@@ -48,8 +48,8 @@
     <Compile Include="Actor.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Film.cs" />
-    <Compile Include="MyCollection.cs" />
-    <Compile Include="MyEnumerator.cs" />
+    <Compile Include="Collections\MyCollection.cs" />
+    <Compile Include="Collections\MyEnumerator.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Producer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

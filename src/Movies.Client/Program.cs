@@ -1,9 +1,6 @@
 ﻿using Movies.BusinessLogic;
+using Movies.BusinessLogic.Collections;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Movies.Client
 {
@@ -27,9 +24,9 @@ namespace Movies.Client
 				}
 				Console.WriteLine("Actors");
 				MyCollection<Actor> actors = new MyCollection<Actor>();
-				Actor peterParker = new Actor("Peter Parker", new DateTime(9, 10, 2017), new[] { "dfdfs", "dsfds", "SDFf" }, coll);
+				Actor peterParker = new Actor("Peter", "Parker", new DateTime(9, 10, 2017), "SDFf", coll);
 				actors.Add(peterParker);
-				actors.Add(new Actor("Peter Parker", new DateTime(1, 2, 3), new[] { "dfdfs", "dsfds", "SDFf" }, coll));
+				actors.Add(new Actor("Peter", "Parker", new DateTime(1, 2, 3), "SDFf", coll));
 				foreach (var actor in actors)
 				{
 					Console.WriteLine(actor);

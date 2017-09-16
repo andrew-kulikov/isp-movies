@@ -2,10 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Movies.BusinessLogic
+namespace Movies.BusinessLogic.Collections
 {
 	public class MyCollection<T> : ICollection<T>
 	{

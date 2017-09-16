@@ -49,7 +49,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Movies.Collections\Movies.BusinessLogic.csproj">
+    <ProjectReference Include="..\Movies.BusinessLogic\Movies.BusinessLogic.csproj">
       <Project>{bb403bb0-743c-4ebf-abc9-52388b43b2f5}</Project>
       <Name>Movies.BusinessLogic</Name>
     </ProjectReference>
