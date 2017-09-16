@@ -1,4 +1,4 @@
-﻿using Movies.Collections;
+﻿using Movies.BusinessLogic;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -49,9 +49,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Movies.Collections\Movies.Collections.csproj">
+    <ProjectReference Include="..\Movies.Collections\Movies.BusinessLogic.csproj">
       <Project>{bb403bb0-743c-4ebf-abc9-52388b43b2f5}</Project>
-      <Name>Movies.Collections</Name>
+      <Name>Movies.BusinessLogic</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

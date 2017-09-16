@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmLibrary", "FilmLibrary\FilmLibrary.csproj", "{06F1D304-FDC0-418B-A341-56BF6A6CBAF4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Collections", "Movies.Collections\Movies.Collections.csproj", "{BB403BB0-743C-4EBF-ABC9-52388B43B2F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.BusinessLogic", "Movies.Collections\Movies.BusinessLogic.csproj", "{BB403BB0-743C-4EBF-ABC9-52388B43B2F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Client", "Movies.Client\Movies.Client.csproj", "{061263BA-6C78-40D8-B77B-715D5065C297}"
 EndProject

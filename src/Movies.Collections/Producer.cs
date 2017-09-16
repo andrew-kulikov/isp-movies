@@ -4,31 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Movies.Collections
+namespace Movies.BusinessLogic
 {
-	public class Producer : IComparable
+	public class Producer : Person
 	{
-		string name;
-		MyCollection<Film> films;
+		private MyCollection<Film> films;
 
-		public Producer(string name, Film[] films)
+		public Producer(string name, string surname, DateTime birthDate, MyCollection<Film> films)
+			:base(name, surname, birthDate)
 		{
-			this.name = name;
-			this.films = new MyCollection<Film>(films);
+			this.films = films;
 		}
 
 		public Film[] Films => films.ToArray();
-		public string Name
-		{
-			get => name;
-			set => name = value ?? throw new ArgumentNullException();
-		}
-
-		public int CompareTo(object obj)
-		{
-			Producer prod = obj as Producer;
-			if (prod.Equals(null)) throw new Exception("dsjhfgjdfhg0");
-			return name.CompareTo(prod.name);
-		}
 	}
 }

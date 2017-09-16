@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Movies.Collections
+namespace Movies.BusinessLogic
 {
 	public class Controller
 	{
