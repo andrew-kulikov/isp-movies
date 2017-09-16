@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Movies.Collections
 {
-	class Controller
+	public class Controller
 	{
 		MyCollection<Film> films;
 		MyCollection<Actor> actors;

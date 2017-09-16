@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Movies.Collections
 {
-	class Film : IComparable
+	public class Film : IComparable
 	{
 		#region Private_Fields
 		private string name;

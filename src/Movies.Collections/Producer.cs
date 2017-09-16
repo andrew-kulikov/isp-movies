@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Movies.Collections
 {
-	class Producer : IComparable
+	public class Producer : IComparable
 	{
 		string name;
 		MyCollection<Film> films;

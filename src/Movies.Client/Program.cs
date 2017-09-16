@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Movies.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Movies.Collections
+namespace Movies.Client
 {
-	class Program
+	public class Program
 	{
 		static void Main(string[] args)
 		{
@@ -26,9 +27,9 @@ namespace Movies.Collections
 				}
 				Console.WriteLine("Actors");
 				MyCollection<Actor> actors = new MyCollection<Actor>();
-				Actor peterParker = new Actor("Peter Parker", (9, 10, 2017), new[] { "dfdfs", "dsfds", "SDFf" }, coll);
+				Actor peterParker = new Actor("Peter Parker", new DateTime(9, 10, 2017), new[] { "dfdfs", "dsfds", "SDFf" }, coll);
 				actors.Add(peterParker);
-				actors.Add(new Actor("Peter Parker", (1, 2, 3), new[] { "dfdfs", "dsfds", "SDFf" }, coll));
+				actors.Add(new Actor("Peter Parker", new DateTime(1, 2, 3), new[] { "dfdfs", "dsfds", "SDFf" }, coll));
 				foreach (var actor in actors)
 				{
 					Console.WriteLine(actor);

@@ -6,51 +6,31 @@ using System.Threading.Tasks;
 
 namespace Movies.Collections
 {
-	class Actor : IComparable
+	public class Actor : IComparable
 	{
-		string name;
-		(int day, int month, int year) birthDate;
-		string[] biography = null;
-		MyCollection<Film> films = null;
+		private string name;
+		private DateTime birthDate;
+		private string[] biography = null;
+		private MyCollection<Film> films = null;
 
-		public Actor(string name, (int, int, int) birthDate, string[] biography, MyCollection<Film> films)
+		public Actor(string name, DateTime birthDate, string[] biography, MyCollection<Film> films)
 		{
 			this.name = name;
-			BirthDate = birthDate;
+			this.birthDate = birthDate;
 			this.biography = biography;
 			this.films = films;
 		}
 
 		public string Name => name;
-		//public (int, int, int) BirthDate => BirthDate;
 		public string[] Biography => biography;
 		public MyCollection<Film> Films => films;
 
 		public void AddFilm(Film film) => films.Add(film);
 		public bool IsInFilm(Film film) => films.Contains(film);
 
-		public (int, int, int) BirthDate
+		public DateTime BirthDate
 		{
 			get => birthDate;
-			set
-			{
-				if (value.Item3 >= 0 && value.Item3 <= DateTime.Now.Year 
-					&& value.Item2 >= 1 && value.Item2 <= 12 
-					&& value.Item1 >= 1 && value.Item1 <= DateTime.DaysInMonth(value.Item3, value.Item2))
-				{
-					if (value.Item3 == DateTime.Now.Year)
-					{
-						if (value.Item2 > DateTime.Now.Month
-							|| value.Item2 == DateTime.Now.Month && value.Item1 > DateTime.Now.Day)
-							throw new Exception("Wrong date");
-					}
-					birthDate = value;
-				}
-				else
-				{
-					throw new Exception("Wrong date");
-				}
-			}
 		}
 
 		public int CompareTo(object obj)
@@ -63,7 +43,7 @@ namespace Movies.Collections
 		{
 			string s = "";
 			s += "Name: " + name;
-			s += "\nBirth date: " + birthDate.day + "." + birthDate.month + "." + birthDate.year;
+			s += "\nBirth date: " + birthDate.Day + "." + birthDate.Month + "." + birthDate.Year;
 			s += "\nBiography: \n";
 			for (int i = 0; i < biography.Length; i++)
 			{

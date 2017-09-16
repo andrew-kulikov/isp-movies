@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Movies.Collections
 {
-	class MyCollection<T> : ICollection<T> where T: IComparable
+	public class MyCollection<T> : ICollection<T> where T: IComparable
 	{
 		#region Private_Fields
 		private SortedSet<T> data;
