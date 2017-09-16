@@ -48,7 +48,6 @@
     <Compile Include="Actor.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Film.cs" />
-    <Compile Include="FilmCollection.cs" />
     <Compile Include="MyCollection.cs" />
     <Compile Include="Producer.cs" />
     <Compile Include="Program.cs" />
