@@ -8,72 +8,82 @@ namespace Movies.BusinessLogic.Collections
 	public class MyCollection<T> : ICollection<T>
 	{
 		private T[] data;
-		private int count;
+		private int cursor;
 
 		public MyCollection()
 		{
-			count = 0;
+			cursor = 0;
 			data = new T[0];
 		}
 
 		public MyCollection(params T[] items)
+			:this()
 		{
-			count = 0;
-			data = new T[items.Length];
 			Add(items);
 		}
 
-		public int Count => count;
+		public int Count => cursor;
 
-		public T this[int i] => data.ElementAt(i);
+		public T this[int i] {
+			get {
+				if (i > cursor)
+				{
+					throw new IndexOutOfRangeException("Index is out of range");
+				}
+				return data[i];
+			}
+		}
 
 		public bool IsReadOnly => false;
 
 		public void Add(T item)
 		{
-			throw new NotImplementedException();
-
-			//if (!item.Equals(null) && !IsReadOnly)
-			//{
-			//	if (data.Add(item))
-			//		count++;
-			//}
+			if (cursor + 1 >= data.Length)
+			{
+				Array.Resize(ref data, (cursor + 1) * 2);
+			}
+			data[cursor++] = item;
 		}
 
 		public void Add(params T[] items)
 		{
-			throw new NotImplementedException();
-
-			//if (items.Equals(null)) throw new ArgumentNullException();
-			//data.UnionWith(items);
-			//count = data.Count;
+			for (int i = 0; i < items?.Length; i++)
+			{
+				Add(items[i]);
+			}
 		}
 
 		public void Add(MyCollection<T> coll)
 		{
-			throw new NotImplementedException();
-
-			//data.UnionWith(coll);
-			//count = data.Count;
+			if (coll.Equals(null))
+			{
+				throw new ArgumentNullException("Argument is null");
+			}
+			Add(coll.data);
 		}
 
 		public void Clear()
 		{
-			throw new NotImplementedException();
+			for (int i = 0; i  < cursor; i++)
+			{
+				data[i] = default(T);
+			}
+			Array.Resize(ref data, 1);
+			cursor = 0;
 		}
 
 		public bool Contains(T item) => data.Contains(item);
 
 		public void CopyTo(T[] array, int arrayIndex = 0)
 		{
-			if (arrayIndex + count > array.Length)
+			if (arrayIndex + cursor > array.Length)
 			{
 				throw new OverflowException("Array overflow");
 			}
 			else
 			{
 				var items = data.ToArray();
-				for (int i = arrayIndex; i < arrayIndex + count; i++)
+				for (int i = arrayIndex; i < arrayIndex + cursor; i++)
 				{
 					array[i] = items[i - arrayIndex];
 				}
@@ -81,34 +91,44 @@ namespace Movies.BusinessLogic.Collections
 			
 		}
 
-		public T ElementAt(int pos) => data.ElementAt(pos);
+		public T ElementAt(int pos)
+		{
+			return data[pos];
+		}
 
 		public IEnumerator<T> GetEnumerator() => new MyEnumerator<T>(this);
 
 		public bool Remove(T item)
 		{
-			throw new NotImplementedException();
-
-			//if (data.Equals(null)) throw new Exception("Removing from empty collection");
-			//else
-			//{
-			//	if(data.Remove(item))
-			//	{
-			//		count--;
-			//		return true;
-			//	}
-			//	else
-			//	{
-			//		return false;
-			//	}
-			//}
+			bool res = false;
+			for (int i = 0; i < Count; i++)
+			{
+				if (item.Equals(data[i]))
+				{
+					for (int j = i; j < Count - 1; j++)
+					{
+						data[j] = data[j + 1];
+					}
+					res = true;
+					break;
+				}
+			}
+			if (res)
+			{
+				cursor--;
+				if (data.Length / 4 >= cursor)
+				{
+					Array.Resize(ref data, cursor);
+				}
+			}
+			return res;
 		}
 
 		public IEnumerator<T> EnumerateAll()
 		{
-			for (int i = 0; i < count; i++)
+			for (int i = 0; i < cursor; i++)
 			{
-				yield return data.ElementAt(i);
+				yield return data[i];
 			}
 		}
 
