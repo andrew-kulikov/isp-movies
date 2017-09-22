@@ -47,5 +47,20 @@ namespace Movies.BusinessLogic.Tests.Collections
 			MyCollection<int> collection = new MyCollection<int>(1, 2, 3);
 			Assert.AreEqual(true, collection.Remove(2));
 		}
+
+		[TestMethod]
+		public void Remove_NotExistingElement_OK()
+		{
+			MyCollection<int> collection = new MyCollection<int>(1, 2, 3);
+			Assert.AreEqual(false, collection.Remove(4));
+		}
+
+		[TestMethod]
+		public void Remove_FromEmpty_OK()
+		{
+			MyCollection<int> collection = new MyCollection<int>(1);
+			collection.Remove(1);
+			Assert.AreEqual(false, collection.Remove(555));
+		}
 	}
 }

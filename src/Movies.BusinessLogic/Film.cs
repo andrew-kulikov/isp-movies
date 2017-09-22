@@ -27,7 +27,6 @@ namespace Movies.BusinessLogic
 			Array.Copy(genres, this.genres, genres.Length);
 		}
 
-		#region Properties
 		public string Name
 		{
 			get => name;
@@ -69,7 +68,6 @@ namespace Movies.BusinessLogic
 			get => prod;
 			set => prod = value;
 		}
-		#endregion
 
 		public int CompareTo(object obj)
 		{
