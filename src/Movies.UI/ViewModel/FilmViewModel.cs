@@ -1,4 +1,5 @@
 ﻿using Movies.BusinessLogic;
+using Movies.BusinessLogic.Collections;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -7,6 +8,12 @@ namespace Movies.UI.ViewModel
 	class FilmViewModel : INotifyPropertyChanged
 	{
 		private Film film;
+
+		public FilmViewModel(Film film)
+		{
+			this.film = film;
+		}
+
 		public string Name
 		{
 			get => film.Name;
@@ -68,7 +75,25 @@ namespace Movies.UI.ViewModel
 			}
 		} 
 
+		public MyCollection<Actor> Actors
+		{
+			get => film.Actors;
+			set
+			{
+				film.Actors = value;
+				OnPropertyChanged();
+			}
+		}
 
+		public Producer Prod
+		{
+			get => film.Prod;
+			set
+			{
+				film.Prod = value;
+				OnPropertyChanged();
+			}
+		}
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged([CallerMemberName]string prop = "") =>

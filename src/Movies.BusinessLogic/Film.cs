@@ -3,7 +3,7 @@ using System;
 
 namespace Movies.BusinessLogic
 {
-	public class Film : IComparable
+	public class Film
 	{
 		#region Private_Fields
 		private string name;
@@ -69,12 +69,6 @@ namespace Movies.BusinessLogic
 			set => prod = value;
 		}
 
-		public int CompareTo(object obj)
-		{
-			Film film = obj as Film;
-			if (film.Equals(null)) throw new Exception("Wrong type");
-			return name.CompareTo(film.name);
-		}
 		public void AddActor(Actor actor) => actors.Add(actor);
 		public bool ContainsActor(Actor actor) => actors.Contains(actor);
 		public override string ToString()

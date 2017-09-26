@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Movies.BusinessLogic
 {
-	public abstract class Person 
+	public class Person 
 	{
 		private string name;
 		private string surname;
@@ -19,10 +15,22 @@ namespace Movies.BusinessLogic
 			this.birthDate = birthDate;
 		}
 
-		public string Name => name;
+		public string Name
+		{
+			get => name;
+			set => name = value;
+		}
 
-		public string Surname => surname;
+		public string Surname
+		{
+			get => surname;
+			set => surname = value;
+		}
 
-		public DateTime BirthDate => birthDate;
+		public DateTime BirthDate
+		{
+			get => birthDate;
+			set => birthDate = value;
+		}
 	}
 }

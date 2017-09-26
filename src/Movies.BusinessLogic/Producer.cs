@@ -1,9 +1,5 @@
 ﻿using Movies.BusinessLogic.Collections;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Movies.BusinessLogic
 {
@@ -17,6 +13,10 @@ namespace Movies.BusinessLogic
 			this.films = films;
 		}
 
-		public Film[] Films => films.ToArray();
+		public MyCollection<Film> Films
+		{
+			get => films;
+			set => films = value;
+		}
 	}
 }

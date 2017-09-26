@@ -8,18 +8,29 @@ namespace Movies.BusinessLogic
 		private string biography = null;
 		private MyCollection<Film> films = null;
 
-		public Actor(string name, 
-			string surname, 
-			DateTime birthDate, 
-			string biography, 
+		public Actor(string name,
+			string surname,
+			DateTime birthDate,
+			string biography,
 			MyCollection<Film> films) : base(name, surname, birthDate)
 		{
 			this.biography = biography;
 			this.films = films;
 		}
 
-		public string Biography => biography;
-		public MyCollection<Film> Films => films;
+		public string Biography
+		{
+			get => biography;
+			set
+			{
+				biography = value;
+			}
+		}
+		public MyCollection<Film> Films
+		{
+			get => films;
+			set => films = value;
+		}
 
 		public void AddFilm(Film film) => films.Add(film);
 		public bool IsInFilm(Film film) => films.Contains(film);
