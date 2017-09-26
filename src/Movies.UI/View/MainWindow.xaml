@@ -11,24 +11,48 @@
 			<RowDefinition Height="20"/>
 			<RowDefinition />
 		</Grid.RowDefinitions>
-		<StackPanel Grid.Row="0" Orientation="Horizontal" Background="LightGray">
-			<Button Width="60">File</Button>
-			<Button Width="60">View</Button>
-			<Button Width="60">Add</Button>
-			<Button Width="60">Change</Button>
-			<Button Width="60">Help</Button>
-		</StackPanel>
-		<ListBox Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+		<Menu Grid.Row="0">
+			<MenuItem Header="File">
+				<MenuItem Header="Open" />
+				<MenuItem Header="Save" />
+				<MenuItem Header="Save as" />
+				<MenuItem Header="New">
+					<MenuItem Header="Film" />
+					<MenuItem Header="Actor" />
+					<MenuItem Header="Producer" />
+				</MenuItem>
+				<MenuItem Header="Change">
+					<MenuItem Header="Film" />
+					<MenuItem Header="Actor" />
+					<MenuItem Header="Producer" />
+				</MenuItem>
+			</MenuItem>
+			<MenuItem Header="View">
+				
+			</MenuItem>
+
+			<MenuItem Header="Help">
+				<MenuItem Header="About" />
+				<MenuItem Header="Close" />
+				<MenuItem Header="Settings" />
+			</MenuItem>
+		</Menu>
+		<ListBox x:Name="MainListBox" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<Border Margin="5" BorderThickness="1" BorderBrush="SteelBlue" CornerRadius="4" Width="370">
-						<Button Height="200" Width="200">sdgfdg</Button>
+					<Border Margin="5"
+							BorderThickness="1"
+							BorderBrush="SteelBlue"
+							CornerRadius="4"
+							HorizontalAlignment="Center"
+							>
+						<Button>sdgfdg</Button>
 					</Border>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
-					<UniformGrid Columns="3" IsItemsHost ="True"></UniformGrid>
+					<UniformGrid Columns="3" IsItemsHost="True"></UniformGrid>
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
 		</ListBox>

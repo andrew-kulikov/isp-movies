@@ -14,7 +14,11 @@ namespace Movies.UI.View
 		{
 			InitializeComponent();
 			DataContext = new ViewModel.FilmViewModel();
-
+			MainListBox.Items.Add(10);
+			MainListBox.Items.Add(10);
+			MainListBox.Items.Add(10);
+			MainListBox.Items.Add(10);
+			MainListBox.Items.Add(10);
 		}
 	}
 	

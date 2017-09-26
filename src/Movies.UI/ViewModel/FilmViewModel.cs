@@ -67,6 +67,9 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		} 
+
+
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged([CallerMemberName]string prop = "") =>
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
