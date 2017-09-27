@@ -20,6 +20,7 @@ namespace Movies.UI.ViewModel
 				new Film("DDD", "4.jpg", 21, 2045, 5.6, new [] {"1", "2", "3"})
 			};
 			films = new MyObservableCollection<Film>(f);
+			films.AddObs(new Film("Free to play", "3.jpg", 12, 2014, 5.4, new[] { "8", "4" }));
 		}
 
 		public MyObservableCollection<Film> Films

@@ -20,5 +20,11 @@ namespace Movies.UI.View
 			MainListBox.Items.Add(10);
 			MainListBox.Items.Add(10);*/
 		}
+
+		private void AddFilm_Click(object sender, RoutedEventArgs e)
+		{
+			AddFilm form1 = new AddFilm();
+			form1.Show();
+		}
 	}
 }

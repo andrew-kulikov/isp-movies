@@ -9,9 +9,13 @@
     <Grid>
 		<StackPanel>
 			<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Add Film</TextBlock>
-			<UniformGrid Rows="1" Columns="2">
+			<UniformGrid Rows="1" Columns="2" Margin="5">
 				<TextBlock HorizontalAlignment="Center">Film name</TextBlock>
-				<TextBox ></TextBox>
+				<TextBox></TextBox>
+			</UniformGrid>
+			<UniformGrid Rows="1" Columns="2" Margin="5">
+				<TextBlock HorizontalAlignment="Center">Path to poster</TextBlock>
+				<TextBox></TextBox>
 			</UniformGrid>
 		</StackPanel>
     </Grid>

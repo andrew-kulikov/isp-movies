@@ -9,22 +9,10 @@ namespace Movies.UI.ViewModel.Collections
 {
 	public class MyObservableCollection<T> : MyCollection<T>, INotifyCollectionChanged, INotifyPropertyChanged
 	{
-		private RelayCommand addCommand, removeCommand;
-		private T curItem;
-
 		public MyObservableCollection(params T[] items) : base(items)
 		{
 			CollectionChanged?.Invoke(this,
 				new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-		}
-		public T CurItem
-		{
-			get => curItem;
-			set
-			{
-				curItem = value;
-				OnPropertyChanged();
-			}
 		}
 
 		public void AddObs(T element)

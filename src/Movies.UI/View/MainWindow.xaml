@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Movies.UI.View"
         mc:Ignorable="d"
-        Title="Movies">
+        Title="Movies"
+		ResizeMode="NoResize">
 	<Grid ShowGridLines="True">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="20"/>
@@ -17,7 +18,7 @@
 				<MenuItem Header="Save" />
 				<MenuItem Header="Save as" />
 				<MenuItem Header="New">
-					<MenuItem Header="Film" />
+					<MenuItem Header="Film" Click="AddFilm_Click"/>
 					<MenuItem Header="Actor" />
 					<MenuItem Header="Producer" />
 				</MenuItem>
@@ -38,21 +39,34 @@
 			</MenuItem>
 		</Menu>
 		<ListBox ItemsSource="{Binding Path=Films}" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="ListBoxItem">
+					<Setter Property="HorizontalContentAlignment" Value="Center"/>
+				</Style>
+			</ListBox.ItemContainerStyle>
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<Border Margin="5"
-							BorderThickness="1"
-							BorderBrush="SteelBlue"
-							CornerRadius="4"
-							HorizontalAlignment="Center"
-							>
-						<Button>sdgfdg</Button>
-					</Border>
+					<Button
+						HorizontalContentAlignment="Center"
+						HorizontalAlignment="Right"
+						VerticalAlignment="Stretch"
+						Width="Auto">
+						<Image
+							Source="D:\git\isp-movies\src\Movies.UI\Images\4544.jpg"
+							Stretch="Fill"
+						>
+						</Image>
+					</Button>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
-					<UniformGrid Columns="3" IsItemsHost="True"></UniformGrid>
+					<UniformGrid
+						Columns="3"
+						IsItemsHost="True"
+						HorizontalAlignment="Stretch"
+						>
+					</UniformGrid>
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
 		</ListBox>
