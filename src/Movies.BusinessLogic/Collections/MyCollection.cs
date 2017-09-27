@@ -72,6 +72,8 @@ namespace Movies.BusinessLogic.Collections
 			cursor = 0;
 		}
 
+		public T[] ToArray() => data;
+
 		public bool Contains(T item) => data.Contains(item);
 
 		public void CopyTo(T[] array, int arrayIndex = 0)

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Movies.UI.View"
         mc:Ignorable="d"
-        Title="MainWindow">
+        Title="Movies">
 	<Grid ShowGridLines="True">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="20"/>
@@ -37,7 +37,7 @@
 				<MenuItem Header="Settings" />
 			</MenuItem>
 		</Menu>
-		<ListBox x:Name="MainListBox" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+		<ListBox ItemsSource="{Binding Path=Films}" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
 			<ListBox.ItemTemplate>
 				<DataTemplate>
 					<Border Margin="5"
