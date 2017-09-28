@@ -6,13 +6,18 @@
         xmlns:local="clr-namespace:Movies.UI.View"
         mc:Ignorable="d"
         Title="Movies"
-		ResizeMode="NoResize">
-	<Grid ShowGridLines="True">
+		MinWidth="320"
+		MinHeight="480">
+	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="20"/>
 			<RowDefinition />
 		</Grid.RowDefinitions>
-		<Menu Grid.Row="0">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="2*" MinWidth="100"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+		<Menu Grid.Row="0" Grid.ColumnSpan="2">
 			<MenuItem Header="File">
 				<MenuItem Header="Open" />
 				<MenuItem Header="Save" />
@@ -29,7 +34,7 @@
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="View">
-				
+
 			</MenuItem>
 
 			<MenuItem Header="Help">
@@ -38,37 +43,136 @@
 				<MenuItem Header="Settings" />
 			</MenuItem>
 		</Menu>
-		<ListBox ItemsSource="{Binding Path=Films}" Grid.Row="1" BorderBrush="Black" BorderThickness="1">
+		<ListBox ItemsSource="{Binding Path=Films}"
+				 SelectedItem="{Binding Path=SelectedFilm}"
+				 Grid.Row="1"
+				 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="ListBoxItem">
-					<Setter Property="HorizontalContentAlignment" Value="Center"/>
+					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+					<Setter Property="VerticalContentAlignment" Value="Stretch"/>
 				</Style>
 			</ListBox.ItemContainerStyle>
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<Button
-						HorizontalContentAlignment="Center"
-						HorizontalAlignment="Right"
-						VerticalAlignment="Stretch"
-						Width="Auto">
-						<Image
-							Source="D:\git\isp-movies\src\Movies.UI\Images\4544.jpg"
-							Stretch="Fill"
-						>
-						</Image>
-					</Button>
+					<Image
+						Source="{Binding Path=PosterPath}"
+						Stretch="Uniform"
+						MaxWidth="250" />
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
-					<UniformGrid
-						Columns="3"
-						IsItemsHost="True"
-						HorizontalAlignment="Stretch"
-						>
-					</UniformGrid>
+					<WrapPanel	IsItemsHost="True" />
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
 		</ListBox>
+		<ScrollViewer Grid.Column="1" Grid.Row="1">
+			<StackPanel DataContext="{Binding Path=SelectedFilm}">
+				<TextBlock
+					Text="{Binding Path=Name}"
+					HorizontalAlignment="Center"
+					FontWeight="Bold"
+					FontSize="24"
+					Margin="5"/>
+				<Image
+					Source="{Binding Path=PosterPath}"
+					Stretch="Uniform"
+					MaxWidth="250"/>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition />
+						<ColumnDefinition />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition />
+						<RowDefinition Height="Auto" />
+						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
+					</Grid.RowDefinitions>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Margin="0 5 0 0"
+						Grid.Column="0"
+						Grid.Row="0">
+						<TextBlock Text="Year Of Release" FontSize="16" TextAlignment="Center"/>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Margin="0 5 0 0"
+						Grid.Column="1"
+						Grid.Row="0">
+						<TextBlock Text="{Binding Path=YearOfRelease}" FontSize="16" TextAlignment="Center" Height="Auto"/>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Grid.Column="0"
+						Grid.Row="1"
+						Background="LightGray">
+						<TextBlock Text="Description" FontSize="16" TextAlignment="Center"/>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Grid.Column="1"
+						Grid.Row="1"
+						Background="LightGray">
+						<TextBlock Text="{Binding Path=Description}" FontSize="16" TextWrapping="Wrap"/>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Grid.Column="0"
+						Grid.Row="2">
+						<TextBlock Text="Rating" FontSize="16" TextAlignment="Center"/>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Grid.Column="1"
+						Grid.Row="2">
+						<TextBlock Text="{Binding Path=Rating}" FontSize="16" TextAlignment="Center"/>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Grid.Column="0"
+						Grid.Row="3"
+						Background="LightGray">
+						<TextBlock Text="Genres" FontSize="16" TextAlignment="Center"/>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Grid.Column="1"
+						Grid.Row="3"
+						Background="LightGray">
+						<TextBlock Text="{Binding Path=Genres}" FontSize="16" TextWrapping="Wrap" TextAlignment="Center"/>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Grid.Column="0"
+						Grid.Row="4">
+						<TextBlock Text="Actors" FontSize="16" TextAlignment="Center"/>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Grid.Column="1"
+						Grid.Row="4">
+						<ListBox ItemsSource="{Binding Path=Actors}">
+							
+						</ListBox>
+					</Border>
+				</Grid>
+			</StackPanel>
+		</ScrollViewer>
 	</Grid>
 </Window>

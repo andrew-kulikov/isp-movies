@@ -7,7 +7,8 @@ namespace Movies.UI.ViewModel
 {
 	public class ActorViewModel : PersonViewModel
     {
-		public Actor actor;
+		private Actor actor;
+
 		public ActorViewModel(string name,
 			string surname,
 			DateTime birthDate,
@@ -38,6 +39,8 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
+
+		public Actor SourceActor => actor;
 
 	}
 }

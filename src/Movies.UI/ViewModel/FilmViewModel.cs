@@ -1,13 +1,18 @@
 ﻿using Movies.BusinessLogic;
 using Movies.BusinessLogic.Collections;
+using Movies.UI.ViewModel.Collections;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
+
 
 namespace Movies.UI.ViewModel
 {
-	class FilmViewModel : INotifyPropertyChanged
+	public class FilmViewModel : INotifyPropertyChanged
 	{
 		private Film film;
+		MyObservableCollection<ActorViewModel> actors;
+
 
 		public FilmViewModel(Film film)
 		{
@@ -55,9 +60,19 @@ namespace Movies.UI.ViewModel
 			}
 		}
 
+		public string Description
+		{
+			get => film.Description;
+			set
+			{
+				film.Description = value;
+				OnPropertyChanged();
+			}
+		} 
+
 		public string PosterPath
 		{
-			get => film.PosterPath;
+			get => Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", film.PosterPath);
 			set
 			{
 				film.PosterPath = value;
@@ -65,22 +80,27 @@ namespace Movies.UI.ViewModel
 			}
 		}
 
-		public string[] Genres
+		public string Genres
 		{
-			get => film.Genres;
+			get => string.Join(",", film.Genres);
 			set
 			{
-				film.Genres = value;
+				film.Genres = value.Split(',');
 				OnPropertyChanged();
 			}
 		} 
 
-		public MyCollection<Actor> Actors
+		public MyObservableCollection<ActorViewModel> Actors
 		{
-			get => film.Actors;
+			get => actors;
 			set
 			{
-				film.Actors = value;
+				actors = value;
+				film.Actors = new MyCollection<Actor>();
+				foreach (var t in value)
+				{
+					film.Actors.Add(t.SourceActor);
+				}
 				OnPropertyChanged();
 			}
 		}
@@ -98,37 +118,5 @@ namespace Movies.UI.ViewModel
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged([CallerMemberName]string prop = "") =>
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-		/*public ObservableCollection<Film> Films { get; set; }
-		public string CurrentTitle { get; set; }
-		public string CurrentAge { get; set; }
-		public Film SelectedFilm
-		{
-			get => selectedFilm;
-			set
-			{
-				selectedFilm = value;
-				OnPropertyChanged();
-			}
-		}
-		private RelayCommand addCommand;
-		public RelayCommand AddCommand => addCommand ?? (addCommand = new RelayCommand(obj => Add()));
-		public FilmFievModel()
-		{
-			Films = new ObservableCollection<Film>
-			{
-				new Film ("One",  18),
-				new Film ("Next", 14),
-				new Film ("Alien", 24)
-			};
-		}
-		public void Add()
-		{
-			if (!string.IsNullOrEmpty(CurrentTitle) && !string.IsNullOrEmpty(CurrentAge))
-			{
-				Film cur = new Film(CurrentTitle, Int32.Parse(CurrentAge));
-				SelectedFilm = cur;
-				Films.Add(cur);
-			}
-		}*/
 	}
 }
