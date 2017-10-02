@@ -1,27 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Movies.UI.ViewModel;
 
 namespace Movies.UI.View
 {
-    /// <summary>
-    /// Interaction logic for AddFilm.xaml
-    /// </summary>
-    public partial class AddFilm : Window
+	/// <summary>
+	/// Interaction logic for AddFilm.xaml
+	/// </summary>
+	public partial class AddFilm : Window
     {
-        public AddFilm()
+        public AddFilm(ApplicationViewModel vm)
         {
             InitializeComponent();
+			DataContext = vm;
+			for (int i = 1950; i < DateTime.Now.Year + 5; ++i)
+			{
+				YearBox.Items.Add(i);
+			}
+			for (int i = 0; i < 22; ++i)
+			{
+				AgeBox.Items.Add(i);
+			}
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using Movies.BusinessLogic;
 using Movies.BusinessLogic.Collections;
 using Movies.UI.ViewModel.Collections;
+using Movies.UI.View;
+using Movies.UI.Model;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-
+using System.Windows.Input;
 
 namespace Movies.UI.ViewModel
 {
@@ -12,10 +14,17 @@ namespace Movies.UI.ViewModel
 	{
 		private Film film;
 		MyObservableCollection<ActorViewModel> actors;
+		private ActorViewModel selectedActor = null;
+
+		public FilmViewModel()
+		{
+			film = new Film();
+		}
 
 
 		public FilmViewModel(Film film)
 		{
+			actors = new MyObservableCollection<ActorViewModel>();
 			this.film = film;
 		}
 
@@ -26,6 +35,7 @@ namespace Movies.UI.ViewModel
 			{
 				film.Name = value;
 				OnPropertyChanged();
+				OnPropertyChanged("NewFilm");
 			}
 		}
 		
@@ -72,11 +82,17 @@ namespace Movies.UI.ViewModel
 
 		public string PosterPath
 		{
-			get => Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", film.PosterPath);
-			set
+			get
 			{
-				film.PosterPath = value;
-				OnPropertyChanged();
+				string directory = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images");
+				if (File.Exists(directory + "//" + film.Name + ".jpg"))
+				{
+					return directory + "//" + film.Name + ".jpg";
+				}
+				else
+				{
+					return directory + "//default.png";
+				}
 			}
 		}
 
@@ -105,12 +121,39 @@ namespace Movies.UI.ViewModel
 			}
 		}
 
+		public MyObservableCollection<string> ActorNames
+		{
+			get
+			{
+				MyObservableCollection<string> names = new MyObservableCollection<string>();
+				foreach (Actor actor in film.Actors)
+				{
+					names.Add(actor.Name + " " + actor.Surname);
+				}
+				return names;
+			}
+		}
+
+		public string ProducerName => Prod.Name + " " + Prod.Surname;
+
 		public Producer Prod
 		{
 			get => film.Prod;
 			set
 			{
 				film.Prod = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public ActorViewModel SelectedActor
+		{
+			get => selectedActor;
+			set
+			{
+				selectedActor = value;
+				ActorInfo af = new ActorInfo(selectedActor);
+				af.ShowDialog();
 				OnPropertyChanged();
 			}
 		}

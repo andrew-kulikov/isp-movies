@@ -7,6 +7,11 @@ namespace Movies.BusinessLogic
 	{
 		private MyCollection<Film> films;
 
+		public Producer() : base()
+		{
+			films = new MyCollection<Film>();
+		}
+
 		public Producer(string name, string surname, DateTime birthDate, MyCollection<Film> films)
 			:base(name, surname, birthDate)
 		{

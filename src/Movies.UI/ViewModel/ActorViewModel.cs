@@ -15,9 +15,7 @@ namespace Movies.UI.ViewModel
 			string biography,
 			MyCollection<Film> films) : base(name, surname, birthDate)
 		{
-			actor = person as Actor;
-			actor.Biography = biography;
-			actor.Films = films;
+			actor = new Actor(name, surname, birthDate, biography, films);
 		}
 
 		public string Biography
@@ -29,6 +27,10 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
+
+		public string FullDate => BirthDate.Day + "." + BirthDate.Month + "." + BirthDate.Year;
+
+		public string FullName => actor.Name + " " + actor.Surname;
 
 		public MyCollection<Film> Films
 		{

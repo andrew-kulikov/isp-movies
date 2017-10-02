@@ -19,7 +19,7 @@ namespace Movies.UI.ViewModel.Collections
 		{
 			Add(element);
 			CollectionChanged?.Invoke(this,
-				new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add));
+				new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
 
 		public event NotifyCollectionChangedEventHandler CollectionChanged;

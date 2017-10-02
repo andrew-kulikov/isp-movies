@@ -5,9 +5,7 @@ namespace Movies.BusinessLogic
 {
 	public class Film
 	{
-		#region Private_Fields
 		private string name;
-		private string posterPath;
 		private string[] genres;
 		private int ageLimit;
 		private string description;
@@ -15,11 +13,15 @@ namespace Movies.BusinessLogic
 		private MyCollection<Actor> actors = null;
 		private double rating;
 		private Producer prod;
-		#endregion
+
+		public Film()
+		{
+			actors = new MyCollection<Actor>();
+			prod = new Producer();
+		}
 
 		public Film(
 			string name,
-			string posterPath,
 			int ageLimit, 
 			int yearOfRelease, 
 			double rating, 
@@ -27,7 +29,6 @@ namespace Movies.BusinessLogic
 			string description)
 		{
 			this.name = name;
-			this.posterPath = posterPath;
 			this.ageLimit = ageLimit;
 			this.yearOfRelease = yearOfRelease;
 			this.genres = new string[genres.Length];
@@ -41,11 +42,7 @@ namespace Movies.BusinessLogic
 			get => name;
 			set => name = value;
 		}
-		public string PosterPath
-		{
-			get => posterPath;
-			set => posterPath = value;
-		}
+
 		public int AgeLimit
 		{
 			get => ageLimit;
@@ -118,7 +115,7 @@ namespace Movies.BusinessLogic
 		public override string ToString()
 		{
 			string res;
-			res = "Name: " + name + "\nPoster: " + posterPath + "\nLimit: " + ageLimit + "\nYear: " + yearOfRelease + "\n";
+			res = "Name: " + name + "\nLimit: " + ageLimit + "\nYear: " + yearOfRelease + "\n";
 			res += "Genres: ";
 			foreach (string genre in genres)
 			{

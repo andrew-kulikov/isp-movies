@@ -14,7 +14,7 @@
 			<RowDefinition />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="2*" MinWidth="100"/>
+			<ColumnDefinition Width="2.5*" MinWidth="100"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
 		<Menu Grid.Row="0" Grid.ColumnSpan="2">
@@ -22,19 +22,11 @@
 				<MenuItem Header="Open" />
 				<MenuItem Header="Save" />
 				<MenuItem Header="Save as" />
-				<MenuItem Header="New">
-					<MenuItem Header="Film" Click="AddFilm_Click"/>
-					<MenuItem Header="Actor" />
-					<MenuItem Header="Producer" />
-				</MenuItem>
-				<MenuItem Header="Change">
-					<MenuItem Header="Film" />
-					<MenuItem Header="Actor" />
-					<MenuItem Header="Producer" />
+				<MenuItem Header="New Film" Click="AddFilm_Click">
 				</MenuItem>
 			</MenuItem>
 			<MenuItem Header="View">
-
+				<MenuItem Header="Show Sidebar" IsCheckable="True" IsChecked="True" Click="ShowSidebar_Click"/>
 			</MenuItem>
 
 			<MenuItem Header="Help">
@@ -43,10 +35,11 @@
 				<MenuItem Header="Settings" />
 			</MenuItem>
 		</Menu>
-		<ListBox ItemsSource="{Binding Path=Films}"
+		<ListBox ItemsSource="{Binding Path=Films, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				 SelectedItem="{Binding Path=SelectedFilm}"
 				 Grid.Row="1"
-				 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+				 x:Name="FilmListBox">
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="ListBoxItem">
 					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -67,7 +60,7 @@
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
 		</ListBox>
-		<ScrollViewer Grid.Column="1" Grid.Row="1">
+		<ScrollViewer x:Name="Sidebar" Grid.Column="1" Grid.Row="1">
 			<StackPanel DataContext="{Binding Path=SelectedFilm}">
 				<TextBlock
 					Text="{Binding Path=Name}"
@@ -89,7 +82,7 @@
 						<RowDefinition Height="Auto" />
 						<RowDefinition />
 						<RowDefinition />
-						<RowDefinition />
+						<RowDefinition Height="Auto" />
 						<RowDefinition />
 						<RowDefinition />
 					</Grid.RowDefinitions>
@@ -123,7 +116,7 @@
 						Grid.Column="1"
 						Grid.Row="1"
 						Background="LightGray">
-						<TextBlock Text="{Binding Path=Description}" FontSize="16" TextWrapping="Wrap"/>
+						<TextBlock Text="{Binding Path=Description}" FontSize="12" TextWrapping="Wrap"/>
 					</Border>
 					<Border
 						BorderBrush="DimGray"
@@ -167,9 +160,29 @@
 						BorderThickness="1"
 						Grid.Column="1"
 						Grid.Row="4">
-						<ListBox ItemsSource="{Binding Path=Actors}">
-							
+						<ListBox x:Name="ActorsListBox" ItemsSource="{Binding Path=Actors}" SelectedItem="{Binding Path=SelectedActor}" MouseLeftButtonUp="ClearSelectedItem">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Path=FullName}"/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
 						</ListBox>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Grid.Column="0"
+						Grid.Row="5"
+						Background="LightGray">
+						<TextBlock Text="Producer" FontSize="16" TextAlignment="Center"/>
+					</Border>
+					<Border
+						BorderBrush="DimGray"
+						BorderThickness="1"
+						Grid.Column="1"
+						Grid.Row="5"
+						Background="LightGray">
+						<TextBlock Text="{Binding Path=ProducerName}" FontSize="16" TextAlignment="Center"/>
 					</Border>
 				</Grid>
 			</StackPanel>

@@ -14,6 +14,9 @@ namespace Movies.UI.ViewModel
 			producer = person as Producer;
 			producer.Films = films;
 		}
+
+		public string FullName => producer.Name + " " + producer.Surname;
+
 		public MyCollection<Film> Films
 		{
 			get => producer.Films;

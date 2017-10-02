@@ -61,6 +61,10 @@
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\Collections\MyObservableCollection.cs" />
     <Compile Include="ViewModel\FilmViewModel.cs" />
+    <Page Include="View\ActorInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AddFilm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -75,6 +79,9 @@
     </Compile>
     <Compile Include="ViewModel\PersonViewModel.cs" />
     <Compile Include="ViewModel\ProducerViewModel.cs" />
+    <Compile Include="View\ActorInfo.xaml.cs">
+      <DependentUpon>ActorInfo.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AddFilm.xaml.cs">
       <DependentUpon>AddFilm.xaml</DependentUpon>
     </Compile>

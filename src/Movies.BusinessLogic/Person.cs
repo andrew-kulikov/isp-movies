@@ -8,6 +8,11 @@ namespace Movies.BusinessLogic
 		private string surname;
 		private DateTime birthDate;
 
+		public Person()
+		{
+
+		}
+
 		public Person(string name, string surname, DateTime birthDate)
 		{
 			this.name = name;
