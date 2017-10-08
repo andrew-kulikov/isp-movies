@@ -75,7 +75,7 @@ namespace Movies.BusinessLogic
 		}
 		public string[] Genres
 		{
-			get => genres.Clone() as string[];
+			get => genres?.Clone() as string[];
 			set => Array.Copy(genres, value, value.Length);
 
 		}

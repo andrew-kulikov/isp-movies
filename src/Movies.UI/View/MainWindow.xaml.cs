@@ -18,13 +18,26 @@ namespace Movies.UI.View
 			viewModel = new ApplicationViewModel();
 			DataContext = viewModel;
 		}
-
 		private void AddFilm_Click(object sender, RoutedEventArgs e)
 		{
 			AddFilm form1 = new AddFilm(viewModel);
 			form1.ShowDialog();
 			viewModel.Films.AddObs(viewModel.NewFilm);
 			viewModel.NewFilm = null;
+		}
+
+		private void RemoveFilm_Click(object sender, RoutedEventArgs e)
+		{
+			FilmNameForm fn = new FilmNameForm(viewModel);
+			fn.ShowDialog();
+			viewModel.Remove();
+		}
+
+		private void SearchFilm_Click(object sender, RoutedEventArgs e)
+		{
+			FilmNameForm fn = new FilmNameForm(viewModel);
+			fn.ShowDialog();
+			viewModel.Find();
 		}
 
 		private void ShowSidebar_Click(object sender, RoutedEventArgs e)

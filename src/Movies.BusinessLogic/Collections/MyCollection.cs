@@ -7,8 +7,8 @@ namespace Movies.BusinessLogic.Collections
 {
 	public class MyCollection<T> : ICollection<T>
 	{
-		private T[] data;
-		private int cursor;
+		protected T[] data;
+		protected int cursor;
 
 		public MyCollection()
 		{
@@ -110,6 +110,10 @@ namespace Movies.BusinessLogic.Collections
 					for (int j = i; j < Count - 1; j++)
 					{
 						data[j] = data[j + 1];
+					}
+					if (i == Count - 1)
+					{
+						data[i] = default(T);
 					}
 					res = true;
 					break;

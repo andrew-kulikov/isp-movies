@@ -1,12 +1,12 @@
 ﻿using Movies.BusinessLogic;
 using Movies.BusinessLogic.Collections;
-using Movies.UI.ViewModel.Collections;
 using Movies.UI.View;
-using Movies.UI.Model;
+using Movies.UI.ViewModel.Collections;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Windows.Input;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Movies.UI.ViewModel
 {
@@ -154,6 +154,17 @@ namespace Movies.UI.ViewModel
 				selectedActor = value;
 				ActorInfo af = new ActorInfo(selectedActor);
 				af.ShowDialog();
+				OnPropertyChanged();
+			}
+		}
+
+		private Dictionary<string, int> dict;
+		public Dictionary<string, int> GenresDict
+		{
+			get => dict;
+			set
+			{
+				dict = value;
 				OnPropertyChanged();
 			}
 		}

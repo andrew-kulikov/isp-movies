@@ -1,8 +1,6 @@
 ﻿using Movies.BusinessLogic;
 using Movies.BusinessLogic.Collections;
-using Movies.UI.View;
 using Movies.UI.ViewModel.Collections;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -14,6 +12,8 @@ namespace Movies.UI.ViewModel
 		private MyObservableCollection<ActorViewModel> actors;
 		private FilmViewModel selectedFilm;
 		private ActorViewModel selectedActor;
+
+		private string tmpFilmName;
 
 		private FilmViewModel newFilm;
 
@@ -94,6 +94,16 @@ namespace Movies.UI.ViewModel
 			}
 		}
 
+		public string TmpFilmName
+		{
+			get => tmpFilmName;
+			set
+			{
+				tmpFilmName = value;
+				OnPropertyChanged();
+			}
+		}
+
 		public MyObservableCollection<FilmViewModel> Films
 		{
 			get => films;
@@ -114,7 +124,28 @@ namespace Movies.UI.ViewModel
 			}
 		}
 
-		
+		public bool Remove()
+		{
+			bool res = Films.RemoveObs(tmpFilmName);
+			OnPropertyChanged("Films");
+			return res;
+		}
+
+		public bool Find()
+		{
+			bool res = false;
+			foreach (FilmViewModel film in Films)
+			{
+				if (film.Name == tmpFilmName)
+				{
+					SelectedFilm = film;
+					res = true;
+					break;
+				}
+			}
+			return res;
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged([CallerMemberName] string prop = "") =>
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));

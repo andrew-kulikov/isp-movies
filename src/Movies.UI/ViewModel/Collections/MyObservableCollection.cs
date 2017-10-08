@@ -1,13 +1,11 @@
 ﻿using Movies.BusinessLogic.Collections;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Collections.Specialized;
-using System.Windows.Input;
-using Movies.UI.Model;
 
 namespace Movies.UI.ViewModel.Collections
 {
-	public class MyObservableCollection<T> : MyCollection<T>, INotifyCollectionChanged, INotifyPropertyChanged
+	public class MyObservableCollection<T> : MyCollection<T>, INotifyCollectionChanged
 	{
 		public MyObservableCollection(params T[] items) : base(items)
 		{
@@ -22,11 +20,26 @@ namespace Movies.UI.ViewModel.Collections
 				new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
 
-		public event NotifyCollectionChangedEventHandler CollectionChanged;
-		public event PropertyChangedEventHandler PropertyChanged;
+		public bool RemoveObs(string name)
+		{
+			foreach(T element in data)
+			{
+				if (element is FilmViewModel)
+				{
+					if ((element as FilmViewModel).Name == name)
+					{
+						bool res = Remove(element);
+						CollectionChanged?.Invoke(this,
+							new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+						return res;
+					}
+				}
+			}
+			
+			return false;
+		}
 
-		public void OnPropertyChanged([CallerMemberName]string prop = "") =>
-				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+		public event NotifyCollectionChangedEventHandler CollectionChanged;
 
 		public void OnCollectionChanged(NotifyCollectionChangedEventArgs e) =>
 				CollectionChanged?.Invoke(this, e);

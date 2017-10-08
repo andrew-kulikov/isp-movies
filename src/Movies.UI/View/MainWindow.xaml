@@ -1,10 +1,7 @@
 ﻿<Window x:Class="Movies.UI.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Movies.UI.View"
-        mc:Ignorable="d"
         Title="Movies"
 		MinWidth="320"
 		MinHeight="480">
@@ -22,8 +19,9 @@
 				<MenuItem Header="Open" />
 				<MenuItem Header="Save" />
 				<MenuItem Header="Save as" />
-				<MenuItem Header="New Film" Click="AddFilm_Click">
-				</MenuItem>
+				<MenuItem Header="New Film" Click="AddFilm_Click" />
+				<MenuItem Header="Remove Film" Click="RemoveFilm_Click"/>
+				<MenuItem Header="Search Film" Click="SearchFilm_Click"/>
 			</MenuItem>
 			<MenuItem Header="View">
 				<MenuItem Header="Show Sidebar" IsCheckable="True" IsChecked="True" Click="ShowSidebar_Click"/>
