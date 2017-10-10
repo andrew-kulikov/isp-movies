@@ -9,10 +9,12 @@ namespace Movies.UI.View
 	/// </summary>
 	public partial class AddFilm : Window
     {
-        public AddFilm(ApplicationViewModel vm)
+		private ApplicationViewModel viewModel;
+        public AddFilm(ApplicationViewModel applicationViewModel)
         {
             InitializeComponent();
-			DataContext = vm;
+			viewModel = applicationViewModel;
+			DataContext = viewModel.NewFilm;
 			for (int i = 1950; i < DateTime.Now.Year + 5; ++i)
 			{
 				YearBox.Items.Add(i);
@@ -22,5 +24,20 @@ namespace Movies.UI.View
 				AgeBox.Items.Add(i);
 			}
         }
+
+		public void AddButton_Click(object sender, RoutedEventArgs e)
+		{
+			if (viewModel.NewFilm.IsReady())
+			{
+				viewModel.NewFilm.TransformGenres();
+				viewModel.Films.AddObs(viewModel.NewFilm);
+				viewModel.NewFilm = null;
+				Close();
+			}
+			else
+			{
+				MessageBox.Show("Incorrect input");
+			}
+		}
     }
 }

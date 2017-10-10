@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace Movies.UI.ViewModel
 {
@@ -15,10 +16,12 @@ namespace Movies.UI.ViewModel
 		private Film film;
 		MyObservableCollection<ActorViewModel> actors;
 		private ActorViewModel selectedActor = null;
+		private Dictionary<string, bool> dict;
 
 		public FilmViewModel()
 		{
 			film = new Film();
+			dict = new Dictionary<string, bool>();
 		}
 
 
@@ -65,8 +68,11 @@ namespace Movies.UI.ViewModel
 			get => film.Rating;
 			set
 			{
-				film.Rating = value;
-				OnPropertyChanged();
+				if (film.Rating != value)
+				{
+					film.Rating = value;
+					OnPropertyChanged();
+				}
 			}
 		}
 
@@ -98,10 +104,10 @@ namespace Movies.UI.ViewModel
 
 		public string Genres
 		{
-			get => string.Join(",", film.Genres);
+			get => film.Genres;
 			set
 			{
-				film.Genres = value.Split(',');
+				film.Genres = value;
 				OnPropertyChanged();
 			}
 		} 
@@ -158,14 +164,45 @@ namespace Movies.UI.ViewModel
 			}
 		}
 
-		private Dictionary<string, int> dict;
-		public Dictionary<string, int> GenresDict
+		public Dictionary<string, bool> GenresDict
 		{
 			get => dict;
 			set
 			{
 				dict = value;
 				OnPropertyChanged();
+			}
+		}
+
+		public void TransformGenres()
+		{
+			string genres = "";
+			foreach (var genre in dict)
+			{
+				if (genre.Value)
+				{
+					genres += genre.Key + ", ";
+				}
+			}
+			if (genres.Length != 0)
+			{
+				Genres = genres.Substring(0, genres.Length - 2);
+			}
+		}
+
+		public bool IsReady()
+		{
+			if (Name == null || Name.Equals(null) || Name == "")
+			{
+				return false;
+			}
+			else if (Rating == -1)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
 

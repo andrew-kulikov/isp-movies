@@ -6,7 +6,7 @@ namespace Movies.BusinessLogic
 	public class Film
 	{
 		private string name;
-		private string[] genres;
+		private string genres;
 		private int ageLimit;
 		private string description;
 		private int yearOfRelease;
@@ -25,16 +25,15 @@ namespace Movies.BusinessLogic
 			int ageLimit, 
 			int yearOfRelease, 
 			double rating, 
-			string[] genres, 
+			string genres, 
 			string description)
 		{
 			this.name = name;
 			this.ageLimit = ageLimit;
 			this.yearOfRelease = yearOfRelease;
-			this.genres = new string[genres.Length];
+			this.genres = genres;
 			this.rating = rating;
 			this.description = description;
-			Array.Copy(genres, this.genres, genres.Length);
 		}
 
 		public string Name
@@ -73,10 +72,10 @@ namespace Movies.BusinessLogic
 				}
 			}
 		}
-		public string[] Genres
+		public string Genres
 		{
-			get => genres?.Clone() as string[];
-			set => Array.Copy(genres, value, value.Length);
+			get => genres;
+			set => genres = value;
 
 		}
 		public string Description
@@ -93,9 +92,13 @@ namespace Movies.BusinessLogic
 				{
 					rating = value;
 				}
+				else if (value < 0)
+				{
+					rating = 0;
+				}
 				else
 				{
-					throw new ArgumentOutOfRangeException("Rating is out of range");
+					rating = 10;
 				}
 			}
 		}
@@ -116,11 +119,7 @@ namespace Movies.BusinessLogic
 		{
 			string res;
 			res = "Name: " + name + "\nLimit: " + ageLimit + "\nYear: " + yearOfRelease + "\n";
-			res += "Genres: ";
-			foreach (string genre in genres)
-			{
-				res += genre + ", ";
-			}
+			res += "Genres: " + genres;
 			return res;
 		}
 	}

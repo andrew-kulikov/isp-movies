@@ -4,17 +4,18 @@
         xmlns:local="clr-namespace:Movies.UI.View"
         Title="Movies"
 		MinWidth="320"
-		MinHeight="480">
+		MinHeight="480"
+		x:Name="mainWindow">
 	<Grid>
 		<Grid.RowDefinitions>
-			<RowDefinition Height="20"/>
+			<RowDefinition Height="50"/>
 			<RowDefinition />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="2.5*" MinWidth="100"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
-		<Menu Grid.Row="0" Grid.ColumnSpan="2">
+		<!--Menu Grid.Row="0" Grid.ColumnSpan="2">
 			<MenuItem Header="File">
 				<MenuItem Header="Open" />
 				<MenuItem Header="Save" />
@@ -32,7 +33,49 @@
 				<MenuItem Header="Close" />
 				<MenuItem Header="Settings" />
 			</MenuItem>
-		</Menu>
+		</-->
+		<StackPanel
+			Grid.Row="0"
+			Grid.ColumnSpan="2"
+			Background="#363e45"
+			Orientation="Horizontal"
+			HorizontalAlignment="Stretch">
+			<Button
+				Width="150"
+				Background="#dedede" 
+				FontFamily="Verdana" 
+				FontWeight="Medium" 
+				FontSize="16" 
+				Click="AddFilm_Click">
+				<StackPanel Orientation="Horizontal">
+					<Image Source="D:\git\isp-movies\src\Movies.UI\Images\plus.ico"></Image>
+					<TextBlock TextWrapping="Wrap" Width="70" TextAlignment="Center" VerticalAlignment="Center">ADD FILM</TextBlock>
+				</StackPanel>
+			</Button>
+			<Button
+				Width="150"
+				Background="#dedede" 
+				FontFamily="Verdana" 
+				FontWeight="Medium"
+				FontSize="16" 
+				Click="RemoveFilm_Click">
+				<StackPanel Orientation="Horizontal">
+					<Image Source="D:\git\isp-movies\src\Movies.UI\Images\delete.ico"></Image>
+					<TextBlock TextWrapping="Wrap" Width="70" TextAlignment="Center" VerticalAlignment="Center">REMOVE FILM</TextBlock>
+				</StackPanel>
+			</Button>
+			
+		</StackPanel>
+		<StackPanel
+			Grid.Row="0"
+			Grid.Column="1"
+			Width="120"
+			Margin="0 15 40 15"
+			HorizontalAlignment="Right"
+			Orientation="Horizontal">
+			<TextBox Width="100"></TextBox>
+			<Image Source="D:\git\isp-movies\src\Movies.UI\Images\find.png" />
+		</StackPanel>
 		<ListBox ItemsSource="{Binding Path=Films, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				 SelectedItem="{Binding Path=SelectedFilm}"
 				 Grid.Row="1"

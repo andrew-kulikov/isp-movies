@@ -22,8 +22,6 @@ namespace Movies.UI.View
 		{
 			AddFilm form1 = new AddFilm(viewModel);
 			form1.ShowDialog();
-			viewModel.Films.AddObs(viewModel.NewFilm);
-			viewModel.NewFilm = null;
 		}
 
 		private void RemoveFilm_Click(object sender, RoutedEventArgs e)

@@ -26,21 +26,21 @@ namespace Movies.UI.ViewModel
 					18,
 					2017,
 					6.3,
-					new[] { "1", "2", "3" },
+					"1, 2, 3",
 					"A group of young teens is unexpectedly sent to the mysterious Digital World and paired up with their own powerful, morphing monster called the Digimon. Together the entire group set out on an adventure to fight evil and save the world.");
 			Noise = new Film(
 					"White Noise 2",
 					12,
 					2007,
 					5.7,
-					new[] { "5", "2", "7" },
+					"5, 2, 7",
 					"Following the loss of his family, a man attempts suicide only to discover upon waking that he can identify people who are about to die");
 			Agora = new Film(
 				"Agora",
 				12,
 				2009,
 				7.2,
-				new[] { "8", "4" },
+				"8, 4",
 				"A historical drama set in Roman Egypt, concerning a slave who turns to the rising tide of Christianity in the hope of pursuing freedom while falling in love with his mistress, the famous philosophy and mathematics professor Hypatia of Alexandria.");
 	
 			FilmViewModel[] f = new FilmViewModel[]
@@ -52,14 +52,14 @@ namespace Movies.UI.ViewModel
 					12, 
 					2012, 
 					7.0, 
-					new [] {"8", "4"},
+					"8, 4",
 					"Three magazine employees head out on an assignment to interview a guy who placed a classified advertisement seeking a companion for time travel.")),
 				new FilmViewModel(new Film(
 					"Four brothers",
 					21, 
 					2005, 
 					5.6, 
-					new [] {"1", "2", "3"},
+					"1, 2, 3",
 					"Four adopted brothers come to avenge their mother's death in what appears to be a random killing in a grocery store robbery. However, the boys' investigation of the death reveals more nefarious activities involving the one brother's business dealings with a notorious local hoodlum. Two cops who are trying to solve the case may also not be what they seem."))
 			};
 			ActorViewModel Parker = new ActorViewModel(
@@ -126,6 +126,11 @@ namespace Movies.UI.ViewModel
 
 		public bool Remove()
 		{
+			if (selectedFilm?.Name == tmpFilmName)
+			{
+				selectedFilm = null;
+				OnPropertyChanged("SelectedFilm");
+			}
 			bool res = Films.RemoveObs(tmpFilmName);
 			OnPropertyChanged("Films");
 			return res;
@@ -136,7 +141,7 @@ namespace Movies.UI.ViewModel
 			bool res = false;
 			foreach (FilmViewModel film in Films)
 			{
-				if (film.Name == tmpFilmName)
+				if (film?.Name == tmpFilmName)
 				{
 					SelectedFilm = film;
 					res = true;
