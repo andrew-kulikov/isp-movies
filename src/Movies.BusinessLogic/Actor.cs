@@ -8,6 +8,12 @@ namespace Movies.BusinessLogic
 		private string biography = null;
 		private MyCollection<Film> films = null;
 
+		public Actor()
+		{
+			films = new MyCollection<Film>();
+			biography = "";
+		}
+
 		public Actor(string name,
 			string surname,
 			DateTime birthDate,

@@ -14,7 +14,7 @@ namespace Movies.UI.View
         {
             InitializeComponent();
 			viewModel = applicationViewModel;
-			DataContext = viewModel.NewFilm;
+			DataContext = viewModel;
 			for (int i = 1950; i < DateTime.Now.Year + 5; ++i)
 			{
 				YearBox.Items.Add(i);
@@ -23,7 +23,19 @@ namespace Movies.UI.View
 			{
 				AgeBox.Items.Add(i);
 			}
-        }
+			for (int i = 1930; i <= DateTime.Now.Year - 10; ++i)
+			{
+				ActorBirthYearBox.Items.Add(i);
+			}
+			for (int i = 1; i <= 12; ++i)
+			{
+				ActorBirthMonthBox.Items.Add(i);
+			}
+			for (int i = 1; i <= 31; ++i)
+			{
+				ActorBirthDayBox.Items.Add(i);
+			}
+		}
 
 		public void AddButton_Click(object sender, RoutedEventArgs e)
 		{
@@ -31,7 +43,7 @@ namespace Movies.UI.View
 			{
 				viewModel.NewFilm.TransformGenres();
 				viewModel.Films.AddObs(viewModel.NewFilm);
-				viewModel.NewFilm = null;
+				viewModel.NewFilm = new FilmViewModel();
 				Close();
 			}
 			else
@@ -39,5 +51,13 @@ namespace Movies.UI.View
 				MessageBox.Show("Incorrect input");
 			}
 		}
-    }
+
+		private void AddActorToFilm_Click(object sender, RoutedEventArgs e)
+		{
+			viewModel.NewActor.Films.Add(viewModel.NewFilm.Source);
+			viewModel.NewFilm.Actors.Add(viewModel.NewActor);
+			viewModel.Actors.Add(viewModel.NewActor);
+			viewModel.NewActor = new ActorViewModel();
+		}
+	}
 }

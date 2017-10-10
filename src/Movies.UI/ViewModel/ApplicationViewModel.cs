@@ -10,8 +10,10 @@ namespace Movies.UI.ViewModel
 	{
 		private MyObservableCollection<FilmViewModel> films;
 		private MyObservableCollection<ActorViewModel> actors;
+		private MyObservableCollection<ActorViewModel> availableActors;
 		private FilmViewModel selectedFilm;
-		private ActorViewModel selectedActor;
+		private ActorViewModel newActor;
+		private ActorViewModel selectedAvailableActor;
 
 		private string tmpFilmName;
 
@@ -21,6 +23,7 @@ namespace Movies.UI.ViewModel
 
 		public ApplicationViewModel()
 		{
+			newActor = new ActorViewModel();
 			Digimon = new Film(
 					"Digimon",
 					18,
@@ -76,6 +79,10 @@ namespace Movies.UI.ViewModel
 					new MyCollection<Film>(Noise, Agora));
 			actors = new MyObservableCollection<ActorViewModel>(Parker, Brat);
 			films = new MyObservableCollection<FilmViewModel>(f);
+			foreach (FilmViewModel film in films)
+			{
+				film.Actors = actors;
+			}
 			films.AddObs(new FilmViewModel(Agora));
 			SelectedFilm = films[0];
 			newFilm = new FilmViewModel();
@@ -87,7 +94,7 @@ namespace Movies.UI.ViewModel
 			set
 			{
 				selectedFilm = value;
-				selectedFilm.Actors = actors;
+				//selectedFilm.Actors = actors;
 				Producer prod = new Producer("James", "Cameron", new System.DateTime(1964, 12, 14), new MyCollection<Film>(Noise, Digimon, Agora));
 				selectedFilm.Prod = prod;
 				OnPropertyChanged();
@@ -149,6 +156,48 @@ namespace Movies.UI.ViewModel
 				}
 			}
 			return res;
+		}
+
+		public ActorViewModel NewActor
+		{
+			get => newActor;
+			set
+			{
+				newActor = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public MyObservableCollection<ActorViewModel> Actors
+		{
+			get => actors;
+			set
+			{
+				actors = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public MyObservableCollection<ActorViewModel> AvailableActors
+		{
+			get => availableActors;
+			set
+			{
+				availableActors = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public ActorViewModel SelectedAvailableActor
+		{
+			get => selectedAvailableActor;
+			set
+			{
+				selectedAvailableActor = value;
+				newFilm.Actors.Add(selectedAvailableActor);
+				AvailableActors.RemoveObs(selectedAvailableActor.FullName);
+				OnPropertyChanged();
+			}
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

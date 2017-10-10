@@ -34,6 +34,16 @@ namespace Movies.UI.ViewModel.Collections
 						return res;
 					}
 				}
+				if (element is ActorViewModel)
+				{
+					if ((element as ActorViewModel).FullName == name)
+					{
+						bool res = Remove(element);
+						CollectionChanged?.Invoke(this,
+							new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+						return res;
+					}
+				}
 			}
 			
 			return false;

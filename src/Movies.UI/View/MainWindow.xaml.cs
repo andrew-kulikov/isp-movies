@@ -20,6 +20,7 @@ namespace Movies.UI.View
 		}
 		private void AddFilm_Click(object sender, RoutedEventArgs e)
 		{
+			viewModel.AvailableActors =  new ViewModel.Collections.MyObservableCollection<ActorViewModel>(viewModel.Actors.ToArray());
 			AddFilm form1 = new AddFilm(viewModel);
 			form1.ShowDialog();
 		}

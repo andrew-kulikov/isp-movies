@@ -22,6 +22,7 @@ namespace Movies.UI.ViewModel
 		{
 			film = new Film();
 			dict = new Dictionary<string, bool>();
+			actors = new MyObservableCollection<ActorViewModel>();
 		}
 
 
@@ -205,6 +206,8 @@ namespace Movies.UI.ViewModel
 				return true;
 			}
 		}
+
+		public Film Source => film;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged([CallerMemberName]string prop = "") =>
