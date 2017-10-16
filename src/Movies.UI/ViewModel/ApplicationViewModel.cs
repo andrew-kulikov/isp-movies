@@ -1,6 +1,7 @@
 ﻿using Movies.BusinessLogic;
 using Movies.BusinessLogic.Collections;
 using Movies.UI.ViewModel.Collections;
+using Movies.UI.Model;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -11,15 +12,20 @@ namespace Movies.UI.ViewModel
 		private MyObservableCollection<FilmViewModel> films;
 		private MyObservableCollection<ActorViewModel> actors;
 		private MyObservableCollection<ActorViewModel> availableActors;
+		private MyObservableCollection<ProducerViewModel> producers;
 		private FilmViewModel selectedFilm;
 		private ActorViewModel newActor;
 		private ActorViewModel selectedAvailableActor;
-
+		private ProducerViewModel selectedProducer;
+		private ProducerViewModel newProducer;
+		private RelayCommand addCommand;
+		private RelayCommand addExistingActorCommand;
+		private RelayCommand addNewActorCommand;
+		private RelayCommand addNewProducerCommand;
+		private RelayCommand addExistingProducerCommand;
 		private string tmpFilmName;
-
 		private FilmViewModel newFilm;
-
-		private Film Digimon, Noise, Agora; 
+		private Film Digimon, Noise, Agora;
 
 		public ApplicationViewModel()
 		{
@@ -45,23 +51,23 @@ namespace Movies.UI.ViewModel
 				7.2,
 				"8, 4",
 				"A historical drama set in Roman Egypt, concerning a slave who turns to the rising tide of Christianity in the hope of pursuing freedom while falling in love with his mistress, the famous philosophy and mathematics professor Hypatia of Alexandria.");
-	
+
 			FilmViewModel[] f = new FilmViewModel[]
 			{
 				new FilmViewModel(Digimon),
 				new FilmViewModel(Noise),
 				new FilmViewModel(new Film(
 					"Safety Not Guaranteed",
-					12, 
-					2012, 
-					7.0, 
+					12,
+					2012,
+					7.0,
 					"8, 4",
 					"Three magazine employees head out on an assignment to interview a guy who placed a classified advertisement seeking a companion for time travel.")),
 				new FilmViewModel(new Film(
 					"Four brothers",
-					21, 
-					2005, 
-					5.6, 
+					21,
+					2005,
+					5.6,
 					"1, 2, 3",
 					"Four adopted brothers come to avenge their mother's death in what appears to be a random killing in a grocery store robbery. However, the boys' investigation of the death reveals more nefarious activities involving the one brother's business dealings with a notorious local hoodlum. Two cops who are trying to solve the case may also not be what they seem."))
 			};
@@ -79,13 +85,17 @@ namespace Movies.UI.ViewModel
 					new MyCollection<Film>(Noise, Agora));
 			actors = new MyObservableCollection<ActorViewModel>(Parker, Brat);
 			films = new MyObservableCollection<FilmViewModel>(f);
+			films.AddObs(new FilmViewModel(Agora));
 			foreach (FilmViewModel film in films)
 			{
 				film.Actors = actors;
 			}
-			films.AddObs(new FilmViewModel(Agora));
+			producers = new MyObservableCollection<ProducerViewModel>(
+				new ProducerViewModel("James", "Cameron", new System.DateTime(1964, 12, 14), new MyCollection<Film>(Noise, Digimon, Agora)));
 			SelectedFilm = films[0];
 			newFilm = new FilmViewModel();
+			AvailableActors = new MyObservableCollection<ActorViewModel>(Actors);
+			NewProducer = new ProducerViewModel();
 		}
 
 		public FilmViewModel SelectedFilm
@@ -94,9 +104,6 @@ namespace Movies.UI.ViewModel
 			set
 			{
 				selectedFilm = value;
-				//selectedFilm.Actors = actors;
-				Producer prod = new Producer("James", "Cameron", new System.DateTime(1964, 12, 14), new MyCollection<Film>(Noise, Digimon, Agora));
-				selectedFilm.Prod = prod;
 				OnPropertyChanged();
 			}
 		}
@@ -107,6 +114,7 @@ namespace Movies.UI.ViewModel
 			set
 			{
 				tmpFilmName = value;
+				Find();
 				OnPropertyChanged();
 			}
 		}
@@ -139,6 +147,16 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged("SelectedFilm");
 			}
 			bool res = Films.RemoveObs(tmpFilmName);
+			for (int i = 0; i < actors?.Count; i++)
+			{
+				for (int j = 0; j < actors[i]?.Films?.Count; i++)
+				{
+					if (actors[i].Films[j].Name == tmpFilmName)
+					{
+						actors[i].Films.Remove(actors[i].Films[j]);
+					}
+				}
+			}
 			OnPropertyChanged("Films");
 			return res;
 		}
@@ -148,7 +166,7 @@ namespace Movies.UI.ViewModel
 			bool res = false;
 			foreach (FilmViewModel film in Films)
 			{
-				if (film?.Name == tmpFilmName)
+				if (film != null && film.Name.Contains(tmpFilmName))
 				{
 					SelectedFilm = film;
 					res = true;
@@ -156,6 +174,29 @@ namespace Movies.UI.ViewModel
 				}
 			}
 			return res;
+		}
+
+		private bool FindActor(string fullName)
+		{
+			foreach (ActorViewModel actor in newFilm.Actors)
+			{
+				if (actor.FullName == fullName)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private bool FindProducer(string fullName)
+		{
+			if (newFilm.Prod != null &&
+				newFilm.ProducerName != "" &&
+				newFilm.ProducerName == fullName)
+			{
+				return true;
+			}
+			return false;
 		}
 
 		public ActorViewModel NewActor
@@ -194,12 +235,105 @@ namespace Movies.UI.ViewModel
 			set
 			{
 				selectedAvailableActor = value;
-				newFilm.Actors.Add(selectedAvailableActor);
-				AvailableActors.RemoveObs(selectedAvailableActor.FullName);
 				OnPropertyChanged();
 			}
 		}
 
+		public MyObservableCollection<ProducerViewModel> Producers
+		{
+			get => producers;
+			set
+			{
+				producers = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public ProducerViewModel NewProducer
+		{
+			get => newProducer;
+			set
+			{
+				newProducer = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public ProducerViewModel SelectedProducer
+		{
+			get => selectedProducer;
+			set
+			{
+				selectedProducer = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public RelayCommand AddNewActorCommand => addNewActorCommand ?? (addNewActorCommand =
+			new RelayCommand(obj =>
+			{
+				if (newActor != null &&
+				newActor.Name != "" &&
+				FindActor(newActor.FullName) == false)
+				{
+					newActor.Films.Add(newFilm.Source);
+					newFilm.Actors.AddObs(newActor);
+					availableActors.RemoveObs(newActor.FullName);
+					Actors.AddObs(newActor);
+					NewActor = new ActorViewModel();
+				}
+			}));
+
+		public RelayCommand AddExistingActorCommand => addExistingActorCommand ?? (addExistingActorCommand =
+			new RelayCommand(obj =>
+			{
+				if (selectedAvailableActor != null &&
+				selectedAvailableActor.Name != "" &&
+				FindActor(selectedAvailableActor.FullName) == false)
+				{
+					newFilm.Actors.AddObs(selectedAvailableActor);
+					AvailableActors.RemoveObs(selectedAvailableActor.FullName);
+				}
+			}));
+
+		public RelayCommand AddFilmCommand => addCommand ?? (addCommand =
+			new RelayCommand(obj =>
+			{
+				if (NewFilm.IsReady())
+				{
+					NewFilm.TransformGenres();
+					Films.AddObs(NewFilm);
+					NewFilm = new FilmViewModel();
+					availableActors = new MyObservableCollection<ActorViewModel>(Actors);
+					SelectedAvailableActor = new ActorViewModel();
+					OnPropertyChanged("AvailableActors");
+				}
+			}));
+
+		public RelayCommand AddExistingProducerCommand => addExistingProducerCommand ??
+			(addExistingProducerCommand = new RelayCommand(obj =>
+			{
+				if ((newFilm.Prod == null || newFilm.Prod.Name == null || newFilm.Name == "") &&  
+					selectedProducer != null &&
+					selectedProducer.Name != "" &&
+					FindProducer(selectedProducer.FullName) == false)
+				{
+					selectedProducer.Films.Add(newFilm.Source);
+					newFilm.Prod = selectedProducer.Source;
+				}
+			}));
+
+		public RelayCommand AddNewProducerCommand => addNewProducerCommand ??
+			(addNewProducerCommand = new RelayCommand(obj =>
+			{
+				if (newFilm.Prod == null || newFilm.Prod.Name == null || newFilm.Prod.Name == "")
+				{
+					NewProducer.Films.Add(NewFilm.Source);
+					NewFilm.Prod = NewProducer.Source;
+					Producers.AddObs(NewProducer);
+					NewProducer = new ProducerViewModel();
+				}
+			}));
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged([CallerMemberName] string prop = "") =>
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));

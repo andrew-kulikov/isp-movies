@@ -13,12 +13,19 @@ namespace Movies.UI.ViewModel.Collections
 				new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
 
+		public MyObservableCollection(MyObservableCollection<T> items) : base(items.data)
+		{
+			CollectionChanged?.Invoke(this,
+				new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+		}
+
 		public void AddObs(T element)
 		{
 			Add(element);
 			CollectionChanged?.Invoke(this,
 				new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
+		
 
 		public bool RemoveObs(string name)
 		{

@@ -38,11 +38,14 @@ namespace Movies.BusinessLogic.Collections
 
 		public void Add(T item)
 		{
-			if (cursor + 1 >= data.Length)
+			if (item != null)
 			{
-				Array.Resize(ref data, (cursor + 1) * 2);
+				if (cursor + 1 >= data.Length)
+				{
+					Array.Resize(ref data, (cursor + 1) * 2);
+				}
+				data[cursor++] = item;
 			}
-			data[cursor++] = item;
 		}
 
 		public void Add(params T[] items)

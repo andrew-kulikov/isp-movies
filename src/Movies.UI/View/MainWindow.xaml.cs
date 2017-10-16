@@ -20,7 +20,8 @@ namespace Movies.UI.View
 		}
 		private void AddFilm_Click(object sender, RoutedEventArgs e)
 		{
-			viewModel.AvailableActors =  new ViewModel.Collections.MyObservableCollection<ActorViewModel>(viewModel.Actors.ToArray());
+			
+			//viewModel.SelectedAvailableActor = null;
 			AddFilm form1 = new AddFilm(viewModel);
 			form1.ShowDialog();
 		}
@@ -39,22 +40,13 @@ namespace Movies.UI.View
 			viewModel.Find();
 		}
 
-		private void ShowSidebar_Click(object sender, RoutedEventArgs e)
-		{
-			if (Sidebar.Visibility == Visibility.Collapsed)
-			{
-				Sidebar.Visibility = Visibility.Visible;
-			}
-			else
-			{
-				Sidebar.Visibility = Visibility.Collapsed;
-			}
-			
-		}
-
 		private void ClearSelectedItem(object sender, RoutedEventArgs e)
 		{
+			ActorViewModel f = new ActorViewModel(viewModel.SelectedFilm.SelectedActor.SourceActor);
 			ActorsListBox.UnselectAll();
+			viewModel.SelectedFilm.SelectedActor = f;
+			ActorInfo af = new ActorInfo(f);
+			af.ShowDialog();
 		}
 	}
 }

@@ -10,6 +10,11 @@ namespace Movies.UI.ViewModel
     {
 		private Actor actor;
 
+		public ActorViewModel(Actor actor)
+		{
+			this.actor = actor;
+		}
+
 		public ActorViewModel()
 		{
 			actor = new Actor();

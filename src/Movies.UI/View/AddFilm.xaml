@@ -4,7 +4,7 @@
         Title="AddFilm"
 		Height="400"
 		Width="300"
-		MinHeight="420"
+		MinHeight="370"
 		MinWidth="300"
 		ResizeMode="NoResize">
 	<TabControl>
@@ -12,94 +12,99 @@
 			<TabItem.Header>
 				<TextBlock>Film</TextBlock>
 			</TabItem.Header>
-			<Grid DataContext="{Binding Path=NewFilm}">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition />
-					<ColumnDefinition />
-				</Grid.ColumnDefinitions>
-				<TextBlock
+			<StackPanel>
+				<Grid DataContext="{Binding Path=NewFilm}">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition />
+						<ColumnDefinition />
+					</Grid.ColumnDefinitions>
+					<TextBlock
 					Grid.Row="0" 
 					Grid.Column="0" 
 					HorizontalAlignment="Center" 
 					Margin="0 5 0 0">Film name</TextBlock>
-				<TextBox 
+					<TextBox 
 					Grid.Row="0" 
 					Grid.Column="1" 
 					Margin="0 5 0 0" 
 					Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-				<TextBlock 
+					<TextBlock 
 					Grid.Row="1" 
 					HorizontalAlignment="Center"
 					Margin="0 5 0 0">Rating</TextBlock>
-				<TextBox 
+					<TextBox 
 					Grid.Row="1"
 					Grid.Column="1" 
 					Margin="0 5 0 0" 
 					Text="{Binding Path=Rating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
-				<TextBlock 
+					<TextBlock 
 					Grid.Row="2"
 					HorizontalAlignment="Center"
 					Margin="0 5 0 0">Age limit</TextBlock>
-				<ComboBox 
+					<ComboBox 
 					Grid.Row="2" 
 					Grid.Column="1" 
 					x:Name="AgeBox" 
 					Margin="0 5 0 0"
 					SelectedItem="{Binding Path=AgeLimit, Mode=TwoWay}"></ComboBox>
-				<TextBlock 
+					<TextBlock 
 					Grid.Row="3"
 					HorizontalAlignment="Center" 
 					Margin="0 5 0 0">Year of release</TextBlock>
-				<ComboBox
+					<ComboBox
 					Grid.Row="3"
 					Grid.Column="1" 
 					x:Name="YearBox" 
 					Margin="0 5 0 0"
 					SelectedItem="{Binding Path=YearOfRelease, Mode=TwoWay}"></ComboBox>
-				<TextBlock 
+					<TextBlock 
 					Grid.Row="4" 
 					Grid.Column="0" 
 					HorizontalAlignment="Center" 
 					Margin="0 5 0 0">Description</TextBlock>
-				<ScrollViewer Grid.Row="4" Grid.Column="1">
-					<TextBox
+					<ScrollViewer Grid.Row="4" Grid.Column="1">
+						<TextBox
 						Margin="0 5 0 0"
 						Height="50"
 						Text="{Binding Path=Description, Mode=TwoWay}" />
-				</ScrollViewer>
-				<StackPanel
+					</ScrollViewer>
+					<StackPanel
 					Grid.Row="5" 
 					Grid.Column="0" 
 					HorizontalAlignment="Center" 
 					VerticalAlignment="Center">
-					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Comedy]}">Comedy</CheckBox>
-					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Vestern]}">Vestern</CheckBox>
-					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Horror]}">Horror</CheckBox>
-					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Documental]}">Documental</CheckBox>
-				</StackPanel>
-				<StackPanel Grid.Row="5" Grid.Column="1">
-					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Sci-Fi]}">Sci-Fi</CheckBox>
-					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[War]}">War</CheckBox>
-					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Action]}">Action</CheckBox>
-					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Animation]}">Animation</CheckBox>
-				</StackPanel>
-				<TextBlock Grid.Row="6" HorizontalAlignment="Center" Margin="0 5 0 0">Actors</TextBlock>
-				<Button Grid.Row="6" Grid.Column="1" Margin="0 5 0 0">Add actors</Button>
-				<TextBlock Grid.Row="7" HorizontalAlignment="Center" Margin="0 5 0 0">Producer</TextBlock>
-				<Button Grid.Row="7" Grid.Column="1" Margin="0 5 0 0">Add producer</Button>
-				<Button Grid.Row="8" Grid.ColumnSpan="2" Margin="20" Height="20" Width="100" Click="AddButton_Click">Add</Button>
-			</Grid>
+						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Comedy]}">Comedy</CheckBox>
+						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Vestern]}">Vestern</CheckBox>
+						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Horror]}">Horror</CheckBox>
+						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Documental]}">Documental</CheckBox>
+					</StackPanel>
+					<StackPanel Grid.Row="5" Grid.Column="1">
+						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Sci-Fi]}">Sci-Fi</CheckBox>
+						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[War]}">War</CheckBox>
+						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Action]}">Action</CheckBox>
+						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Animation]}">Animation</CheckBox>
+					</StackPanel>
+
+				</Grid>
+				<Button
+					Grid.Row="6"
+					Grid.ColumnSpan="2" 
+					Margin="20" Height="20"
+					Width="100" 
+					
+					Command="{Binding Path=AddFilmCommand}">Add</Button>
+			</StackPanel>
 		</TabItem>
 		<TabItem>
 			<TabItem.Header>
@@ -110,21 +115,21 @@
 					<TabItem.Header>
 						<TextBlock>New</TextBlock>
 					</TabItem.Header>
-					<StackPanel DataContext="{Binding Path=NewActor}">
+					<StackPanel>
 						<TextBlock
 							HorizontalAlignment="Center"
 							Margin="0 5 0 0">First Name</TextBlock>
 						<TextBox
 							TextAlignment="Center"
 							Margin="0 5 0 0"
-							Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+							Text="{Binding Path=NewActor.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 						<TextBlock
 							HorizontalAlignment="Center"
 							Margin="0 5 0 0">Last Name</TextBlock>
 						<TextBox
 							TextAlignment="Center"
 							Margin="0 5 0 0"
-							Text="{Binding Path=Surname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+							Text="{Binding Path=NewActor.Surname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 						<TextBlock
 							HorizontalAlignment="Center"
 							Margin="0 5 0 0">Biography</TextBlock>
@@ -132,28 +137,29 @@
 							TextAlignment="Center"
 							Height="60"
 							Margin="0 5 0 0"
-							Text="{Binding Path=Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+							Text="{Binding Path=NewActor.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 						<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 							<TextBlock Margin="0 5 5 0">Day</TextBlock>
 							<ComboBox
 								x:Name="ActorBirthDayBox"
 								Margin="0 5 5 0"
-								SelectedItem="{Binding Path=BirthDay}"></ComboBox>
+								SelectedItem="{Binding Path=NewActor.BirthDay}"></ComboBox>
 							<TextBlock Margin="0 5 5 0">Month</TextBlock>
 							<ComboBox
 								x:Name="ActorBirthMonthBox"
 								Margin="0 5 5 0"
-								SelectedItem="{Binding Path=BirthMonth}"></ComboBox>
+								SelectedItem="{Binding Path=NewActor.BirthMonth}"></ComboBox>
 							<TextBlock Margin="0 5 5 0">Year</TextBlock>
 							<ComboBox
 								x:Name="ActorBirthYearBox"
 								Margin="0 5 5 0"
-								SelectedItem="{Binding Path=BirthYear}"></ComboBox>
+								SelectedItem="{Binding Path=NewActor.BirthYear}"></ComboBox>
 						</StackPanel>
 						<Button
 							HorizontalAlignment="Center"
 							Margin="0 5 0 0"
-							Width="80" Click="AddActorToFilm_Click">
+							Width="80"
+							Command="{Binding Path=AddNewActorCommand}">
 							Add
 						</Button>
 					</StackPanel>
@@ -162,15 +168,95 @@
 					<TabItem.Header>
 						<TextBlock>Existing</TextBlock>
 					</TabItem.Header>
-					<ListBox
-						ItemsSource="{Binding Path=AvailableActors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-						SelectedItem="{Binding Path=SelectedAvailableActor}">
-						<ListBox.ItemTemplate>
-							<DataTemplate>
-								<TextBlock Text="{Binding Path=FullName}"></TextBlock>
-							</DataTemplate>
-						</ListBox.ItemTemplate>
-					</ListBox>
+					<StackPanel>
+						<ListBox
+							ItemsSource="{Binding Path=AvailableActors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+							SelectedItem="{Binding Path=SelectedAvailableActor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Path=FullName}"></TextBlock>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+						<Button Command="{Binding Path=AddExistingActorCommand}">Add actor</Button>
+					</StackPanel>
+				</TabItem>
+			</TabControl>
+		</TabItem>
+		<TabItem>
+			<TabItem.Header>
+				<TextBlock>Producer</TextBlock>
+			</TabItem.Header>
+			<TabControl>
+				<TabItem>
+					<TabItem.Header>
+						<TextBlock>New</TextBlock>
+					</TabItem.Header>
+					<StackPanel>
+						<TextBlock
+							HorizontalAlignment="Center"
+							Margin="0 5 0 0">First Name</TextBlock>
+						<TextBox
+							TextAlignment="Center"
+							Margin="0 5 0 0"
+							Text="{Binding Path=NewProducer.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+						<TextBlock
+							HorizontalAlignment="Center"
+							Margin="0 5 0 0">Last Name</TextBlock>
+						<TextBox
+							TextAlignment="Center"
+							Margin="0 5 0 0"
+							Text="{Binding Path=NewProducer.Surname, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+						<TextBlock
+							HorizontalAlignment="Center"
+							Margin="0 5 0 0">Biography</TextBlock>
+						<TextBox
+							TextAlignment="Center"
+							Height="60"
+							Margin="0 5 0 0"
+							Text="{Binding Path=NewProducer.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+						<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+							<TextBlock Margin="0 5 5 0">Day</TextBlock>
+							<ComboBox
+								x:Name="ProducerBirthDayBox"
+								Margin="0 5 5 0"
+								SelectedItem="{Binding Path=NewProducer.BirthDay}"></ComboBox>
+							<TextBlock Margin="0 5 5 0">Month</TextBlock>
+							<ComboBox
+								x:Name="ProducerBirthMonthBox"
+								Margin="0 5 5 0"
+								SelectedItem="{Binding Path=NewProducer.BirthMonth}"></ComboBox>
+							<TextBlock Margin="0 5 5 0">Year</TextBlock>
+							<ComboBox
+								x:Name="ProducerBirthYearBox"
+								Margin="0 5 5 0"
+								SelectedItem="{Binding Path=NewProducer.BirthYear}"></ComboBox>
+						</StackPanel>
+						<Button
+							HorizontalAlignment="Center"
+							Margin="0 5 0 0"
+							Width="80"
+							Command="{Binding Path=AddNewProducerCommand}">
+							Add
+						</Button>
+					</StackPanel>
+				</TabItem>
+				<TabItem>
+					<TabItem.Header>
+						<TextBlock>Existing</TextBlock>
+					</TabItem.Header>
+					<StackPanel>
+						<ListBox
+							ItemsSource="{Binding Path=Producers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+							SelectedItem="{Binding Path=SelectedProducer}">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Path=FullName}"></TextBlock>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+						<Button Margin="0 10 0 0" Command="{Binding Path=AddExistingProducerCommand}">Add Producer</Button>
+					</StackPanel>
 				</TabItem>
 			</TabControl>
 		</TabItem>

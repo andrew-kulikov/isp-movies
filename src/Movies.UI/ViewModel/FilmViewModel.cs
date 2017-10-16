@@ -25,7 +25,6 @@ namespace Movies.UI.ViewModel
 			actors = new MyObservableCollection<ActorViewModel>();
 		}
 
-
 		public FilmViewModel(Film film)
 		{
 			actors = new MyObservableCollection<ActorViewModel>();
@@ -159,8 +158,6 @@ namespace Movies.UI.ViewModel
 			set
 			{
 				selectedActor = value;
-				ActorInfo af = new ActorInfo(selectedActor);
-				af.ShowDialog();
 				OnPropertyChanged();
 			}
 		}
