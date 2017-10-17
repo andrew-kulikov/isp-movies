@@ -2,8 +2,10 @@
 using Movies.BusinessLogic.Collections;
 using Movies.UI.ViewModel.Collections;
 using Movies.UI.Model;
+using Movies.UI.View;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.IO;
 
 namespace Movies.UI.ViewModel
 {
@@ -15,6 +17,7 @@ namespace Movies.UI.ViewModel
 		private MyObservableCollection<ProducerViewModel> producers;
 		private FilmViewModel selectedFilm;
 		private ActorViewModel newActor;
+		private ActorViewModel selectedActor;
 		private ActorViewModel selectedAvailableActor;
 		private ProducerViewModel selectedProducer;
 		private ProducerViewModel newProducer;
@@ -23,6 +26,7 @@ namespace Movies.UI.ViewModel
 		private RelayCommand addNewActorCommand;
 		private RelayCommand addNewProducerCommand;
 		private RelayCommand addExistingProducerCommand;
+		private RelayCommand removeFilmCommand;
 		private string tmpFilmName;
 		private FilmViewModel newFilm;
 		private Film Digimon, Noise, Agora;
@@ -143,8 +147,8 @@ namespace Movies.UI.ViewModel
 		{
 			if (selectedFilm?.Name == tmpFilmName)
 			{
-				selectedFilm = null;
-				OnPropertyChanged("SelectedFilm");
+				SelectedFilm = null;
+				
 			}
 			bool res = Films.RemoveObs(tmpFilmName);
 			for (int i = 0; i < actors?.Count; i++)
@@ -154,6 +158,16 @@ namespace Movies.UI.ViewModel
 					if (actors[i].Films[j].Name == tmpFilmName)
 					{
 						actors[i].Films.Remove(actors[i].Films[j]);
+					}
+				}
+			}
+			for (int i = 0; i < producers?.Count; i++)
+			{
+				for (int j = 0; j < producers[i].Films?.Count; j++)
+				{
+					if (producers[i].Films[j].Name == tmpFilmName)
+					{
+						producers[i].Films.Remove(producers[i].Films[j]);
 					}
 				}
 			}
@@ -205,6 +219,16 @@ namespace Movies.UI.ViewModel
 			set
 			{
 				newActor = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public ActorViewModel Selectedactor
+		{
+			get => selectedActor;
+			set
+			{
+				selectedActor = value;
 				OnPropertyChanged();
 			}
 		}
@@ -323,7 +347,7 @@ namespace Movies.UI.ViewModel
 				}
 			}));
 
-		public RelayCommand AddNewProducerCommand => addNewProducerCommand ??
+ 		public RelayCommand AddNewProducerCommand => addNewProducerCommand ??
 			(addNewProducerCommand = new RelayCommand(obj =>
 			{
 				if (newFilm.Prod == null || newFilm.Prod.Name == null || newFilm.Prod.Name == "")
@@ -334,6 +358,18 @@ namespace Movies.UI.ViewModel
 					NewProducer = new ProducerViewModel();
 				}
 			}));
+
+		public RelayCommand RemoveFilmCommand => removeFilmCommand ??
+			(removeFilmCommand = new RelayCommand(obj =>
+			{
+				FilmNameForm fn = new FilmNameForm(this);
+				fn.ShowDialog();
+				Remove();
+			}));
+
+		public string IconPath => Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", "logo.png");
+		
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged([CallerMemberName] string prop = "") =>
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));

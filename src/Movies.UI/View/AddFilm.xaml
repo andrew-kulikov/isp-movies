@@ -2,10 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="AddFilm"
-		Height="400"
-		Width="300"
-		MinHeight="370"
+		Height="420"
+		Width="320"
+		MinHeight="380"
 		MinWidth="300"
+		Icon="{Binding Path=IconPath}"
 		ResizeMode="NoResize">
 	<TabControl>
 		<TabItem>
@@ -30,60 +31,61 @@
 						<ColumnDefinition />
 					</Grid.ColumnDefinitions>
 					<TextBlock
-					Grid.Row="0" 
-					Grid.Column="0" 
-					HorizontalAlignment="Center" 
-					Margin="0 5 0 0">Film name</TextBlock>
+						Grid.Row="0" 
+						Grid.Column="0" 
+						HorizontalAlignment="Center" 
+						Margin="0 5 0 0">Film name</TextBlock>
 					<TextBox 
-					Grid.Row="0" 
-					Grid.Column="1" 
-					Margin="0 5 0 0" 
-					Text="{Binding Path=Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+						Grid.Row="0" 
+						Grid.Column="1" 
+						Margin="0 5 10 0" 
+						Text="{Binding Path=Name, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 					<TextBlock 
-					Grid.Row="1" 
-					HorizontalAlignment="Center"
-					Margin="0 5 0 0">Rating</TextBlock>
+						Grid.Row="1" 
+						HorizontalAlignment="Center"
+						Margin="0 5 0 0">Rating</TextBlock>
 					<TextBox 
-					Grid.Row="1"
-					Grid.Column="1" 
-					Margin="0 5 0 0" 
-					Text="{Binding Path=Rating, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+						Grid.Row="1"
+						Grid.Column="1" 
+						Margin="0 5 10 0" 
+						Text="{Binding Path=Rating, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
 					<TextBlock 
-					Grid.Row="2"
-					HorizontalAlignment="Center"
-					Margin="0 5 0 0">Age limit</TextBlock>
+						Grid.Row="2"
+						HorizontalAlignment="Center"
+						Margin="0 5 0 0">Age limit</TextBlock>
 					<ComboBox 
-					Grid.Row="2" 
-					Grid.Column="1" 
-					x:Name="AgeBox" 
-					Margin="0 5 0 0"
-					SelectedItem="{Binding Path=AgeLimit, Mode=TwoWay}"></ComboBox>
+						Grid.Row="2" 
+						Grid.Column="1" 
+						x:Name="AgeBox" 
+						Margin="0 5 10 0"
+						SelectedItem="{Binding Path=AgeLimit, Mode=TwoWay}"></ComboBox>
 					<TextBlock 
-					Grid.Row="3"
-					HorizontalAlignment="Center" 
-					Margin="0 5 0 0">Year of release</TextBlock>
+						Grid.Row="3"
+						HorizontalAlignment="Center" 
+						Margin="0 5 0 0">Year of release</TextBlock>
 					<ComboBox
-					Grid.Row="3"
-					Grid.Column="1" 
-					x:Name="YearBox" 
-					Margin="0 5 0 0"
-					SelectedItem="{Binding Path=YearOfRelease, Mode=TwoWay}"></ComboBox>
+						Grid.Row="3"
+						Grid.Column="1" 
+						x:Name="YearBox" 
+						Margin="0 5 10 0"
+						SelectedItem="{Binding Path=YearOfRelease, Mode=TwoWay}"></ComboBox>
 					<TextBlock 
-					Grid.Row="4" 
-					Grid.Column="0" 
-					HorizontalAlignment="Center" 
-					Margin="0 5 0 0">Description</TextBlock>
+						Grid.Row="4" 
+						Grid.Column="0" 
+						HorizontalAlignment="Center" 
+						Margin="0 5 0 0">Description</TextBlock>
 					<ScrollViewer Grid.Row="4" Grid.Column="1">
 						<TextBox
-						Margin="0 5 0 0"
-						Height="50"
-						Text="{Binding Path=Description, Mode=TwoWay}" />
+							Margin="0 5 10 0"
+							Height="50"
+							Text="{Binding Path=Description, Mode=TwoWay}"
+							TextWrapping="Wrap"/>
 					</ScrollViewer>
 					<StackPanel
-					Grid.Row="5" 
-					Grid.Column="0" 
-					HorizontalAlignment="Center" 
-					VerticalAlignment="Center">
+						Grid.Row="5" 
+						Grid.Column="0" 
+						HorizontalAlignment="Center" 
+						VerticalAlignment="Center">
 						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Comedy]}">Comedy</CheckBox>
 						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Vestern]}">Vestern</CheckBox>
 						<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=GenresDict[Horror]}">Horror</CheckBox>
@@ -100,7 +102,8 @@
 				<Button
 					Grid.Row="6"
 					Grid.ColumnSpan="2" 
-					Margin="20" Height="20"
+					Margin="20"
+					Height="30"
 					Width="100" 
 					
 					Command="{Binding Path=AddFilmCommand}">Add</Button>

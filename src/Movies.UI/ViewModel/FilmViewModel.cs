@@ -157,8 +157,11 @@ namespace Movies.UI.ViewModel
 			get => selectedActor;
 			set
 			{
-				selectedActor = value;
-				OnPropertyChanged();
+				if (value != null)
+				{
+					selectedActor = value;
+					OnPropertyChanged();
+				}
 			}
 		}
 

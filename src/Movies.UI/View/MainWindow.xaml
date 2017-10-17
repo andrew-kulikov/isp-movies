@@ -5,209 +5,193 @@
         Title="Movies"
 		MinWidth="320"
 		MinHeight="480"
-		x:Name="mainWindow">
+		x:Name="mainWindow"
+		xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"       
+		Icon="{Binding Path=IconPath}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
+	<!--Window.Resources>
+		<local:Name="MultiValueConverter" x:Key="NameMultiValueConverter" />
+	</-->
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="50"/>
 			<RowDefinition />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="2.5*" MinWidth="100"/>
-			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="0.5*" />
+			<ColumnDefinition Width="1.5*" MinWidth="100"/>
+			<ColumnDefinition Width="2*"/>
 		</Grid.ColumnDefinitions>
 		<StackPanel
 			Grid.Row="0"
-			Grid.ColumnSpan="2"
-			Background="#363e45"
+			Grid.ColumnSpan="3"
+			
 			Orientation="Horizontal"
 			HorizontalAlignment="Stretch">
 			<Button
-				Width="150"
-				Background="#dedede" 
-				FontFamily="Verdana" 
-				FontWeight="Medium" 
-				FontSize="16" 
+				Style="{DynamicResource MaterialDesignFloatingActionLightButton}"
+				Height="40"
+				Width="40"
+				Margin="10 0 0 0"
 				Click="AddFilm_Click">
-				<StackPanel Orientation="Horizontal">
-					<Image Source="D:\git\isp-movies\src\Movies.UI\Images\plus.ico"></Image>
-					<TextBlock TextWrapping="Wrap" Width="70" TextAlignment="Center" VerticalAlignment="Center">ADD FILM</TextBlock>
-				</StackPanel>
+				<Image Source="D:\git\isp-movies\src\Movies.UI\Images\plus.ico" />
 			</Button>
 			<Button
-				Width="150"
-				Background="#dedede" 
-				FontFamily="Verdana" 
-				FontWeight="Medium"
-				FontSize="16" 
-				Click="RemoveFilm_Click">
-				<StackPanel Orientation="Horizontal">
-					<Image Source="D:\git\isp-movies\src\Movies.UI\Images\delete.ico"></Image>
-					<TextBlock TextWrapping="Wrap" Width="70" TextAlignment="Center" VerticalAlignment="Center">REMOVE FILM</TextBlock>
-				</StackPanel>
+				Height="40"
+				Width="40"
+				Margin="10 0 0 0"
+				Command="{Binding RemoveFilmCommand}"
+				Style="{DynamicResource MaterialDesignFloatingActionLightButton}">
+				<Image Source="D:\git\isp-movies\src\Movies.UI\Images\delete.ico" />
 			</Button>
-			
+
 		</StackPanel>
 		<StackPanel
 			Grid.Row="0"
-			Grid.Column="1"
-			Width="120"
-			Margin="0 15 40 15"
+			Grid.Column="2"
+			Width="150"
+			Margin="0 5 10 5"
 			HorizontalAlignment="Right"
 			Orientation="Horizontal">
 			<TextBox Width="100" Text="{Binding Path=TmpFilmName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
 			<Image Source="D:\git\isp-movies\src\Movies.UI\Images\find.png" />
 		</StackPanel>
-		<ListBox ItemsSource="{Binding Path=Films, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-				 SelectedItem="{Binding Path=SelectedFilm}"
-				 Grid.Row="1"
-				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-				 x:Name="FilmListBox">
-			<ListBox.ItemContainerStyle>
-				<Style TargetType="ListBoxItem">
-					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-					<Setter Property="VerticalContentAlignment" Value="Stretch"/>
-				</Style>
-			</ListBox.ItemContainerStyle>
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<Image
-						Source="{Binding Path=PosterPath}"
-						Stretch="Uniform"
-						MaxWidth="250" />
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-			<ListBox.ItemsPanel>
-				<ItemsPanelTemplate>
-					<WrapPanel	IsItemsHost="True" />
-				</ItemsPanelTemplate>
-			</ListBox.ItemsPanel>
+		<ListBox Grid.Row="1">
+			<ListBoxItem MouseLeftButtonUp="ListBoxItem_MouseLeftButtonUp">Films</ListBoxItem>
+			<ListBoxItem MouseLeftButtonUp="ListBoxItem1_MouseLeftButtonUp">Actors</ListBoxItem>
+			<ListBoxItem MouseLeftButtonUp="ListBoxItem2_MouseLeftButtonUp">Producers</ListBoxItem>
 		</ListBox>
-		<ScrollViewer x:Name="Sidebar" Grid.Column="1" Grid.Row="1">
-			<StackPanel DataContext="{Binding Path=SelectedFilm}">
+		<Frame Grid.Column="1" Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"></Frame>
+		<ScrollViewer Width="Auto" DataContext="{Binding Path=SelectedFilm}" x:Name="Sidebar" Grid.Column="2" Grid.Row="1">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="2*"/>
+					<ColumnDefinition Width="110"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<Image
+					Grid.RowSpan="6"
+					Margin="10 10 0 0"
+					VerticalAlignment="Top"
+					HorizontalAlignment="Left"
+					Source="{Binding Path=PosterPath}"
+					Stretch="Uniform"
+					Width="Auto"/>
 				<TextBlock
+					
+					Grid.Column="1"
+					Grid.ColumnSpan="2"
 					Text="{Binding Path=Name}"
 					HorizontalAlignment="Center"
 					FontWeight="Bold"
 					FontSize="24"
 					Margin="5"/>
-				<Image
-					Source="{Binding Path=PosterPath}"
-					Stretch="Uniform"
-					MaxWidth="250"/>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition />
-						<ColumnDefinition />
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition />
-						<RowDefinition Height="Auto" />
-						<RowDefinition />
-						<RowDefinition />
-						<RowDefinition Height="Auto" />
-						<RowDefinition />
-						<RowDefinition />
-					</Grid.RowDefinitions>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Margin="0 5 0 0"
-						Grid.Column="0"
-						Grid.Row="0">
-						<TextBlock Text="Year Of Release" FontSize="16" TextAlignment="Center"/>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Margin="0 5 0 0"
-						Grid.Column="1"
-						Grid.Row="0">
-						<TextBlock Text="{Binding Path=YearOfRelease}" FontSize="16" TextAlignment="Center" Height="Auto"/>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Grid.Column="0"
-						Grid.Row="1"
-						Background="LightGray">
-						<TextBlock Text="Description" FontSize="16" TextAlignment="Center"/>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Grid.Column="1"
-						Grid.Row="1"
-						Background="LightGray">
-						<TextBlock Text="{Binding Path=Description}" FontSize="12" TextWrapping="Wrap"/>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Grid.Column="0"
-						Grid.Row="2">
-						<TextBlock Text="Rating" FontSize="16" TextAlignment="Center"/>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Grid.Column="1"
-						Grid.Row="2">
-						<TextBlock Text="{Binding Path=Rating}" FontSize="16" TextAlignment="Center"/>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Grid.Column="0"
-						Grid.Row="3"
-						Background="LightGray">
-						<TextBlock Text="Genres" FontSize="16" TextAlignment="Center"/>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Grid.Column="1"
-						Grid.Row="3"
-						Background="LightGray">
-						<TextBlock Text="{Binding Path=Genres}" FontSize="16" TextWrapping="Wrap" TextAlignment="Center"/>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Grid.Column="0"
-						Grid.Row="4">
-						<TextBlock Text="Actors" FontSize="16" TextAlignment="Center"/>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Grid.Column="1"
-						Grid.Row="4">
-						<ListBox x:Name="ActorsListBox" ItemsSource="{Binding Path=Actors}" SelectedItem="{Binding Path=SelectedActor}" MouseLeftButtonUp="ClearSelectedItem">
-							<ListBox.ItemTemplate>
-								<DataTemplate>
-									<TextBlock Text="{Binding Path=FullName}"/>
-								</DataTemplate>
-							</ListBox.ItemTemplate>
-						</ListBox>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Grid.Column="0"
-						Grid.Row="5"
-						Background="LightGray">
-						<TextBlock Text="Producer" FontSize="16" TextAlignment="Center"/>
-					</Border>
-					<Border
-						BorderBrush="DimGray"
-						BorderThickness="1"
-						Grid.Column="1"
-						Grid.Row="5"
-						Background="LightGray">
-						<TextBlock Text="{Binding Path=ProducerName}" FontSize="16" TextAlignment="Center"/>
-					</Border>
-				</Grid>
-			</StackPanel>
+				<TextBlock
+					Margin="10 0 0 0"
+					TextAlignment="Left"
+					FontSize="14"
+					Grid.Column="1"
+					Grid.Row="1"
+					Text="Year Of Release"/>
+
+				<TextBlock 
+					FontSize="16"
+					Grid.Column="2"
+					Grid.Row="1"
+					TextAlignment="Center"
+					Text="{Binding Path=YearOfRelease}"/>
+
+				<TextBlock 
+					Margin="10 0 0 0"
+					TextAlignment="Left"
+					FontSize="16"
+					Grid.Column="1"
+					Grid.Row="2"
+					Text="Producer"/>
+
+				<TextBlock 
+					FontSize="16"
+					Grid.Column="2"
+					Grid.Row="2"
+					TextAlignment="Center"
+					Text="{Binding Path=ProducerName}"/>
+
+				<TextBlock 
+					Margin="10 0 0 0"
+					TextAlignment="Left"
+					FontSize="16"
+					Grid.Column="1"
+					Grid.Row="3"
+					Text="Rating"/>
+
+				<TextBlock 
+					FontSize="16"
+					Grid.Column="2"
+					Grid.Row="3"
+					TextAlignment="Center"
+					Text="{Binding Path=Rating}"/>
+
+				<TextBlock 
+					Margin="10 0 0 0"
+					TextAlignment="Left"
+					FontSize="16"
+					Grid.Column="1"
+					Grid.Row="4"
+					Text="Genres"/>
+
+				<TextBlock 
+					FontSize="16"
+					Grid.Row="4"
+					Grid.Column="2"
+					TextAlignment="Center"
+					Text="{Binding Path=Genres}"
+					TextWrapping="Wrap"/>
+
+				<TextBlock
+					Margin="10 0 0 0"
+					TextAlignment="Left"
+					FontSize="16"
+					Grid.Row="5"
+					Grid.Column="1"
+					Text="Actors"/>
+
+				<ListBox 
+					FontSize="16"
+					Grid.Row="5"
+					Grid.Column="2"
+					x:Name="ActorsListBox"
+					ItemsSource="{Binding Path=Actors}"
+					SelectedItem="{Binding Path=SelectedActor}"
+					MouseLeftButtonUp="ClearSelectedItem">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Path=FullName}"/>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+
+				<TextBlock
+					FontSize="16"
+					Grid.Row="6"
+					Grid.ColumnSpan="3"
+					Text="{Binding Path=Description}"
+					TextWrapping="Wrap"/>
+			</Grid>
 		</ScrollViewer>
 	</Grid>
 </Window>

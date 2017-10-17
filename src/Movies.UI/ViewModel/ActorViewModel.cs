@@ -2,6 +2,7 @@
 using Movies.BusinessLogic.Collections;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace Movies.UI.ViewModel
@@ -92,6 +93,8 @@ namespace Movies.UI.ViewModel
 		}
 
 		public Actor SourceActor => actor;
+
+		public string PersonIconPath => Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", "person.png");
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged([CallerMemberName]string prop = "") =>
