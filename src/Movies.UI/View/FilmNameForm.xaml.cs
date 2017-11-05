@@ -8,12 +8,12 @@ namespace Movies.UI.View
 	/// Interaction logic for FilmNameForm.xaml
 	/// </summary>
 	public partial class FilmNameForm : Window
-    {
-        public FilmNameForm(ApplicationViewModel vm)
-        {
-            InitializeComponent();
+	{
+		public FilmNameForm(ApplicationViewModel vm)
+		{
+			InitializeComponent();
 			DataContext = vm;
-        }
+		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{

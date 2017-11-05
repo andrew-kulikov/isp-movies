@@ -1,11 +1,14 @@
 ﻿using Movies.BusinessLogic;
 using Movies.BusinessLogic.Collections;
-using Movies.UI.ViewModel.Collections;
+using Movies.BusinessLogic.Tools;
 using Movies.UI.Model;
 using Movies.UI.View;
+using Movies.UI.ViewModel.Collections;
+using Movies.UI.Tools;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace Movies.UI.ViewModel
 {
@@ -27,6 +30,8 @@ namespace Movies.UI.ViewModel
 		private RelayCommand addNewProducerCommand;
 		private RelayCommand addExistingProducerCommand;
 		private RelayCommand removeFilmCommand;
+		private RelayCommand saveCommand;
+		private RelayCommand openCommand;
 		private string tmpFilmName;
 		private FilmViewModel newFilm;
 		private Film Digimon, Noise, Agora;
@@ -82,8 +87,8 @@ namespace Movies.UI.ViewModel
 						"One of the first things I did was to work up a costume.",
 						new MyCollection<Film>(Agora, Digimon));
 			ActorViewModel Brat = new ActorViewModel(
-					"Brat",
-					"The son of his father",
+					"Jim",
+					"Carrey",
 					new System.DateTime(1975, 7, 18),
 					"One of the first things I did was to work up a costume.",
 					new MyCollection<Film>(Noise, Agora));
@@ -100,6 +105,11 @@ namespace Movies.UI.ViewModel
 			newFilm = new FilmViewModel();
 			AvailableActors = new MyObservableCollection<ActorViewModel>(Actors);
 			NewProducer = new ProducerViewModel();
+			/*var f = 
+			Helper.ConnectCollections(
+				ref MyCollectionsConverter.ObsToReg(films),
+				ref MyCollectionsConverter.ObsToReg(actors),
+				ref MyCollectionsConverter.ObsToReg(producers));*/
 		}
 
 		public FilmViewModel SelectedFilm
@@ -180,7 +190,7 @@ namespace Movies.UI.ViewModel
 			bool res = false;
 			foreach (FilmViewModel film in Films)
 			{
-				if (film != null && film.Name.Contains(tmpFilmName))
+				if (film != null && film.Name.ToLower().Contains(tmpFilmName))
 				{
 					SelectedFilm = film;
 					res = true;
@@ -296,15 +306,23 @@ namespace Movies.UI.ViewModel
 		public RelayCommand AddNewActorCommand => addNewActorCommand ?? (addNewActorCommand =
 			new RelayCommand(obj =>
 			{
-				if (newActor != null &&
-				newActor.Name != "" &&
-				FindActor(newActor.FullName) == false)
+				if (newActor.IsReady && FindActor(newActor.FullName) == false)
 				{
 					newActor.Films.Add(newFilm.Source);
 					newFilm.Actors.AddObs(newActor);
 					availableActors.RemoveObs(newActor.FullName);
 					Actors.AddObs(newActor);
 					NewActor = new ActorViewModel();
+					MessageBox.Show("Actor successfully added!");
+				}
+				else if(!newActor.IsReady)
+				{
+					MessageBox.Show("Enter correct information!");
+					
+				}
+				else if(FindActor(newActor.FullName) == false)
+				{
+					MessageBox.Show("Actor already exists!");
 				}
 			}));
 
@@ -331,6 +349,10 @@ namespace Movies.UI.ViewModel
 					availableActors = new MyObservableCollection<ActorViewModel>(Actors);
 					SelectedAvailableActor = new ActorViewModel();
 					OnPropertyChanged("AvailableActors");
+				}
+				else
+				{
+					MessageBox.Show("Enter correct information!");
 				}
 			}));
 
@@ -365,6 +387,35 @@ namespace Movies.UI.ViewModel
 				FilmNameForm fn = new FilmNameForm(this);
 				fn.ShowDialog();
 				Remove();
+			}));
+
+		public RelayCommand SaveCommand => saveCommand ??
+			(saveCommand = new RelayCommand(obj =>
+			{
+				/*selectedFilm.Save(@"D:\git\isp-movies\src\Data\films.json");*/
+				MyCollection<Film> allFims = new MyCollection<Film>();
+				foreach (var f in films)
+				{
+					allFims.Add(f.Source);
+				}
+				Helper.SerializeCollection(allFims, @"D:\git\isp-movies\src\Data\films.json");
+			}));
+
+		public RelayCommand OpenCommand => openCommand ??
+			(openCommand = new RelayCommand(obj =>
+			{
+				MyCollection<Film> newFilms = new MyCollection<Film>();
+				newFilms = Helper.DeserializeCollection(@"D:\git\isp-movies\src\Data\films.json");
+				foreach (var film in newFilms) {
+					FilmViewModel film1 = new FilmViewModel(film);
+					MyCollection<Film> allFims = new MyCollection<Film>();
+					foreach (var f in films)
+					{
+						allFims.Add(f.Source);
+					}
+					film1.SetActorFilms(allFims);
+					films.AddObs(film1);
+				}
 			}));
 
 		public string IconPath => Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", "logo.png");

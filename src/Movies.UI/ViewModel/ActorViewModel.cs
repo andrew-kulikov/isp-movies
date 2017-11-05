@@ -92,6 +92,19 @@ namespace Movies.UI.ViewModel
 			set => actor.BirthDate = new DateTime(value, actor.BirthDate.Month, actor.BirthDate.Day);
 		}
 
+		public bool IsReady
+		{
+			get
+			{
+				if (Name == null || Name == "" || BirthDay == 0
+					|| BirthMonth == 0 || Surname == null || Surname == "")
+				{
+					return false;
+				}
+				return true;
+			}
+		}
+
 		public Actor SourceActor => actor;
 
 		public string PersonIconPath => Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", "person.png");

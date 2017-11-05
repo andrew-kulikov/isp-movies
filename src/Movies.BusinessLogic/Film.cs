@@ -1,4 +1,6 @@
 ﻿using Movies.BusinessLogic.Collections;
+using Movies.DataAcsessLayer;
+using Newtonsoft.Json;
 using System;
 
 namespace Movies.BusinessLogic
@@ -22,10 +24,10 @@ namespace Movies.BusinessLogic
 
 		public Film(
 			string name,
-			int ageLimit, 
-			int yearOfRelease, 
-			double rating, 
-			string genres, 
+			int ageLimit,
+			int yearOfRelease,
+			double rating,
+			string genres,
 			string description)
 		{
 			this.name = name;
@@ -34,6 +36,9 @@ namespace Movies.BusinessLogic
 			this.genres = genres;
 			this.rating = rating;
 			this.description = description;
+			actors = new MyCollection<Actor>();
+			prod = new Producer();
+
 		}
 
 		public string Name
@@ -105,12 +110,98 @@ namespace Movies.BusinessLogic
 		public MyCollection<Actor> Actors
 		{
 			get => actors;
-			set => actors = value;
+			set
+			{
+				actors = value;
+				//FilmWriter.ToFile(JsonConvert.SerializeObject(this));
+			}
 		}
 		public Producer Prod
 		{
 			get => prod;
-			set => prod = value;
+			set
+			{
+				prod = value;
+				//Accessor.ToFile(JsonConvert.SerializeObject(this));
+			}
+
+		}
+
+		public FilmModel ToDataModel()
+		{
+			FilmModel model = new FilmModel()
+			{
+				AgeLimit = ageLimit,
+				Description = description,
+				Genres = genres,
+				Name = name,
+				Rating = rating,
+				YearOfRelease = yearOfRelease
+			};
+			model.Prod = prod.ToDataModel();
+			MyCollection<ActorModel> newActors = new MyCollection<ActorModel>();
+			foreach (var actor in actors)
+			{
+				newActors.Add(actor.ToDataModel());
+			}
+			model.Actors = newActors.ToArray();
+			return model;
+		}
+
+		public void Save(string path)
+		{
+			Accessor.Write(ToDataModel(), path);
+		}
+
+		public void Initialize()
+		{
+			FilmModel model = Accessor.Read();
+			if (model != null)
+			{
+				name = model.Name;
+				rating = model.Rating;
+				genres = model.Genres;
+				description = model.Description;
+				yearOfRelease = model.YearOfRelease;
+				MyCollection<Actor> newActors = new MyCollection<Actor>();
+				foreach (var act in model.Actors)
+				{
+					if (act != null)
+					{
+						Actor newAct = new Actor();
+						newAct.Initialize(act);
+						newActors.Add(newAct);
+					}
+				}
+				actors = newActors;
+				Producer newPr = new Producer();
+				newPr.Initialize(model?.Prod);
+			}
+		}
+
+		public void Initialize(FilmModel model)
+		{
+			if (model != null)
+			{
+				name = model.Name;
+				rating = model.Rating;
+				genres = model.Genres;
+				description = model.Description;
+				yearOfRelease = model.YearOfRelease;
+				MyCollection<Actor> newActors = new MyCollection<Actor>();
+				foreach (var act in model.Actors)
+				{
+					if (act != null)
+					{
+						Actor newAct = new Actor();
+						newAct.Initialize(act);
+						newActors.Add(newAct);
+					}
+				}
+				actors = newActors;
+				Producer newPr = new Producer();
+				newPr.Initialize(model?.Prod);
+			}
 		}
 
 		public void AddActor(Actor actor) => actors.Add(actor);

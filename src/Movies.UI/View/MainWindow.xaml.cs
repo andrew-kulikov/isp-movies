@@ -31,7 +31,7 @@ namespace Movies.UI.View
 
 		private void ClearSelectedItem(object sender, RoutedEventArgs e)
 		{
-			ActorsListBox.UnselectAll();
+			//ActorsListBox.UnselectAll();
 			ActorInfo af = new ActorInfo(viewModel.SelectedFilm.SelectedActor);
 			af.ShowDialog();
 		}

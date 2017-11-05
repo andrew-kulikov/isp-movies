@@ -4,11 +4,12 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Data;
 
 namespace Movies.UI.View
 {
-	public class NameMultiValueConverter : IMultiValueConverter
+	public class NameMultiValueConverter : DependencyObject, IMultiValueConverter
 	{
 		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
@@ -21,5 +22,6 @@ namespace Movies.UI.View
 			string[] s = val.Split('(');
 			return new object[2] { s[0], s[1].Substring(0, s[1].Length - 1) };
 		}
+		
 	}
 }

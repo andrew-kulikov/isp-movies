@@ -41,7 +41,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged("NewFilm");
 			}
 		}
-		
 		public int AgeLimit
 		{
 			get => film.AgeLimit;
@@ -52,7 +51,6 @@ namespace Movies.UI.ViewModel
 			}
 
 		}
-
 		public int YearOfRelease
 		{
 			get => film.YearOfRelease;
@@ -62,7 +60,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public double Rating
 		{
 			get => film.Rating;
@@ -75,7 +72,6 @@ namespace Movies.UI.ViewModel
 				}
 			}
 		}
-
 		public string Description
 		{
 			get => film.Description;
@@ -85,7 +81,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		} 
-
 		public string PosterPath
 		{
 			get
@@ -101,7 +96,6 @@ namespace Movies.UI.ViewModel
 				}
 			}
 		}
-
 		public string Genres
 		{
 			get => film.Genres;
@@ -111,18 +105,30 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		} 
-
 		public MyObservableCollection<ActorViewModel> Actors
 		{
-			get => actors;
+			get
+			{
+				if (actors.Count == 0)
+				{
+					actors = new MyObservableCollection<ActorViewModel>();
+					foreach (Actor actor in film.Actors)
+					{
+						actors.Add(new ActorViewModel(actor));
+					}
+					OnPropertyChanged();
+				}
+				return actors;
+			}
 			set
 			{
 				actors = value;
-				film.Actors = new MyCollection<Actor>();
+				MyCollection<Actor> newActors = new MyCollection<Actor>();
 				foreach (var t in value)
 				{
-					film.Actors.Add(t.SourceActor);
+					newActors.Add(t.SourceActor);
 				}
+				film.Actors = newActors;
 				OnPropertyChanged();
 			}
 		}
@@ -204,6 +210,27 @@ namespace Movies.UI.ViewModel
 			else
 			{
 				return true;
+			}
+		}
+
+		public void Save(string path)
+		{
+			film.Save(path);
+		}
+
+		public void Initialize()
+		{
+			film.Initialize();
+			
+		}
+
+		public void SetActorFilms(MyCollection<Film> films)
+		{
+			actors = new MyObservableCollection<ActorViewModel>();
+			foreach (Actor actor in film.Actors)
+			{
+				actor.TransformFilms(films);
+				actors.Add(new ActorViewModel(actor));
 			}
 		}
 

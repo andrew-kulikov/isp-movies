@@ -4,11 +4,11 @@
         xmlns:local="clr-namespace:Movies.UI.View"
         Title="FilmNameForm" Height="300" Width="300"
 		Icon="{Binding Path=IconPath}">
-    <Grid>
+	<Grid>
 		<StackPanel>
 			<TextBlock Margin="10" HorizontalAlignment="Center">Enter film name here</TextBlock>
 			<TextBox Margin="10" HorizontalAlignment="Center" Width="100" Text="{Binding Path=TmpFilmName}"/>
 			<Button HorizontalAlignment="Center" Margin="10" Width="100" Click="Button_Click">Ok</Button>
 		</StackPanel>
-    </Grid>
+	</Grid>
 </Window>

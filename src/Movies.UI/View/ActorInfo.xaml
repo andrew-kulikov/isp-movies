@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="ActorInfo" Height="300" Width="300"
 		Icon="{Binding Path=IconPath}">
-    <Grid>
-		<StackPanel>
+	<Grid>
+		<StackPanel >
 			<TextBlock Margin="0 5 0 5" HorizontalAlignment="Center">Name</TextBlock>
 			<TextBox Text="{Binding Path=FullName, Mode=OneWay}"></TextBox>
 			<TextBlock Margin="0 5 0 5" HorizontalAlignment="Center">Bith date</TextBlock>
@@ -22,5 +22,5 @@
 				</ListBox.ItemTemplate>
 			</ListBox>
 		</StackPanel>
-    </Grid>
+	</Grid>
 </Window>

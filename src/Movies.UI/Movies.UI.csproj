@@ -63,12 +63,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\RelayCommand.cs" />
+    <Compile Include="Tools\MyCollectionsConverter.cs" />
     <Compile Include="ViewModel\ActorViewModel.cs" />
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\Collections\MyObservableCollection.cs" />
     <Compile Include="ViewModel\FilmViewModel.cs" />
     <Compile Include="View\ActorsListPage.xaml.cs">
       <DependentUpon>ActorsListPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FilmNameForm.xaml.cs">
+      <DependentUpon>FilmNameForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\FilmsListPage.xaml.cs">
       <DependentUpon>FilmsListPage.xaml</DependentUpon>
@@ -112,9 +116,6 @@
     </Compile>
     <Compile Include="View\AddFilm.xaml.cs">
       <DependentUpon>AddFilm.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\FilmNameForm.xaml.cs">
-      <DependentUpon>FilmNameForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

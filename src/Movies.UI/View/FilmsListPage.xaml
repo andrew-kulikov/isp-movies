@@ -7,19 +7,23 @@
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="FilmsListPage">
-
-    <Grid>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition />
+		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="3*"/>
+			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="250"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
-		<ListBox ItemsSource="{Binding Path=Films, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-				 SelectedItem="{Binding Path=SelectedFilm}"
-				 Grid.Column="1"
-				 Grid.Row="1"
-				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-				 x:Name="FilmListBox">
+		<ScrollViewer Grid.RowSpan="2">
+			<ListBox 
+				ItemsSource="{Binding Path=Films, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				SelectedItem="{Binding Path=SelectedFilm}"
+				Grid.Column="0"
+				ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+				x:Name="FilmListBox">
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="ListBoxItem">
 					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -45,14 +49,128 @@
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-		<!--Image
+		</ScrollViewer>
+		<Image
+			Grid.Row="0"
 			Grid.Column="1"
 			Margin="10 10 0 0"
 			VerticalAlignment="Top"
 			HorizontalAlignment="Left"
 			Source="{Binding Path=SelectedFilm.PosterPath}"
 			Stretch="Uniform"
-			Width="Auto"/-->
+			Width="Auto"/>
+		<StackPanel Grid.Column="2">
+			<TextBlock
+				Grid.Column="1"
+				Grid.ColumnSpan="2"
+				Text="{Binding Path=SelectedFilm.Name}"
+				HorizontalAlignment="Center"
+				FontWeight="Bold"
+				FontSize="20"
+				Margin="5"/>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<TextBlock
+					Margin="10 5 5 5"
+					TextAlignment="Left"
+					FontSize="16"
+					Text="Year Of Release"/>
 
+				<TextBlock 
+					Margin="5"
+					Grid.Column="1"
+					FontSize="16"
+					TextAlignment="Center"
+					Text="{Binding Path=SelectedFilm.YearOfRelease}"/>
+
+				<TextBlock 
+					Grid.Row="1"
+					Margin="10 5 5 5"
+					TextAlignment="Left"
+					FontSize="16"
+					Text="Producer"/>
+
+				<TextBlock 
+					Margin="5"
+					Grid.Row="1"
+					Grid.Column="1"
+					FontSize="16"
+					TextAlignment="Center"
+					Text="{Binding Path=SelectedFilm.ProducerName}"/>
+
+				<TextBlock 
+					Grid.Row="2"
+					Margin="10 5 5 5"
+					TextAlignment="Left"
+					FontSize="16"
+					Text="Rating"/>
+
+				<TextBlock 
+					Margin="5"
+					Grid.Row="2"
+					Grid.Column="1"
+					FontSize="16"
+					TextAlignment="Center"
+					Text="{Binding Path=SelectedFilm.Rating}"/>
+
+				<TextBlock 
+					Grid.Row="3"
+					Margin="10 5 5 5"
+					TextAlignment="Left"
+					FontSize="16"
+					Text="Genres"/>
+
+				<TextBlock 
+					Margin="5"
+					Grid.Row="3"
+					Grid.Column="1"
+					FontSize="16"
+					TextAlignment="Center"
+					Text="{Binding Path=SelectedFilm.Genres}"
+					TextWrapping="Wrap"/>
+
+				<TextBlock
+					Grid.Row="4"
+					Margin="10 5 5 5"
+					TextAlignment="Left"
+					FontSize="16"
+					Text="Actors"/>
+
+				<ListBox 
+					Margin="5"
+					Grid.Row="4"
+					Grid.Column="1"
+					FontSize="16"
+					x:Name="ActorsListBox"
+					ItemsSource="{Binding Path=SelectedFilm.Actors}"
+					SelectedItem="{Binding Path=SelectedFilm.SelectedActor}"
+					MouseLeftButtonUp="RemoveSelection">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Path=FullName}"/>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</Grid>
+		</StackPanel>
+
+		<TextBlock
+			Margin="10"
+			Grid.Column="1"
+			Grid.Row="1"
+			Grid.ColumnSpan="2"
+			FontSize="16"
+			Text="{Binding Path=SelectedFilm.Description}"
+			TextWrapping="Wrap"/>
 	</Grid>
 </Page>

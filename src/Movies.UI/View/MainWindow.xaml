@@ -15,18 +15,14 @@
 		Icon="{Binding Path=IconPath}"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
-	<!--Window.Resources>
-		<local:Name="MultiValueConverter" x:Key="NameMultiValueConverter" />
-	</-->
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="50"/>
 			<RowDefinition />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="0.5*" />
-			<ColumnDefinition Width="1.5*" MinWidth="100"/>
-			<ColumnDefinition Width="2*"/>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="5*" MinWidth="100"/>
 		</Grid.ColumnDefinitions>
 		<StackPanel
 			Grid.Row="0"
@@ -50,7 +46,20 @@
 				Style="{DynamicResource MaterialDesignFloatingActionLightButton}">
 				<Image Source="D:\git\isp-movies\src\Movies.UI\Images\delete.ico" />
 			</Button>
-
+			<Button
+				Height="40"
+				Width="40"
+				Margin="10 0 0 0"
+				Command="{Binding SaveCommand}"
+				Style="{DynamicResource MaterialDesignFloatingActionLightButton}">
+			</Button>
+			<Button
+				Height="40"
+				Width="40"
+				Margin="10 0 0 0"
+				Command="{Binding OpenCommand}"
+				Style="{DynamicResource MaterialDesignFloatingActionLightButton}">
+			</Button>
 		</StackPanel>
 		<StackPanel
 			Grid.Row="0"
@@ -68,130 +77,5 @@
 			<ListBoxItem MouseLeftButtonUp="ListBoxItem2_MouseLeftButtonUp">Producers</ListBoxItem>
 		</ListBox>
 		<Frame Grid.Column="1" Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"></Frame>
-		<ScrollViewer Width="Auto" DataContext="{Binding Path=SelectedFilm}" x:Name="Sidebar" Grid.Column="2" Grid.Row="1">
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="2*"/>
-					<ColumnDefinition Width="110"/>
-					<ColumnDefinition Width="*"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition />
-					<RowDefinition />
-					<RowDefinition />
-					<RowDefinition />
-					<RowDefinition />
-					<RowDefinition />
-					<RowDefinition />
-				</Grid.RowDefinitions>
-				<Image
-					Grid.RowSpan="6"
-					Margin="10 10 0 0"
-					VerticalAlignment="Top"
-					HorizontalAlignment="Left"
-					Source="{Binding Path=PosterPath}"
-					Stretch="Uniform"
-					Width="Auto"/>
-				<TextBlock
-					
-					Grid.Column="1"
-					Grid.ColumnSpan="2"
-					Text="{Binding Path=Name}"
-					HorizontalAlignment="Center"
-					FontWeight="Bold"
-					FontSize="24"
-					Margin="5"/>
-				<TextBlock
-					Margin="10 0 0 0"
-					TextAlignment="Left"
-					FontSize="14"
-					Grid.Column="1"
-					Grid.Row="1"
-					Text="Year Of Release"/>
-
-				<TextBlock 
-					FontSize="16"
-					Grid.Column="2"
-					Grid.Row="1"
-					TextAlignment="Center"
-					Text="{Binding Path=YearOfRelease}"/>
-
-				<TextBlock 
-					Margin="10 0 0 0"
-					TextAlignment="Left"
-					FontSize="16"
-					Grid.Column="1"
-					Grid.Row="2"
-					Text="Producer"/>
-
-				<TextBlock 
-					FontSize="16"
-					Grid.Column="2"
-					Grid.Row="2"
-					TextAlignment="Center"
-					Text="{Binding Path=ProducerName}"/>
-
-				<TextBlock 
-					Margin="10 0 0 0"
-					TextAlignment="Left"
-					FontSize="16"
-					Grid.Column="1"
-					Grid.Row="3"
-					Text="Rating"/>
-
-				<TextBlock 
-					FontSize="16"
-					Grid.Column="2"
-					Grid.Row="3"
-					TextAlignment="Center"
-					Text="{Binding Path=Rating}"/>
-
-				<TextBlock 
-					Margin="10 0 0 0"
-					TextAlignment="Left"
-					FontSize="16"
-					Grid.Column="1"
-					Grid.Row="4"
-					Text="Genres"/>
-
-				<TextBlock 
-					FontSize="16"
-					Grid.Row="4"
-					Grid.Column="2"
-					TextAlignment="Center"
-					Text="{Binding Path=Genres}"
-					TextWrapping="Wrap"/>
-
-				<TextBlock
-					Margin="10 0 0 0"
-					TextAlignment="Left"
-					FontSize="16"
-					Grid.Row="5"
-					Grid.Column="1"
-					Text="Actors"/>
-
-				<ListBox 
-					FontSize="16"
-					Grid.Row="5"
-					Grid.Column="2"
-					x:Name="ActorsListBox"
-					ItemsSource="{Binding Path=Actors}"
-					SelectedItem="{Binding Path=SelectedActor}"
-					MouseLeftButtonUp="ClearSelectedItem">
-					<ListBox.ItemTemplate>
-						<DataTemplate>
-							<TextBlock Text="{Binding Path=FullName}"/>
-						</DataTemplate>
-					</ListBox.ItemTemplate>
-				</ListBox>
-
-				<TextBlock
-					FontSize="16"
-					Grid.Row="6"
-					Grid.ColumnSpan="3"
-					Text="{Binding Path=Description}"
-					TextWrapping="Wrap"/>
-			</Grid>
-		</ScrollViewer>
 	</Grid>
 </Window>
