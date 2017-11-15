@@ -148,14 +148,15 @@ namespace Movies.BusinessLogic
 			return model;
 		}
 
-		public void Save(string path)
+		/*public void Save(string path)
 		{
 			Accessor.Write(ToDataModel(), path);
-		}
+		}*/
 
 		public void Initialize()
 		{
-			FilmModel model = Accessor.Read();
+			//FilmModel model = Accessor.Read();
+			FilmModel model = new FilmModel();
 			if (model != null)
 			{
 				name = model.Name;
@@ -201,6 +202,7 @@ namespace Movies.BusinessLogic
 				actors = newActors;
 				Producer newPr = new Producer();
 				newPr.Initialize(model?.Prod);
+				prod = newPr;
 			}
 		}
 

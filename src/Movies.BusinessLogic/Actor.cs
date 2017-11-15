@@ -65,7 +65,7 @@ namespace Movies.BusinessLogic
 		public void TransformFilms(MyCollection<Film> allFilms)
 		{
 			MyCollection<Film> newFilms = new MyCollection<Film>();
-			foreach (string fname in FilmNames)
+			foreach (string fname in FilmNames ?? new MyCollection<string>())
 			{
 				foreach (Film film in allFilms)
 				{

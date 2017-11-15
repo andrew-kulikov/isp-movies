@@ -9,6 +9,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Forms;
+using System.Reflection;
+using System;
 
 namespace Movies.UI.ViewModel
 {
@@ -29,15 +32,21 @@ namespace Movies.UI.ViewModel
 		private RelayCommand addNewActorCommand;
 		private RelayCommand addNewProducerCommand;
 		private RelayCommand addExistingProducerCommand;
-		private RelayCommand removeFilmCommand;
+		private RelayCommand removeCommand;
 		private RelayCommand saveCommand;
 		private RelayCommand openCommand;
+		private RelayCommand loadCommand;
+		private RelayCommand removePluginCommand;
 		private string tmpFilmName;
 		private FilmViewModel newFilm;
 		private Film Digimon, Noise, Agora;
+		private Context context;
+		private MyCollection<IPlugin.IPlugin> plugins;
+		private static IPlugin.IPlugin selectedPlugin;
 
 		public ApplicationViewModel()
 		{
+			context = Context.Films;
 			newActor = new ActorViewModel();
 			Digimon = new Film(
 					"Digimon",
@@ -85,19 +94,22 @@ namespace Movies.UI.ViewModel
 						"Parker",
 						new System.DateTime(1956, 4, 24),
 						"One of the first things I did was to work up a costume.",
-						new MyCollection<Film>(Agora, Digimon));
+						new MyCollection<Film>());
 			ActorViewModel Brat = new ActorViewModel(
 					"Jim",
 					"Carrey",
 					new System.DateTime(1975, 7, 18),
 					"One of the first things I did was to work up a costume.",
-					new MyCollection<Film>(Noise, Agora));
+					new MyCollection<Film>());
 			actors = new MyObservableCollection<ActorViewModel>(Parker, Brat);
 			films = new MyObservableCollection<FilmViewModel>(f);
 			films.AddObs(new FilmViewModel(Agora));
 			foreach (FilmViewModel film in films)
 			{
-				film.Actors = actors;
+				foreach (var actor in actors)
+				{
+					film.Actors.Add(actor);
+				}
 			}
 			producers = new MyObservableCollection<ProducerViewModel>(
 				new ProducerViewModel("James", "Cameron", new System.DateTime(1964, 12, 14), new MyCollection<Film>(Noise, Digimon, Agora)));
@@ -105,23 +117,23 @@ namespace Movies.UI.ViewModel
 			newFilm = new FilmViewModel();
 			AvailableActors = new MyObservableCollection<ActorViewModel>(Actors);
 			NewProducer = new ProducerViewModel();
-			/*var f = 
-			Helper.ConnectCollections(
-				ref MyCollectionsConverter.ObsToReg(films),
-				ref MyCollectionsConverter.ObsToReg(actors),
-				ref MyCollectionsConverter.ObsToReg(producers));*/
+			foreach (var film in films)
+			{
+				Parker.Films.Add(film.Source);
+				Brat.Films.Add(film.Source);
+			}
+			plugins = LoadPlugins(@"D:\git\isp-movies\src\plugins");
 		}
-
 		public FilmViewModel SelectedFilm
 		{
 			get => selectedFilm;
 			set
 			{
+				context = Context.Films;
 				selectedFilm = value;
 				OnPropertyChanged();
 			}
 		}
-
 		public string TmpFilmName
 		{
 			get => tmpFilmName;
@@ -132,7 +144,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public MyObservableCollection<FilmViewModel> Films
 		{
 			get => films;
@@ -142,7 +153,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public FilmViewModel NewFilm
 		{
 			get => newFilm;
@@ -153,53 +163,48 @@ namespace Movies.UI.ViewModel
 			}
 		}
 
-		public bool Remove()
-		{
-			if (selectedFilm?.Name == tmpFilmName)
-			{
-				SelectedFilm = null;
-				
-			}
-			bool res = Films.RemoveObs(tmpFilmName);
-			for (int i = 0; i < actors?.Count; i++)
-			{
-				for (int j = 0; j < actors[i]?.Films?.Count; i++)
-				{
-					if (actors[i].Films[j].Name == tmpFilmName)
-					{
-						actors[i].Films.Remove(actors[i].Films[j]);
-					}
-				}
-			}
-			for (int i = 0; i < producers?.Count; i++)
-			{
-				for (int j = 0; j < producers[i].Films?.Count; j++)
-				{
-					if (producers[i].Films[j].Name == tmpFilmName)
-					{
-						producers[i].Films.Remove(producers[i].Films[j]);
-					}
-				}
-			}
-			OnPropertyChanged("Films");
-			return res;
-		}
-
 		public bool Find()
 		{
 			bool res = false;
-			foreach (FilmViewModel film in Films)
+			if (context == Context.Films)
 			{
-				if (film != null && film.Name.ToLower().Contains(tmpFilmName))
+				foreach (FilmViewModel film in Films)
 				{
-					SelectedFilm = film;
-					res = true;
-					break;
+					if (film != null && film.Name.ToLower().Contains(tmpFilmName))
+					{
+						SelectedFilm = film;
+						res = true;
+						break;
+					}
 				}
 			}
+			else if (context == Context.Actors)
+			{
+				foreach (ActorViewModel actor in actors)
+				{
+					if (actor != null && actor.Name.ToLower().Contains(tmpFilmName))
+					{
+						SelectedActor = actor;
+						res = true;
+						break;
+					}
+				}
+			}
+			else if (context == Context.Prodecers)
+			{
+				foreach (ProducerViewModel prod in producers)
+				{
+					if (prod != null && prod.Name.ToLower().Contains(tmpFilmName))
+					{
+						SelectedProducer = prod;
+						res = true;
+						break;
+					}
+				}
+			}
+
 			return res;
 		}
-
 		private bool FindActor(string fullName)
 		{
 			foreach (ActorViewModel actor in newFilm.Actors)
@@ -211,7 +216,6 @@ namespace Movies.UI.ViewModel
 			}
 			return false;
 		}
-
 		private bool FindProducer(string fullName)
 		{
 			if (newFilm.Prod != null &&
@@ -222,7 +226,6 @@ namespace Movies.UI.ViewModel
 			}
 			return false;
 		}
-
 		public ActorViewModel NewActor
 		{
 			get => newActor;
@@ -232,17 +235,16 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
-		public ActorViewModel Selectedactor
+		public ActorViewModel SelectedActor
 		{
 			get => selectedActor;
 			set
 			{
+				context = Context.Actors;
 				selectedActor = value;
 				OnPropertyChanged();
 			}
 		}
-
 		public MyObservableCollection<ActorViewModel> Actors
 		{
 			get => actors;
@@ -252,7 +254,16 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
+		public Context Context
+		{
+			get => context;
+			set
+			{
+				context = value;
+				OnPropertyChanged();
+			}
+		}
+		//public string MoreInfo => plugin.GetMoreInfo(selectedFilm.GetType());
 		public MyObservableCollection<ActorViewModel> AvailableActors
 		{
 			get => availableActors;
@@ -262,7 +273,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public ActorViewModel SelectedAvailableActor
 		{
 			get => selectedAvailableActor;
@@ -272,7 +282,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public MyObservableCollection<ProducerViewModel> Producers
 		{
 			get => producers;
@@ -282,7 +291,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public ProducerViewModel NewProducer
 		{
 			get => newProducer;
@@ -292,40 +300,38 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public ProducerViewModel SelectedProducer
 		{
 			get => selectedProducer;
 			set
 			{
+				context = Context.Prodecers;
 				selectedProducer = value;
 				OnPropertyChanged();
 			}
 		}
-
 		public RelayCommand AddNewActorCommand => addNewActorCommand ?? (addNewActorCommand =
 			new RelayCommand(obj =>
 			{
 				if (newActor.IsReady && FindActor(newActor.FullName) == false)
 				{
 					newActor.Films.Add(newFilm.Source);
-					newFilm.Actors.AddObs(newActor);
-					availableActors.RemoveObs(newActor.FullName);
+					//newFilm.Actors.Add(newActor);
+					newFilm.AddActor(newActor);
 					Actors.AddObs(newActor);
 					NewActor = new ActorViewModel();
-					MessageBox.Show("Actor successfully added!");
+					System.Windows.MessageBox.Show("Actor successfully added!");
 				}
-				else if(!newActor.IsReady)
+				else if (!newActor.IsReady)
 				{
-					MessageBox.Show("Enter correct information!");
-					
+					System.Windows.MessageBox.Show("Enter correct information!");
+
 				}
-				else if(FindActor(newActor.FullName) == false)
+				else if (FindActor(newActor.FullName) == false)
 				{
-					MessageBox.Show("Actor already exists!");
+					System.Windows.MessageBox.Show("Actor already exists!");
 				}
 			}));
-
 		public RelayCommand AddExistingActorCommand => addExistingActorCommand ?? (addExistingActorCommand =
 			new RelayCommand(obj =>
 			{
@@ -337,14 +343,20 @@ namespace Movies.UI.ViewModel
 					AvailableActors.RemoveObs(selectedAvailableActor.FullName);
 				}
 			}));
-
 		public RelayCommand AddFilmCommand => addCommand ?? (addCommand =
 			new RelayCommand(obj =>
 			{
 				if (NewFilm.IsReady())
 				{
 					NewFilm.TransformGenres();
+					NewFilm.Actors = newFilm.Actors;
+					/*foreach (var actor in newFilm?.Actors)
+					{
+						actor.Films.Add(newFilm.Source);
+					}*/
+
 					Films.AddObs(NewFilm);
+
 					NewFilm = new FilmViewModel();
 					availableActors = new MyObservableCollection<ActorViewModel>(Actors);
 					SelectedAvailableActor = new ActorViewModel();
@@ -352,74 +364,262 @@ namespace Movies.UI.ViewModel
 				}
 				else
 				{
-					MessageBox.Show("Enter correct information!");
+					System.Windows.MessageBox.Show("Enter correct information!");
 				}
 			}));
-
 		public RelayCommand AddExistingProducerCommand => addExistingProducerCommand ??
 			(addExistingProducerCommand = new RelayCommand(obj =>
 			{
-				if ((newFilm.Prod == null || newFilm.Prod.Name == null || newFilm.Name == "") &&  
+				if ((newFilm.Prod == null || newFilm.Prod.Name == null || newFilm.Name == "") &&
 					selectedProducer != null &&
 					selectedProducer.Name != "" &&
 					FindProducer(selectedProducer.FullName) == false)
 				{
+					//!
 					selectedProducer.Films.Add(newFilm.Source);
 					newFilm.Prod = selectedProducer.Source;
 				}
 			}));
-
- 		public RelayCommand AddNewProducerCommand => addNewProducerCommand ??
-			(addNewProducerCommand = new RelayCommand(obj =>
+		public RelayCommand AddNewProducerCommand => addNewProducerCommand ??
+		   (addNewProducerCommand = new RelayCommand(obj =>
+		   {
+			   if (newFilm.Prod == null || newFilm.Prod.Name == null || newFilm.Prod.Name == "")
+			   {
+				   NewProducer.Films.Add(NewFilm.Source);
+				   NewFilm.Prod = NewProducer.Source;
+				   Producers.AddObs(NewProducer);
+				   NewProducer = new ProducerViewModel();
+			   }
+		   }));
+		public RelayCommand RemoveCommand => removeCommand ??
+			(removeCommand = new RelayCommand(obj =>
 			{
-				if (newFilm.Prod == null || newFilm.Prod.Name == null || newFilm.Prod.Name == "")
+				if (context == Context.Films)
 				{
-					NewProducer.Films.Add(NewFilm.Source);
-					NewFilm.Prod = NewProducer.Source;
-					Producers.AddObs(NewProducer);
-					NewProducer = new ProducerViewModel();
+					if (films.Count != 0)
+					{
+						MyCollectionsConverter.DeleteFilm(selectedFilm?.Name, ref actors, ref producers);
+						bool res = Films.RemoveObs(selectedFilm?.Name);
+						if (films.Count != 0)
+						{
+							SelectedFilm = films[0];
+						}
+						else
+						{
+							SelectedFilm = null;
+						}
+					}
 				}
+				else if (context == Context.Actors)
+				{
+					if (actors.Count != 0)
+					{
+						string name = selectedActor?.FullName;
+						
+						bool res = Actors.RemoveObs(name);
+						foreach (var film in films)
+						{
+							film.RemoveActor(name);
+						}
+						//films = MyCollectionsConverter.DeleteActor(name, films);
+						if (actors.Count != 0)
+						{
+							SelectedActor = actors[0];
+						}
+						else
+						{
+							SelectedActor = null;
+						}
+					}
+				}
+				else if (context == Context.Prodecers)
+				{
+					if (producers.Count != 0)
+					{
+						string name = selectedProducer?.FullName;
+						bool res = Producers.RemoveObs(name);
+						MyCollectionsConverter.DeleteProduer(name, ref films);
+						if (producers.Count != 0)
+						{
+							SelectedProducer = producers[0];
+						}
+						else
+						{
+							SelectedProducer = null;
+						}
+					}
+				}
+				OnPropertyChanged("Films");
 			}));
-
-		public RelayCommand RemoveFilmCommand => removeFilmCommand ??
-			(removeFilmCommand = new RelayCommand(obj =>
-			{
-				FilmNameForm fn = new FilmNameForm(this);
-				fn.ShowDialog();
-				Remove();
-			}));
-
 		public RelayCommand SaveCommand => saveCommand ??
 			(saveCommand = new RelayCommand(obj =>
 			{
-				/*selectedFilm.Save(@"D:\git\isp-movies\src\Data\films.json");*/
-				MyCollection<Film> allFims = new MyCollection<Film>();
-				foreach (var f in films)
+				string fileName;
+				SaveFileDialog sd = new SaveFileDialog();
+				sd.Filter = "Json|*.json|Binary|*.dat|Archive|*.gz";
+				if (sd.ShowDialog() == DialogResult.OK)
 				{
-					allFims.Add(f.Source);
-				}
-				Helper.SerializeCollection(allFims, @"D:\git\isp-movies\src\Data\films.json");
-			}));
+					fileName = sd.FileName;
 
-		public RelayCommand OpenCommand => openCommand ??
-			(openCommand = new RelayCommand(obj =>
-			{
-				MyCollection<Film> newFilms = new MyCollection<Film>();
-				newFilms = Helper.DeserializeCollection(@"D:\git\isp-movies\src\Data\films.json");
-				foreach (var film in newFilms) {
-					FilmViewModel film1 = new FilmViewModel(film);
+					int mode = 0;
+					if (sd.FilterIndex == 3)
+					{
+						mode = 2;
+						fileName = fileName.Replace(".gz", ".json");
+					}
+					else if (sd.FilterIndex == 2)
+					{
+						mode = 1;
+					}
 					MyCollection<Film> allFims = new MyCollection<Film>();
 					foreach (var f in films)
 					{
 						allFims.Add(f.Source);
 					}
-					film1.SetActorFilms(allFims);
-					films.AddObs(film1);
+					Helper.SerializeCollection(allFims, fileName, mode);
 				}
 			}));
+		public RelayCommand OpenCommand => openCommand ??
+			(openCommand = new RelayCommand(obj =>
+			{
+				string fileName = @"D:\git\isp-movies\src\Data\films.json";
+				OpenFileDialog od = new OpenFileDialog();
+				od.Filter = "Json|*.json|Binary|*.dat|Archive|*.gz";
+				if (od.ShowDialog() == DialogResult.OK)
+				{
+					fileName = od.FileName;
+
+					int mode = 0;
+					MyCollection<Film> newFilms = new MyCollection<Film>();
+					if (Path.GetExtension(fileName) == ".dat")
+					{
+						mode = 1;
+					}
+					else if (Path.GetExtension(fileName) == ".gz")
+					{
+						mode = 2;
+					}
+					newFilms = Helper.DeserializeCollection(fileName, mode);
+
+					foreach (var film in newFilms)
+					{
+						if (film != null)
+						{
+							FilmViewModel film1 = new FilmViewModel(film);
+							MyCollectionsConverter.AddFilm(film1, ref actors, ref producers);
+							films.AddObs(film1);
+						}
+					}
+
+					foreach (var film in films)
+					{
+
+						MyCollection<Film> allFilms = new MyCollection<Film>();
+						foreach (var f in films)
+						{
+							allFilms.Add(f.Source);
+						}
+						film.SetActorFilms(allFilms);
+					}
+					MyCollectionsConverter.ConnectCollection(ref films, ref actors, ref producers);
+					Films = films;
+					Actors = actors;
+					Actors.AddObs(new ActorViewModel());
+					OnPropertyChanged("Films");
+					OnPropertyChanged("Actors");
+					OnPropertyChanged("Producers");
+				}
+			}));
+		public RelayCommand LoadCommand => loadCommand ??
+			(loadCommand = new RelayCommand(obj =>
+			{
+				Plugins p = new Plugins(this);
+				p.ShowDialog();
+			}));
+		public static IPlugin.IPlugin SelectedPluginForFilm => selectedPlugin;
+		public IPlugin.IPlugin SelectedPlugin {
+			get => selectedPlugin;
+			set
+			{
+				Films.Refresh();
+				selectedPlugin = value;
+				OnPropertyChanged("HeaderColor");
+				System.Windows.MessageBox.Show("Plugin " + selectedPlugin.Name + " added!");
+				OnPropertyChanged();
+			}
+		}
+		public MyCollection<IPlugin.IPlugin> Plugins
+		{
+			get => plugins;
+			set
+			{
+				plugins = value;
+				OnPropertyChanged();
+			}
+		}
+		public RelayCommand RemovePluginCommand => removePluginCommand ??
+			(removePluginCommand = new RelayCommand(obj =>
+			{
+				selectedPlugin = null;
+				OnPropertyChanged("HeaderColor");
+				Films.Refresh();
+			}));
+		public static MyCollection<IPlugin.IPlugin> LoadPlugins(string path)
+		{
+			string[] dllFileNames = null;
+
+			if (Directory.Exists(path))
+			{
+				dllFileNames = Directory.GetFileSystemEntries(path, "*.dll");
+
+				MyCollection<Assembly> assemblies = new MyCollection<Assembly>();
+				foreach (string dllFile in dllFileNames)
+				{
+					AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
+					Assembly assembly = Assembly.Load(an);
+					assemblies.Add(assembly);
+				}
+
+				Type pluginType = typeof(IPlugin.IPlugin);
+				MyCollection<Type> pluginTypes = new MyCollection<Type>();
+				foreach (Assembly assembly in assemblies)
+				{
+					if (assembly != null)
+					{
+						Type[] types = assembly.GetTypes();
+
+						foreach (Type type in types)
+						{
+							if (type.IsInterface || type.IsAbstract)
+							{
+								continue;
+							}
+							else
+							{
+								if (type.GetInterface(pluginType.FullName) != null)
+								{
+									pluginTypes.Add(type);
+								}
+							}
+						}
+					}
+				}
+
+				MyCollection<IPlugin.IPlugin> plugins = new MyCollection<IPlugin.IPlugin>();
+				foreach (Type type in pluginTypes)
+				{
+					IPlugin.IPlugin plugin = (IPlugin.IPlugin)Activator.CreateInstance(type);
+					plugins.Add(plugin);
+				}
+
+				return plugins;
+			}
+
+			return null;
+		}
+		public string HeaderColor => selectedPlugin.HeaderColor;
 
 		public string IconPath => Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", "logo.png");
-		
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged([CallerMemberName] string prop = "") =>

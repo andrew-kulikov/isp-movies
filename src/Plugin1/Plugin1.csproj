@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BB403BB0-743C-4EBF-ABC9-52388B43B2F5}</ProjectGuid>
+    <ProjectGuid>{38430E5B-A536-438D-89B1-1C50026C9A8C}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Movies.BusinessLogic</RootNamespace>
-    <AssemblyName>Movies.BusinessLogic</AssemblyName>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Plugin1</RootNamespace>
+    <AssemblyName>Plugin1</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,13 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,25 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actor.cs" />
-    <Compile Include="Controller.cs" />
-    <Compile Include="Film.cs" />
-    <Compile Include="Collections\MyCollection.cs" />
-    <Compile Include="Collections\MyEnumerator.cs" />
-    <Compile Include="INameable.cs" />
-    <Compile Include="Person.cs" />
-    <Compile Include="Producer.cs" />
+    <Compile Include="MyPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tools\Helper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Movies.DataAcsessLayer\Movies.DataAcsessLayer.csproj">
-      <Project>{7e777497-28bc-41d4-8b1e-97d8cdaa1deb}</Project>
-      <Name>Movies.DataAcsessLayer</Name>
+    <ProjectReference Include="..\PluginLib\IPlugin.csproj">
+      <Project>{bb5f0072-0b3a-43c1-9827-fd7d4d809ff7}</Project>
+      <Name>IPlugin</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

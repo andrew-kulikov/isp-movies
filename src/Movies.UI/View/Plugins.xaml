@@ -1,0 +1,24 @@
+﻿<Window x:Class="Movies.UI.View.Plugins"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Movies.UI.View"
+        Title="Plugins" Height="300" Width="300"
+		Icon="D:\git\isp-movies\src\Movies.UI\Images\logo.png">
+    <Grid>
+		<StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
+			<ListBox
+				x:Name="Plugs"
+				ItemsSource="{Binding Path=Plugins}"
+				SelectedItem="{Binding Path=SelectedPlugin}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Path=Name}" />
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+			<Button Command="{Binding Path=RemovePluginCommand}" Click="Button_Click">
+				OFF
+			</Button>
+		</StackPanel>
+	</Grid>
+</Window>

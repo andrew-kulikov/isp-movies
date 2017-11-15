@@ -1,23 +1,22 @@
 ﻿using System.Windows;
 using Movies.UI.ViewModel;
 
-
 namespace Movies.UI.View
 {
 	/// <summary>
-	/// Interaction logic for FilmNameForm.xaml
+	/// Interaction logic for Plugins.xaml
 	/// </summary>
-	public partial class FilmNameForm : Window
+	public partial class Plugins : Window
 	{
-		public FilmNameForm(ApplicationViewModel vm)
+		public Plugins(ApplicationViewModel viewModel)
 		{
 			InitializeComponent();
-			DataContext = vm;
+			DataContext = viewModel;
 		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
 		{
-			Close();
+			Plugs.UnselectAll();
 		}
 	}
 }

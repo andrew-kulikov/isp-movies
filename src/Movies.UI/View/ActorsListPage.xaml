@@ -13,7 +13,9 @@
 				 Grid.Column="1"
 				 Grid.Row="1"
 				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-				 x:Name="FilmListBox">
+				 x:Name="FilmListBox"
+				 MouseLeftButtonUp="RemoveSelection"
+				 >
 			<ListBox.ItemContainerStyle>
 				<Style TargetType="ListBoxItem">
 					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -27,10 +29,20 @@
 							Source="{Binding Path=PersonIconPath}"
 							Stretch="Uniform"
 							Height="150" />
-						<TextBlock
-							FontSize="20"
-							Margin="10 0 0 0" 
-							Text="{Binding Path=FullName}"/>
+						<StackPanel Orientation="Vertical">
+							<TextBlock
+								FontSize="20"
+								Margin="10 0 0 0" 
+								Text="{Binding Path=FullName}"/>
+							<TextBlock
+								FontSize="20"
+								Margin="10 0 0 0"
+								Text="{Binding Path=BirthYear}"></TextBlock>
+							<TextBlock
+								FontSize="12"
+								Margin="10 0 0 0"
+								Text="{Binding Path=Biography}"></TextBlock>
+						</StackPanel>
 					</StackPanel>
 				</DataTemplate>
 			</ListBox.ItemTemplate>

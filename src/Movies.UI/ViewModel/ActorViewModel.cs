@@ -39,11 +39,8 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public string FullDate => actor.BirthDate.Day + "." + actor.BirthDate.Month + "." + actor.BirthDate.Year;
-
 		public string FullName => actor.Name + " " + actor.Surname;
-
 		public MyCollection<Film> Films
 		{
 			get => actor.Films;
@@ -53,7 +50,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public string Name
 		{
 			get => actor.Name;
@@ -63,7 +59,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public string Surname
 		{
 			get => actor.Surname;
@@ -73,25 +68,21 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public int BirthDay
 		{
 			get => actor.BirthDate.Day;
 			set => actor.BirthDate = new DateTime(actor.BirthDate.Year, actor.BirthDate.Month, value);
 		}
-
 		public int BirthMonth
 		{
 			get => actor.BirthDate.Month;
 			set => actor.BirthDate = new DateTime(actor.BirthDate.Year, value, actor.BirthDate.Day);
 		}
-
 		public int BirthYear
 		{
 			get => actor.BirthDate.Year;
 			set => actor.BirthDate = new DateTime(value, actor.BirthDate.Month, actor.BirthDate.Day);
 		}
-
 		public bool IsReady
 		{
 			get
@@ -102,6 +93,17 @@ namespace Movies.UI.ViewModel
 					return false;
 				}
 				return true;
+			}
+		}
+		public void RemoveFilm(string name)
+		{
+			foreach (var film in actor.Films)
+			{
+				if (film.Name == name)
+				{
+					actor.Films.Remove(film);
+					break;
+				}
 			}
 		}
 

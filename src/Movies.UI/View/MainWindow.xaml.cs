@@ -19,7 +19,7 @@ namespace Movies.UI.View
 			InitializeComponent();
 			viewModel = new ApplicationViewModel();
 			DataContext = viewModel;
-			MainFrame.Content = new FilmsListPage(viewModel);
+			MainFrame.Content = new FilmsListPage(ref viewModel);
 		}
 		private void AddFilm_Click(object sender, RoutedEventArgs e)
 		{
@@ -38,14 +38,17 @@ namespace Movies.UI.View
 
 		private void ListBoxItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
-			MainFrame.Content = new FilmsListPage(viewModel);
+			viewModel.Context = Model.Context.Films;
+			MainFrame.Content = new FilmsListPage(ref viewModel);
 		}
 		private void ListBoxItem1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
+			viewModel.Context = Model.Context.Actors;
 			MainFrame.Content = new ActorsListPage(viewModel);
 		}
 		private void ListBoxItem2_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
+			viewModel.Context = Model.Context.Prodecers;
 			MainFrame.Content = new ProducersListPage(viewModel);
 		}
 	}

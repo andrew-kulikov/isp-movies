@@ -11,6 +11,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition />
+			<RowDefinition Height="40" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
@@ -24,31 +25,35 @@
 				Grid.Column="0"
 				ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				x:Name="FilmListBox">
-			<ListBox.ItemContainerStyle>
-				<Style TargetType="ListBoxItem">
-					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-					<Setter Property="VerticalContentAlignment" Value="Stretch"/>
-				</Style>
-			</ListBox.ItemContainerStyle>
-			<ListBox.ItemTemplate>
-				<DataTemplate>
-					<StackPanel Orientation="Horizontal">
-						<Image
+				<ListBox.ItemContainerStyle>
+					<Style TargetType="ListBoxItem">
+						<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+						<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+					</Style>
+				</ListBox.ItemContainerStyle>
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal">
+							<Image
 							Source="{Binding Path=PosterPath}"
 							Stretch="Uniform"
 							Height="150" />
-						<TextBlock
-							FontSize="20"
-							Margin="10 0 0 0">
-							<TextBlock.Text>
-
-								<Binding Path="Name"/>
-							</TextBlock.Text>
-						</TextBlock>
-					</StackPanel>
-				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+							<StackPanel Orientation="Vertical">
+								<TextBlock
+								FontSize="20"
+								Margin="10 0 0 0"
+								Text="{Binding Path=Name}" />
+								<StackPanel Orientation="Horizontal">
+									<TextBlock
+									FontSize="20"
+									Margin="10 0 0 0"
+									Text="{Binding Path=MoreInfo}" />
+								</StackPanel>
+							</StackPanel>
+						</StackPanel>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
 		</ScrollViewer>
 		<Image
 			Grid.Row="0"
@@ -106,7 +111,7 @@
 					Grid.Column="1"
 					FontSize="16"
 					TextAlignment="Center"
-					Text="{Binding Path=SelectedFilm.ProducerName}"/>
+					Text="{Binding Path=SelectedFilm.ProducerName, Mode=OneWay}"/>
 
 				<TextBlock 
 					Grid.Row="2"
@@ -157,7 +162,7 @@
 					MouseLeftButtonUp="RemoveSelection">
 					<ListBox.ItemTemplate>
 						<DataTemplate>
-							<TextBlock Text="{Binding Path=FullName}"/>
+							<TextBlock Text="{Binding Path=FullName, UpdateSourceTrigger=LostFocus}"/>
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>
@@ -172,5 +177,14 @@
 			FontSize="16"
 			Text="{Binding Path=SelectedFilm.Description}"
 			TextWrapping="Wrap"/>
+		<!--Button
+			Grid.Column="1"
+			Grid.Row="2"
+				Height="40"
+				Width="40"
+				Command="{Binding OpenCommand}"
+				Style="{DynamicResource MaterialDesignFloatingActionLightButton}">
+			<Image Source="D:\git\isp-movies\src\Movies.UI\Images\open.png" />
+		</-->
 	</Grid>
 </Page>

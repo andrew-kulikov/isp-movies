@@ -5,7 +5,7 @@ namespace Movies.BusinessLogic.Tools
 {
 	public static class Helper
 	{
-		public static void SerializeCollection(MyCollection<Film> films, string path)
+		public static void SerializeCollection(MyCollection<Film> films, string path, int mode)
 		{
 			MyCollection<FilmModel> models = new MyCollection<FilmModel>();
 			foreach (var film in films)
@@ -15,13 +15,13 @@ namespace Movies.BusinessLogic.Tools
 					models.Add(film.ToDataModel());
 				}
 			}
-			Accessor.WriteColl(models.ToArray(), path);
+			Accessor.WriteColl(models.ToArray(), path, mode);
 		}
 
-		public static MyCollection<Film> DeserializeCollection(string path)
+		public static MyCollection<Film> DeserializeCollection(string path, int mode)
 		{
 			MyCollection<Film> films = new MyCollection<Film>();
-			MyCollection<FilmModel> models = new MyCollection<FilmModel>(Accessor.ReadColl());
+			MyCollection<FilmModel> models = new MyCollection<FilmModel>(Accessor.ReadColl(path, mode));
 			foreach (var model in models)
 			{
 				Film f = new Film();
@@ -31,6 +31,15 @@ namespace Movies.BusinessLogic.Tools
 			return films;
 		}
 
+		public static void Compress(string path)
+		{
+			Accessor.Compress(path);
+		}
+
+		public static void Decompress(string path)
+		{
+			Accessor.Decompress(path);
+		}
 		public static void ConnectCollections(
 			ref MyCollection<Film> films,
 			ref MyCollection<Actor> actors, 

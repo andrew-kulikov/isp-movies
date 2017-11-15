@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Movies.DataAcsessLayer
 {
+	[Serializable]
 	public class ProducerModel
 	{
 		private string name;

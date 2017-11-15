@@ -10,7 +10,7 @@ namespace Movies.UI.View
 	public partial class FilmsListPage : Page
 	{
 		private ApplicationViewModel viewModel;
-		public FilmsListPage(ApplicationViewModel viewModel)
+		public FilmsListPage(ref ApplicationViewModel viewModel)
 		{
 			InitializeComponent();
 			this.viewModel = viewModel;

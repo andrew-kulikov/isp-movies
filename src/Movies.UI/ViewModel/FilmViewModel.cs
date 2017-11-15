@@ -109,14 +109,14 @@ namespace Movies.UI.ViewModel
 		{
 			get
 			{
-				if (actors.Count == 0)
+				if (actors?.Count == 0)
 				{
 					actors = new MyObservableCollection<ActorViewModel>();
 					foreach (Actor actor in film.Actors)
 					{
 						actors.Add(new ActorViewModel(actor));
 					}
-					OnPropertyChanged();
+					//OnPropertyChanged();
 				}
 				return actors;
 			}
@@ -124,7 +124,7 @@ namespace Movies.UI.ViewModel
 			{
 				actors = value;
 				MyCollection<Actor> newActors = new MyCollection<Actor>();
-				foreach (var t in value)
+				foreach (var t in actors)
 				{
 					newActors.Add(t.SourceActor);
 				}
@@ -132,7 +132,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public MyObservableCollection<string> ActorNames
 		{
 			get
@@ -145,9 +144,7 @@ namespace Movies.UI.ViewModel
 				return names;
 			}
 		}
-
 		public string ProducerName => Prod.Name + " " + Prod.Surname;
-
 		public Producer Prod
 		{
 			get => film.Prod;
@@ -157,7 +154,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public ActorViewModel SelectedActor
 		{
 			get => selectedActor;
@@ -170,7 +166,6 @@ namespace Movies.UI.ViewModel
 				}
 			}
 		}
-
 		public Dictionary<string, bool> GenresDict
 		{
 			get => dict;
@@ -180,7 +175,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-
 		public void TransformGenres()
 		{
 			string genres = "";
@@ -196,7 +190,6 @@ namespace Movies.UI.ViewModel
 				Genres = genres.Substring(0, genres.Length - 2);
 			}
 		}
-
 		public bool IsReady()
 		{
 			if (Name == null || Name.Equals(null) || Name == "")
@@ -212,18 +205,26 @@ namespace Movies.UI.ViewModel
 				return true;
 			}
 		}
-
-		public void Save(string path)
-		{
-			film.Save(path);
-		}
-
 		public void Initialize()
 		{
 			film.Initialize();
 			
 		}
-
+		public void RemoveActor(string fulName)
+		{
+			foreach (var actor in film.Actors)
+			{
+				if (actor.Name + " " + actor.Surname == fulName)
+				{
+					film.Actors.Remove(actor);
+					break;
+				}
+			}
+		}
+		public void AddActor(ActorViewModel actor)
+		{
+			film.Actors.Add(actor.SourceActor);
+		}
 		public void SetActorFilms(MyCollection<Film> films)
 		{
 			actors = new MyObservableCollection<ActorViewModel>();
@@ -232,8 +233,37 @@ namespace Movies.UI.ViewModel
 				actor.TransformFilms(films);
 				actors.Add(new ActorViewModel(actor));
 			}
+			foreach (var film in films)
+			{
+				foreach (var actor in this.film.Actors)
+				{
+					bool res = false;
+					foreach (var f in actor.Films)
+					{
+						if (f.Name == film.Name)
+						{
+							res = true;
+						}
+					}
+					bool res1 = false;
+					foreach (var actor1 in film.Actors)
+					{
+						if (actor1.Name == actor.Name)
+						{
+							res1 = true;
+						}
+					}
+					if (!res && res1)
+					{
+						actor.Films.Add(film);
+					}
+				}
+			}
 		}
-
+		private string moreInfo;
+		public string MoreInfo => ApplicationViewModel.SelectedPluginForFilm.GetMoreInfo(this);
+	
+	
 		public Film Source => film;
 
 		public event PropertyChangedEventHandler PropertyChanged;

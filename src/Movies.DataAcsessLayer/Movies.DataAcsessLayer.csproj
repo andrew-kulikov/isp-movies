@@ -45,8 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActorModel.cs" />
-    <Compile Include="CollectionReader.cs" />
-    <Compile Include="Collections\MyCollectionModel.cs" />
     <Compile Include="FilmModel.cs" />
     <Compile Include="Accessor.cs" />
     <Compile Include="ProducerModel.cs" />

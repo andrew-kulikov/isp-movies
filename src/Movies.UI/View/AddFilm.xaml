@@ -1,12 +1,12 @@
 ﻿<Window x:Class="Movies.UI.View.AddFilm"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="AddFilm"
+        Title="New film"
 		Height="420"
 		Width="320"
 		MinHeight="380"
 		MinWidth="300"
-		Icon="{Binding Path=IconPath}"
+		Icon="D:\git\isp-movies\src\Movies.UI\Images\logo.png"
 		ResizeMode="NoResize">
 	<TabControl>
 		<TabItem>
@@ -141,7 +141,7 @@
 							Height="60"
 							Margin="0 5 0 0"
 							Text="{Binding Path=NewActor.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-						<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+						<!--StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 							<TextBlock Margin="0 5 5 0">Day</TextBlock>
 							<ComboBox
 								x:Name="ActorBirthDayBox"
@@ -157,7 +157,8 @@
 								x:Name="ActorBirthYearBox"
 								Margin="0 5 5 0"
 								SelectedItem="{Binding Path=NewActor.BirthYear}"></ComboBox>
-						</StackPanel>
+						</StackPanel-->
+						<DatePicker SelectedDate="{Binding Path=NewActor.BirthDate}"></DatePicker>
 						<Button
 							HorizontalAlignment="Center"
 							Margin="0 5 0 0"

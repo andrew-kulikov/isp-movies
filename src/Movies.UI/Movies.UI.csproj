@@ -62,6 +62,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\Context.cs" />
     <Compile Include="Model\RelayCommand.cs" />
     <Compile Include="Tools\MyCollectionsConverter.cs" />
     <Compile Include="ViewModel\ActorViewModel.cs" />
@@ -71,13 +72,13 @@
     <Compile Include="View\ActorsListPage.xaml.cs">
       <DependentUpon>ActorsListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\FilmNameForm.xaml.cs">
-      <DependentUpon>FilmNameForm.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\FilmsListPage.xaml.cs">
       <DependentUpon>FilmsListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MultiValueConverter.cs" />
+    <Compile Include="View\Plugins.xaml.cs">
+      <DependentUpon>Plugins.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ProducersListPage.xaml.cs">
       <DependentUpon>ProducersListPage.xaml</DependentUpon>
     </Compile>
@@ -90,10 +91,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\AddFilm.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\FilmNameForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -121,6 +118,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\Plugins.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ProducersListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -158,6 +159,10 @@
     <ProjectReference Include="..\Movies.BusinessLogic\Movies.BusinessLogic.csproj">
       <Project>{bb403bb0-743c-4ebf-abc9-52388b43b2f5}</Project>
       <Name>Movies.BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PluginLib\IPlugin.csproj">
+      <Project>{bb5f0072-0b3a-43c1-9827-fd7d4d809ff7}</Project>
+      <Name>IPlugin</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

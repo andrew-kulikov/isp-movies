@@ -26,7 +26,7 @@ namespace Movies.BusinessLogic.Collections
 
 		public T this[int i] {
 			get {
-				if (i > cursor)
+				if (i > cursor || i < 0)
 				{
 					throw new IndexOutOfRangeException("Index is out of range");
 				}
