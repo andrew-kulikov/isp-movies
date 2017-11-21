@@ -11,12 +11,15 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Forms;
 using System.Reflection;
+using System.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace Movies.UI.ViewModel
 {
 	public class ApplicationViewModel : INotifyPropertyChanged
 	{
+		private MyObservableCollection<FilmViewModel> allFilms;
 		private MyObservableCollection<FilmViewModel> films;
 		private MyObservableCollection<ActorViewModel> actors;
 		private MyObservableCollection<ActorViewModel> availableActors;
@@ -37,91 +40,33 @@ namespace Movies.UI.ViewModel
 		private RelayCommand openCommand;
 		private RelayCommand loadCommand;
 		private RelayCommand removePluginCommand;
-		private string tmpFilmName;
+		private RelayCommand queryCommand;
+		private string tmpFilmName = "";
 		private FilmViewModel newFilm;
 		private Film Digimon, Noise, Agora;
 		private Context context;
 		private MyCollection<IPlugin.IPlugin> plugins;
 		private static IPlugin.IPlugin selectedPlugin;
+		private double startRating = 0;
+		private double endRating = 10;
+		private double startAge = 0;
+		private double endAge = 22;
+		private Dictionary<string, bool> genres = new Dictionary<string, bool>();
+
 
 		public ApplicationViewModel()
 		{
 			context = Context.Films;
 			newActor = new ActorViewModel();
-			Digimon = new Film(
-					"Digimon",
-					18,
-					2017,
-					6.3,
-					"1, 2, 3",
-					"A group of young teens is unexpectedly sent to the mysterious Digital World and paired up with their own powerful, morphing monster called the Digimon. Together the entire group set out on an adventure to fight evil and save the world.");
-			Noise = new Film(
-					"White Noise 2",
-					12,
-					2007,
-					5.7,
-					"5, 2, 7",
-					"Following the loss of his family, a man attempts suicide only to discover upon waking that he can identify people who are about to die");
-			Agora = new Film(
-				"Agora",
-				12,
-				2009,
-				7.2,
-				"8, 4",
-				"A historical drama set in Roman Egypt, concerning a slave who turns to the rising tide of Christianity in the hope of pursuing freedom while falling in love with his mistress, the famous philosophy and mathematics professor Hypatia of Alexandria.");
-
-			FilmViewModel[] f = new FilmViewModel[]
-			{
-				new FilmViewModel(Digimon),
-				new FilmViewModel(Noise),
-				new FilmViewModel(new Film(
-					"Safety Not Guaranteed",
-					12,
-					2012,
-					7.0,
-					"8, 4",
-					"Three magazine employees head out on an assignment to interview a guy who placed a classified advertisement seeking a companion for time travel.")),
-				new FilmViewModel(new Film(
-					"Four brothers",
-					21,
-					2005,
-					5.6,
-					"1, 2, 3",
-					"Four adopted brothers come to avenge their mother's death in what appears to be a random killing in a grocery store robbery. However, the boys' investigation of the death reveals more nefarious activities involving the one brother's business dealings with a notorious local hoodlum. Two cops who are trying to solve the case may also not be what they seem."))
-			};
-			ActorViewModel Parker = new ActorViewModel(
-						"Peter",
-						"Parker",
-						new System.DateTime(1956, 4, 24),
-						"One of the first things I did was to work up a costume.",
-						new MyCollection<Film>());
-			ActorViewModel Brat = new ActorViewModel(
-					"Jim",
-					"Carrey",
-					new System.DateTime(1975, 7, 18),
-					"One of the first things I did was to work up a costume.",
-					new MyCollection<Film>());
-			actors = new MyObservableCollection<ActorViewModel>(Parker, Brat);
-			films = new MyObservableCollection<FilmViewModel>(f);
-			films.AddObs(new FilmViewModel(Agora));
-			foreach (FilmViewModel film in films)
-			{
-				foreach (var actor in actors)
-				{
-					film.Actors.Add(actor);
-				}
-			}
-			producers = new MyObservableCollection<ProducerViewModel>(
-				new ProducerViewModel("James", "Cameron", new System.DateTime(1964, 12, 14), new MyCollection<Film>(Noise, Digimon, Agora)));
-			SelectedFilm = films[0];
+			films = new MyObservableCollection<FilmViewModel>();
+			actors = new MyObservableCollection<ActorViewModel>();
+			producers = new MyObservableCollection<ProducerViewModel>();
 			newFilm = new FilmViewModel();
 			AvailableActors = new MyObservableCollection<ActorViewModel>(Actors);
 			NewProducer = new ProducerViewModel();
-			foreach (var film in films)
-			{
-				Parker.Films.Add(film.Source);
-				Brat.Films.Add(film.Source);
-			}
+			allFilms = new MyObservableCollection<FilmViewModel>();
+			LoadFromFile("films.json");
+			selectedFilm = films[0];
 			plugins = LoadPlugins(@"D:\git\isp-movies\src\plugins");
 		}
 		public FilmViewModel SelectedFilm
@@ -139,8 +84,18 @@ namespace Movies.UI.ViewModel
 			get => tmpFilmName;
 			set
 			{
+				RestoreFilms();
 				tmpFilmName = value;
-				Find();
+				Filter();
+				OnPropertyChanged();
+			}
+		}
+		public Dictionary<string, bool> Genres
+		{
+			get => genres;
+			set
+			{
+				genres = value;
 				OnPropertyChanged();
 			}
 		}
@@ -162,20 +117,112 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
+		private string GetFileName()
+		{
+			OpenFileDialog od = new OpenFileDialog();
+			od.Filter = "Json|*.json|Binary|*.dat|Archive|*.gz";
+			if (od.ShowDialog() == DialogResult.OK)
+			{
+				return od.FileName;
+			}
+			return null;
+		}
+		private void RestoreFilms()
+		{
+			Films = new MyObservableCollection<FilmViewModel>(allFilms);
+		}
+		public void Filter()
+		{
+			var newFilms = from film in allFilms
+						   where film.Rating <= endRating && film.Rating >= startRating
+						   && film.AgeLimit >= startAge && film.AgeLimit <= endAge
+						   select film;
+			if (genres.Count != 0)
+			{
+				newFilms = from film in newFilms
+						   from genre in genres.Keys
+						   where genres[genre] && film.Genres.Contains(genre)
+						   select film;
+			}
+ 			films = new MyObservableCollection<FilmViewModel>(newFilms.ToArray());
+			Films.Refresh();
+			try
+			{
+				SelectedFilm = films[0];
+			}
+			catch
+			{
+				SelectedFilm = null;
+			}
+			Find();
+			OnPropertyChanged("Films");
+		}
+		private void LoadFromFile(string path)
+		{
+			string fileName = "films.json";
+			if (path != null)
+			{
+				fileName = path;
 
+				int mode = 0;
+				MyCollection<Film> newFilms = new MyCollection<Film>();
+				if (Path.GetExtension(fileName) == ".dat")
+				{
+					mode = 1;
+				}
+				else if (Path.GetExtension(fileName) == ".gz")
+				{
+					mode = 2;
+				}
+				newFilms = Helper.DeserializeCollection(fileName, mode);
+
+				foreach (var film in newFilms)
+				{
+					if (film != null)
+					{
+						FilmViewModel film1 = new FilmViewModel(film);
+						MyCollectionsConverter.AddFilm(film1, ref actors, ref producers);
+						allFilms.AddObs(film1);
+					}
+				}
+
+				foreach (var film in allFilms)
+				{
+
+					MyCollection<Film> fullColl = new MyCollection<Film>();
+					foreach (var f in allFilms)
+					{
+						fullColl.Add(f.Source);
+					}
+					film.SetActorFilms(fullColl);
+					foreach (var actor in film.Actors)
+					{
+						Actors.AddObs(actor);
+					}
+				}
+				MyCollectionsConverter.ConnectCollection(ref allFilms, ref actors, ref producers);
+				Films.Refresh();
+				Actors.Refresh();
+				Producers.Refresh();
+				Filter();
+			}
+		}
 		public bool Find()
 		{
 			bool res = false;
 			if (context == Context.Films)
 			{
-				foreach (FilmViewModel film in Films)
+				var newFilms = from film in films
+							   where film.Name.ToLower().Contains(tmpFilmName.ToLower())
+							   select film;
+				Films = new MyObservableCollection<FilmViewModel>(newFilms.ToArray());
+				try
 				{
-					if (film != null && film.Name.ToLower().Contains(tmpFilmName))
-					{
-						SelectedFilm = film;
-						res = true;
-						break;
-					}
+					SelectedFilm = films[0];
+				}
+				catch
+				{
+					SelectedFilm = null;
 				}
 			}
 			else if (context == Context.Actors)
@@ -226,6 +273,42 @@ namespace Movies.UI.ViewModel
 			}
 			return false;
 		}
+		public double StartRating
+		{
+			get => startRating;
+			set
+			{
+				startRating = value;
+				OnPropertyChanged();
+			}
+		}
+		public double EndRating
+		{
+			get => endRating;
+			set
+			{
+				endRating = value;
+				OnPropertyChanged();
+			}
+		}
+		public double StartAge
+		{
+			get => startAge;
+			set
+			{
+				startAge = value;
+				OnPropertyChanged();
+			}
+		}
+		public double EndAge
+		{
+			get => endAge;
+			set
+			{
+				endAge = value;
+				OnPropertyChanged();
+			}
+		}
 		public ActorViewModel NewActor
 		{
 			get => newActor;
@@ -263,7 +346,6 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-		//public string MoreInfo => plugin.GetMoreInfo(selectedFilm.GetType());
 		public MyObservableCollection<ActorViewModel> AvailableActors
 		{
 			get => availableActors;
@@ -316,7 +398,6 @@ namespace Movies.UI.ViewModel
 				if (newActor.IsReady && FindActor(newActor.FullName) == false)
 				{
 					newActor.Films.Add(newFilm.Source);
-					//newFilm.Actors.Add(newActor);
 					newFilm.AddActor(newActor);
 					Actors.AddObs(newActor);
 					NewActor = new ActorViewModel();
@@ -355,11 +436,14 @@ namespace Movies.UI.ViewModel
 						actor.Films.Add(newFilm.Source);
 					}*/
 
-					Films.AddObs(NewFilm);
+					//Films.AddObs(NewFilm);
+					allFilms.AddObs(NewFilm);
 
 					NewFilm = new FilmViewModel();
 					availableActors = new MyObservableCollection<ActorViewModel>(Actors);
 					SelectedAvailableActor = new ActorViewModel();
+					AvailableActors.Refresh();
+					Filter();
 					OnPropertyChanged("AvailableActors");
 				}
 				else
@@ -396,11 +480,11 @@ namespace Movies.UI.ViewModel
 			{
 				if (context == Context.Films)
 				{
-					if (films.Count != 0)
+					if (allFilms.Count != 0)
 					{
 						MyCollectionsConverter.DeleteFilm(selectedFilm?.Name, ref actors, ref producers);
-						bool res = Films.RemoveObs(selectedFilm?.Name);
-						if (films.Count != 0)
+						bool res = allFilms.RemoveObs(selectedFilm?.Name);
+						if (allFilms.Count != 0)
 						{
 							SelectedFilm = films[0];
 						}
@@ -415,9 +499,9 @@ namespace Movies.UI.ViewModel
 					if (actors.Count != 0)
 					{
 						string name = selectedActor?.FullName;
-						
+
 						bool res = Actors.RemoveObs(name);
-						foreach (var film in films)
+						foreach (var film in allFilms)
 						{
 							film.RemoveActor(name);
 						}
@@ -438,7 +522,7 @@ namespace Movies.UI.ViewModel
 					{
 						string name = selectedProducer?.FullName;
 						bool res = Producers.RemoveObs(name);
-						MyCollectionsConverter.DeleteProduer(name, ref films);
+						MyCollectionsConverter.DeleteProduer(name, ref allFilms);
 						if (producers.Count != 0)
 						{
 							SelectedProducer = producers[0];
@@ -449,6 +533,7 @@ namespace Movies.UI.ViewModel
 						}
 					}
 				}
+				Filter();
 				OnPropertyChanged("Films");
 			}));
 		public RelayCommand SaveCommand => saveCommand ??
@@ -482,53 +567,8 @@ namespace Movies.UI.ViewModel
 		public RelayCommand OpenCommand => openCommand ??
 			(openCommand = new RelayCommand(obj =>
 			{
-				string fileName = @"D:\git\isp-movies\src\Data\films.json";
-				OpenFileDialog od = new OpenFileDialog();
-				od.Filter = "Json|*.json|Binary|*.dat|Archive|*.gz";
-				if (od.ShowDialog() == DialogResult.OK)
-				{
-					fileName = od.FileName;
-
-					int mode = 0;
-					MyCollection<Film> newFilms = new MyCollection<Film>();
-					if (Path.GetExtension(fileName) == ".dat")
-					{
-						mode = 1;
-					}
-					else if (Path.GetExtension(fileName) == ".gz")
-					{
-						mode = 2;
-					}
-					newFilms = Helper.DeserializeCollection(fileName, mode);
-
-					foreach (var film in newFilms)
-					{
-						if (film != null)
-						{
-							FilmViewModel film1 = new FilmViewModel(film);
-							MyCollectionsConverter.AddFilm(film1, ref actors, ref producers);
-							films.AddObs(film1);
-						}
-					}
-
-					foreach (var film in films)
-					{
-
-						MyCollection<Film> allFilms = new MyCollection<Film>();
-						foreach (var f in films)
-						{
-							allFilms.Add(f.Source);
-						}
-						film.SetActorFilms(allFilms);
-					}
-					MyCollectionsConverter.ConnectCollection(ref films, ref actors, ref producers);
-					Films = films;
-					Actors = actors;
-					Actors.AddObs(new ActorViewModel());
-					OnPropertyChanged("Films");
-					OnPropertyChanged("Actors");
-					OnPropertyChanged("Producers");
-				}
+				string path = GetFileName();
+				LoadFromFile(path);
 			}));
 		public RelayCommand LoadCommand => loadCommand ??
 			(loadCommand = new RelayCommand(obj =>
@@ -536,8 +576,14 @@ namespace Movies.UI.ViewModel
 				Plugins p = new Plugins(this);
 				p.ShowDialog();
 			}));
+		public RelayCommand QueryCommand => queryCommand ??
+			(queryCommand = new RelayCommand(obj =>
+			{
+				Filter();
+			}));
 		public static IPlugin.IPlugin SelectedPluginForFilm => selectedPlugin;
-		public IPlugin.IPlugin SelectedPlugin {
+		public IPlugin.IPlugin SelectedPlugin
+		{
 			get => selectedPlugin;
 			set
 			{
@@ -617,7 +663,7 @@ namespace Movies.UI.ViewModel
 
 			return null;
 		}
-		public string HeaderColor => selectedPlugin.HeaderColor;
+		public string HeaderColor => selectedPlugin?.HeaderColor;
 
 		public string IconPath => Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", "logo.png");
 

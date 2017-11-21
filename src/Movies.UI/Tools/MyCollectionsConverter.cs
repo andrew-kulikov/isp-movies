@@ -135,7 +135,10 @@ namespace Movies.UI.Tools
 			{
 				foreach (var film in films)
 				{
-					film.Actors.AddObs(actor);
+					if (actor.IsInFilm(film))
+					{
+						film.Actors.AddObs(actor);
+					}
 				}
 			}
 			foreach (var film in films)

@@ -159,6 +159,7 @@ namespace Movies.BusinessLogic
 			FilmModel model = new FilmModel();
 			if (model != null)
 			{
+				ageLimit = model.AgeLimit;
 				name = model.Name;
 				rating = model.Rating;
 				genres = model.Genres;
@@ -184,6 +185,7 @@ namespace Movies.BusinessLogic
 		{
 			if (model != null)
 			{
+				ageLimit = model.AgeLimit;
 				name = model.Name;
 				rating = model.Rating;
 				genres = model.Genres;

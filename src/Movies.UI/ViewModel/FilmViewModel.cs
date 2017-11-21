@@ -216,6 +216,7 @@ namespace Movies.UI.ViewModel
 			{
 				if (actor.Name + " " + actor.Surname == fulName)
 				{
+					actors.RemoveObs(actor.Name + " " + actor.Surname);
 					film.Actors.Remove(actor);
 					break;
 				}
@@ -224,6 +225,7 @@ namespace Movies.UI.ViewModel
 		public void AddActor(ActorViewModel actor)
 		{
 			film.Actors.Add(actor.SourceActor);
+			actors.AddObs(actor);
 		}
 		public void SetActorFilms(MyCollection<Film> films)
 		{
@@ -261,7 +263,7 @@ namespace Movies.UI.ViewModel
 			}
 		}
 		private string moreInfo;
-		public string MoreInfo => ApplicationViewModel.SelectedPluginForFilm.GetMoreInfo(this);
+		public string MoreInfo => ApplicationViewModel.SelectedPluginForFilm?.GetMoreInfo(this) ?? "";
 	
 	
 		public Film Source => film;

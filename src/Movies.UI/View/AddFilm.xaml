@@ -219,7 +219,7 @@
 							Height="60"
 							Margin="0 5 0 0"
 							Text="{Binding Path=NewProducer.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-						<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+						<!-- StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 							<TextBlock Margin="0 5 5 0">Day</TextBlock>
 							<ComboBox
 								x:Name="ProducerBirthDayBox"
@@ -235,7 +235,9 @@
 								x:Name="ProducerBirthYearBox"
 								Margin="0 5 5 0"
 								SelectedItem="{Binding Path=NewProducer.BirthYear}"></ComboBox>
-						</StackPanel>
+							
+						</-->
+						<DatePicker SelectedDate="{Binding Path=NewProducer.BirthDate}"></DatePicker>
 						<Button
 							HorizontalAlignment="Center"
 							Margin="0 5 0 0"

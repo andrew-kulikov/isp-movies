@@ -106,6 +106,19 @@ namespace Movies.UI.ViewModel
 				}
 			}
 		}
+		public DateTime BirthDate
+		{
+			get => actor.BirthDate;
+			set
+			{
+				actor.BirthDate = value;
+				OnPropertyChanged();
+			}
+		}
+		public bool IsInFilm(FilmViewModel film)
+		{
+			return actor.IsInFilm(film.Source);
+		}
 
 		public Actor SourceActor => actor;
 

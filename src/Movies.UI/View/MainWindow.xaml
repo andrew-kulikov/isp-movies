@@ -4,7 +4,8 @@
         xmlns:local="clr-namespace:Movies.UI.View"
         Title="Movies"
 		MinWidth="320"
-		MinHeight="480"
+		MinHeight="700"
+		WindowStartupLocation="CenterScreen" WindowState="Maximized"
 		x:Name="mainWindow"
 		xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -82,11 +83,56 @@
 			<TextBox Width="100" Text="{Binding Path=TmpFilmName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
 			<Image Source="D:\git\isp-movies\src\Movies.UI\Images\find.png" />
 		</StackPanel>
-		<ListBox Grid.Row="1">
-			<ListBoxItem MouseLeftButtonUp="ListBoxItem_MouseLeftButtonUp">Films</ListBoxItem>
-			<ListBoxItem MouseLeftButtonUp="ListBoxItem1_MouseLeftButtonUp">Actors</ListBoxItem>
-			<ListBoxItem MouseLeftButtonUp="ListBoxItem2_MouseLeftButtonUp">Producers</ListBoxItem>
-		</ListBox>
+		<StackPanel Orientation="Vertical" Grid.Row="1">
+			<ListBox>
+				<ListBoxItem MouseLeftButtonUp="ListBoxItem_MouseLeftButtonUp">Films</ListBoxItem>
+				<ListBoxItem MouseLeftButtonUp="ListBoxItem1_MouseLeftButtonUp">Actors</ListBoxItem>
+				<ListBoxItem MouseLeftButtonUp="ListBoxItem2_MouseLeftButtonUp">Producers</ListBoxItem>
+			</ListBox>
+			<StackPanel x:Name="LinqToFilms" Margin="0 20 0 0">
+				<TextBlock HorizontalAlignment="Center">Rating</TextBlock>
+				<UniformGrid Rows="1" Margin="10 0"> 
+					<TextBlock VerticalAlignment="Center">From</TextBlock>
+					<TextBox Text="{Binding Path=StartRating, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+					<TextBlock VerticalAlignment="Center">To</TextBlock>
+					<TextBox Text="{Binding Path=EndRating, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+				</UniformGrid>
+				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Age limit</TextBlock>
+				<UniformGrid Rows="1" Margin="10 0">
+					<TextBlock VerticalAlignment="Center">From</TextBlock>
+					<TextBox Text="{Binding Path=StartAge, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+					<TextBlock VerticalAlignment="Center">To</TextBlock>
+					<TextBox Text="{Binding Path=EndAge, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+				</UniformGrid>
+				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Sort by name</TextBlock>
+				<UniformGrid Rows="1" Margin="10 0">
+					<RadioButton>Up</RadioButton>
+					<RadioButton>Down</RadioButton>
+				</UniformGrid>
+				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Sort by rating</TextBlock>
+				<UniformGrid Rows="1" Margin="10 0">
+					<RadioButton>Up</RadioButton>
+					<RadioButton>Down</RadioButton>
+				</UniformGrid>
+				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Sort by age</TextBlock>
+				<UniformGrid Rows="1" Margin="10 0">
+					<RadioButton>Up</RadioButton>
+					<RadioButton>Down</RadioButton>
+				</UniformGrid>
+				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Genres</TextBlock>
+				<UniformGrid Rows="8" Margin="10 0">
+					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[Comedy]}">Comedy</CheckBox>
+					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[Vestern]}">Vestern</CheckBox>
+					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[Horror]}">Horror</CheckBox>
+					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[Documental]}">Documental</CheckBox>
+					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[Sci-Fi]}">Sci-Fi</CheckBox>
+					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[War]}">War</CheckBox>
+					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[Action]}">Action</CheckBox>
+					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[Animation]}">Animation</CheckBox>
+				</UniformGrid>
+				<Button Command="{Binding Path=QueryCommand}">Shpilley-Willey</Button>
+			</StackPanel>
+		</StackPanel>
 		<Frame Grid.Column="1" Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"></Frame>
 	</Grid>
 </Window>

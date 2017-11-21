@@ -1,14 +1,14 @@
 ﻿<Window x:Class="Movies.UI.View.ActorInfo"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Actor" Height="300" Width="300"
+        Title="Actor" Height="450" Width="350"
 		Icon="D:\git\isp-movies\src\Movies.UI\Images\logo.png">
 	<Grid>
 		<StackPanel >
 			<TextBlock Margin="0 5 0 5" HorizontalAlignment="Center">Name</TextBlock>
-			<TextBox Text="{Binding Path=FullName, Mode=OneWay}"></TextBox>
+			<TextBox TextAlignment="Center" Text="{Binding Path=FullName, Mode=OneWay}"></TextBox>
 			<TextBlock Margin="0 5 0 5" HorizontalAlignment="Center">Bith date</TextBlock>
-			<TextBox Text="{Binding Path=FullDate, Mode=OneWay}"></TextBox>
+			<TextBox TextAlignment="Center" Text="{Binding Path=FullDate, Mode=OneWay}"></TextBox>
 			<TextBlock Margin="0 5 0 5" HorizontalAlignment="Center">Biography</TextBlock>
 			<ScrollViewer>
 				<TextBox Text="{Binding Path=Biography, Mode=OneWay}" TextWrapping="Wrap"></TextBox>
@@ -17,7 +17,7 @@
 			<ListBox ItemsSource="{Binding Path=Films}">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
-						<TextBlock Text="{Binding Path=Name}" />
+						<TextBlock HorizontalAlignment="Center" TextAlignment="Center" Text="{Binding Path=Name}" />
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>

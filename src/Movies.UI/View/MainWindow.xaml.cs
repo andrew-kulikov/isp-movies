@@ -40,16 +40,19 @@ namespace Movies.UI.View
 		{
 			viewModel.Context = Model.Context.Films;
 			MainFrame.Content = new FilmsListPage(ref viewModel);
+			LinqToFilms.Visibility = Visibility.Visible;
 		}
 		private void ListBoxItem1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			viewModel.Context = Model.Context.Actors;
 			MainFrame.Content = new ActorsListPage(viewModel);
+			LinqToFilms.Visibility = Visibility.Collapsed;
 		}
 		private void ListBoxItem2_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			viewModel.Context = Model.Context.Prodecers;
 			MainFrame.Content = new ProducersListPage(viewModel);
+			LinqToFilms.Visibility = Visibility.Collapsed;
 		}
 	}
 }

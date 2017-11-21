@@ -15,7 +15,7 @@ namespace Movies.UI.View
             InitializeComponent();
 			viewModel = applicationViewModel;
 			DataContext = viewModel;
-			/*for (int i = 1950; i < DateTime.Now.Year + 5; ++i)
+			for (int i = 1950; i < DateTime.Now.Year + 5; ++i)
 			{
 				YearBox.Items.Add(i);
 			}
@@ -23,7 +23,7 @@ namespace Movies.UI.View
 			{
 				AgeBox.Items.Add(i);
 			}
-			for (int i = 1930; i <= DateTime.Now.Year - 10; ++i)
+			/*for (int i = 1930; i <= DateTime.Now.Year - 10; ++i)
 			{
 				ActorBirthYearBox.Items.Add(i);
 				ProducerBirthYearBox.Items.Add(i);
