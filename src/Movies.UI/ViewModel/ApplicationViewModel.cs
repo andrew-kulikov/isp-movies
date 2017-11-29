@@ -14,6 +14,9 @@ using System.Reflection;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Concurrent;
 
 namespace Movies.UI.ViewModel
 {
@@ -22,8 +25,13 @@ namespace Movies.UI.ViewModel
 		private MyObservableCollection<FilmViewModel> allFilms;
 		private MyObservableCollection<FilmViewModel> films;
 		private MyObservableCollection<ActorViewModel> actors;
+		private MyObservableCollection<ActorViewModel> allActors;
 		private MyObservableCollection<ActorViewModel> availableActors;
+		private MyObservableCollection<ProducerViewModel> allProducers;
 		private MyObservableCollection<ProducerViewModel> producers;
+		private MyObservableCollection<FilmViewModel> nextPage;
+		private MyObservableCollection<FilmViewModel> prevPage;
+		private MyObservableCollection<FilmViewModel> curPage;
 		private FilmViewModel selectedFilm;
 		private ActorViewModel newActor;
 		private ActorViewModel selectedActor;
@@ -41,16 +49,25 @@ namespace Movies.UI.ViewModel
 		private RelayCommand loadCommand;
 		private RelayCommand removePluginCommand;
 		private RelayCommand queryCommand;
+		private RelayCommand clearCommand;
+		private RelayCommand groupCommand;
+		private RelayCommand nextPageCommand;
+		private RelayCommand prevPageCommand;
 		private string tmpFilmName = "";
 		private FilmViewModel newFilm;
-		private Film Digimon, Noise, Agora;
 		private Context context;
-		private MyCollection<IPlugin.IPlugin> plugins;
+		private MyObservableCollection<IPlugin.IPlugin> plugins;
 		private static IPlugin.IPlugin selectedPlugin;
 		private double startRating = 0;
 		private double endRating = 10;
 		private double startAge = 0;
 		private double endAge = 22;
+		private bool nameUp;
+		private bool nameDown;
+		private bool ratingUp;
+		private bool ratingDown;
+		private int curPageNumber = 0;
+		private int pageSize = 4;
 		private Dictionary<string, bool> genres = new Dictionary<string, bool>();
 
 
@@ -65,9 +82,19 @@ namespace Movies.UI.ViewModel
 			AvailableActors = new MyObservableCollection<ActorViewModel>(Actors);
 			NewProducer = new ProducerViewModel();
 			allFilms = new MyObservableCollection<FilmViewModel>();
+			allActors = new MyObservableCollection<ActorViewModel>();
+			allProducers = new MyObservableCollection<ProducerViewModel>();
 			LoadFromFile("films.json");
-			selectedFilm = films[0];
-			plugins = LoadPlugins(@"D:\git\isp-movies\src\plugins");
+			try
+			{
+				selectedFilm = films[0];
+			}
+			catch
+			{
+				SelectedFilm = null;
+			}
+			LoadNextPage();
+			LoadPluginsAsync(@"D:\git\isp-movies\src\plugins");
 		}
 		public FilmViewModel SelectedFilm
 		{
@@ -84,9 +111,61 @@ namespace Movies.UI.ViewModel
 			get => tmpFilmName;
 			set
 			{
-				RestoreFilms();
+				Restore();
 				tmpFilmName = value;
 				Filter();
+				OnPropertyChanged();
+			}
+		}
+		public bool NameUp
+		{
+			get => nameUp;
+			set
+			{
+				nameUp = value;
+				ratingDown = false;
+				OnPropertyChanged("RatingUp");
+				ratingUp = false;
+				OnPropertyChanged("RatingDown");
+				OnPropertyChanged();
+			}
+		}
+		public bool NameDown
+		{
+			get => nameDown;
+			set
+			{
+				nameDown = value;
+				ratingDown = false;
+				OnPropertyChanged("RatingUp");
+				ratingUp = false;
+				OnPropertyChanged("RatingDown");
+				OnPropertyChanged();
+			}
+		}
+		public bool RatingUp
+		{
+			get => ratingUp;
+			set
+			{
+				ratingUp = value;
+				nameDown = false;
+				OnPropertyChanged("NameUp");
+				nameUp = false;
+				OnPropertyChanged("NameDown");
+				OnPropertyChanged();
+			}
+		}
+		public bool RatingDown
+		{
+			get => ratingDown;
+			set
+			{
+				ratingDown = value;
+				nameDown = false;
+				OnPropertyChanged("NameUp");
+				nameUp = false;
+				OnPropertyChanged("NameDown");
 				OnPropertyChanged();
 			}
 		}
@@ -127,35 +206,78 @@ namespace Movies.UI.ViewModel
 			}
 			return null;
 		}
-		private void RestoreFilms()
+		private void Restore()
 		{
 			Films = new MyObservableCollection<FilmViewModel>(allFilms);
+			Actors = new MyObservableCollection<ActorViewModel>(allActors);
+			Producers = new MyObservableCollection<ProducerViewModel>(allProducers);
 		}
 		public void Filter()
 		{
-			var newFilms = from film in allFilms
-						   where film.Rating <= endRating && film.Rating >= startRating
-						   && film.AgeLimit >= startAge && film.AgeLimit <= endAge
-						   select film;
-			if (genres.Count != 0)
+			if (context == Context.Films)
 			{
-				newFilms = from film in newFilms
-						   from genre in genres.Keys
-						   where genres[genre] && film.Genres.Contains(genre)
-						   select film;
+				var newFilms = from film in allFilms
+							   where film.Rating <= endRating && film.Rating >= startRating
+							   && film.AgeLimit >= startAge && film.AgeLimit <= endAge
+							   select film;
+				if (genres.Count != 0 && !genres.All(x => !x.Value))
+				{
+					newFilms = from film in newFilms
+							   from genre in genres.Keys
+							   where genres[genre] && film.Genres.Contains(genre)
+							   select film;
+				}
+				var newFilms1 = new HashSet<FilmViewModel>(newFilms);
+				newFilms = newFilms1.AsEnumerable();
+				if (nameUp)
+				{
+					newFilms = from film in newFilms
+							   orderby film.Name
+							   select film;
+				}
+				else if (nameDown)
+				{
+					newFilms = from film in newFilms
+							   orderby film.Name descending
+							   select film;
+				}
+				if (ratingUp)
+				{
+					newFilms = from film in newFilms
+							   orderby film.Rating
+							   select film;
+				}
+				else if (ratingDown)
+				{
+					newFilms = from film in newFilms
+							   orderby film.Rating descending
+							   select film;
+				}
+				films = new MyObservableCollection<FilmViewModel>(newFilms.ToArray());
+				Films.Refresh();
+				
+				Films.Refresh();
+				CurPage = new MyObservableCollection<FilmViewModel>(films.Take(pageSize).ToArray());
+				try
+				{
+					SelectedFilm = curPage[0];
+				}
+				catch
+				{
+					SelectedFilm = null;
+				}
+				LoadNextPage();
 			}
- 			films = new MyObservableCollection<FilmViewModel>(newFilms.ToArray());
-			Films.Refresh();
-			try
+			else if (context == Context.Actors)
 			{
-				SelectedFilm = films[0];
+				Actors.Refresh();  
 			}
-			catch
+			else if (context == Context.Prodecers)
 			{
-				SelectedFilm = null;
+				Producers.Refresh();
 			}
 			Find();
-			OnPropertyChanged("Films");
+			
 		}
 		private void LoadFromFile(string path)
 		{
@@ -181,7 +303,7 @@ namespace Movies.UI.ViewModel
 					if (film != null)
 					{
 						FilmViewModel film1 = new FilmViewModel(film);
-						MyCollectionsConverter.AddFilm(film1, ref actors, ref producers);
+						MyCollectionsConverter.AddFilm(film1, ref allActors, ref allProducers);
 						allFilms.AddObs(film1);
 					}
 				}
@@ -197,13 +319,15 @@ namespace Movies.UI.ViewModel
 					film.SetActorFilms(fullColl);
 					foreach (var actor in film.Actors)
 					{
-						Actors.AddObs(actor);
+						allActors.AddObs(actor);
 					}
 				}
-				MyCollectionsConverter.ConnectCollection(ref allFilms, ref actors, ref producers);
+				MyCollectionsConverter.ConnectCollection(ref allFilms, ref allActors, ref allProducers);
 				Films.Refresh();
-				Actors.Refresh();
-				Producers.Refresh();
+				allActors.Refresh();
+				allProducers.Refresh();
+				Producers = new MyObservableCollection<ProducerViewModel>(allProducers);
+				Actors = new MyObservableCollection<ActorViewModel>(allActors);
 				Filter();
 			}
 		}
@@ -227,26 +351,32 @@ namespace Movies.UI.ViewModel
 			}
 			else if (context == Context.Actors)
 			{
-				foreach (ActorViewModel actor in actors)
+				var newActors = from actor in actors
+							   where actor.FullName.ToLower().Contains(tmpFilmName.ToLower())
+							   select actor;
+				Actors = new MyObservableCollection<ActorViewModel>(newActors.ToArray());
+				try
 				{
-					if (actor != null && actor.Name.ToLower().Contains(tmpFilmName))
-					{
-						SelectedActor = actor;
-						res = true;
-						break;
-					}
+					SelectedActor = actors[0];
+				}
+				catch
+				{
+					SelectedActor = null;
 				}
 			}
 			else if (context == Context.Prodecers)
 			{
-				foreach (ProducerViewModel prod in producers)
+				var newProds = from prod in producers
+								where prod.FullName.ToLower().Contains(tmpFilmName.ToLower())
+								select prod;
+				Producers = new MyObservableCollection<ProducerViewModel>(newProds.ToArray());
+				try
 				{
-					if (prod != null && prod.Name.ToLower().Contains(tmpFilmName))
-					{
-						SelectedProducer = prod;
-						res = true;
-						break;
-					}
+					SelectedProducer = producers[0];
+				}
+				catch
+				{
+					SelectedProducer = null;
 				}
 			}
 
@@ -328,6 +458,15 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
+		public MyObservableCollection<FilmViewModel> CurPage
+		{
+			get => curPage;
+			set
+			{
+				curPage = value;
+				OnPropertyChanged();
+			}
+		}
 		public MyObservableCollection<ActorViewModel> Actors
 		{
 			get => actors;
@@ -399,7 +538,7 @@ namespace Movies.UI.ViewModel
 				{
 					newActor.Films.Add(newFilm.Source);
 					newFilm.AddActor(newActor);
-					Actors.AddObs(newActor);
+					allActors.AddObs(newActor);
 					NewActor = new ActorViewModel();
 					System.Windows.MessageBox.Show("Actor successfully added!");
 				}
@@ -440,7 +579,7 @@ namespace Movies.UI.ViewModel
 					allFilms.AddObs(NewFilm);
 
 					NewFilm = new FilmViewModel();
-					availableActors = new MyObservableCollection<ActorViewModel>(Actors);
+					availableActors = new MyObservableCollection<ActorViewModel>(allActors);
 					SelectedAvailableActor = new ActorViewModel();
 					AvailableActors.Refresh();
 					Filter();
@@ -576,25 +715,60 @@ namespace Movies.UI.ViewModel
 				Plugins p = new Plugins(this);
 				p.ShowDialog();
 			}));
+		public RelayCommand ClearCommand => clearCommand ??
+			(clearCommand = new RelayCommand(obj =>
+			{
+				StartAge = 0;
+				EndAge = 22;
+				StartRating = 0;
+				EndRating = 10;
+				NameUp = false;
+				NameDown = false;
+				RatingUp = false;
+				RatingDown = false;
+				Genres = new Dictionary<string, bool>();
+				Actors = new MyObservableCollection<ActorViewModel>(allActors);
+				Films = new MyObservableCollection<FilmViewModel>(allFilms);
+				Producers = new MyObservableCollection<ProducerViewModel>(allProducers);
+				TmpFilmName = "";
+			}));
 		public RelayCommand QueryCommand => queryCommand ??
 			(queryCommand = new RelayCommand(obj =>
 			{
 				Filter();
 			}));
+		public RelayCommand GroupCommand => groupCommand ??
+			(groupCommand = new RelayCommand(obj =>
+			{
+				var newActors = from actor in allActors
+								group actor by actor.Films.Count;
+				string res = "";
+				foreach (var g in newActors)
+				{
+					res += "Amount of films: " + g.Key + "\n";
+					foreach (var actor in g)
+					{
+						res += actor.FullName + ", ";
+					}
+					res += "\n";
+				}
+				System.Windows.MessageBox.Show(res);
+			}
+			));
 		public static IPlugin.IPlugin SelectedPluginForFilm => selectedPlugin;
 		public IPlugin.IPlugin SelectedPlugin
 		{
 			get => selectedPlugin;
 			set
 			{
-				Films.Refresh();
+				CurPage.Refresh();
 				selectedPlugin = value;
 				OnPropertyChanged("HeaderColor");
 				System.Windows.MessageBox.Show("Plugin " + selectedPlugin.Name + " added!");
 				OnPropertyChanged();
 			}
 		}
-		public MyCollection<IPlugin.IPlugin> Plugins
+		public MyObservableCollection<IPlugin.IPlugin> Plugins
 		{
 			get => plugins;
 			set
@@ -610,7 +784,7 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged("HeaderColor");
 				Films.Refresh();
 			}));
-		public static MyCollection<IPlugin.IPlugin> LoadPlugins(string path)
+		public void LoadPlugins(string path)
 		{
 			string[] dllFileNames = null;
 
@@ -651,19 +825,77 @@ namespace Movies.UI.ViewModel
 					}
 				}
 
-				MyCollection<IPlugin.IPlugin> plugins = new MyCollection<IPlugin.IPlugin>();
+				Plugins = new MyObservableCollection<IPlugin.IPlugin>();
 				foreach (Type type in pluginTypes)
 				{
+					Thread.Sleep(5000);
 					IPlugin.IPlugin plugin = (IPlugin.IPlugin)Activator.CreateInstance(type);
-					plugins.Add(plugin);
+					System.Windows.Application.Current.Dispatcher.InvokeAsync(() => Plugins.AddObs(plugin));
 				}
-
-				return plugins;
 			}
-
-			return null;
 		}
 		public string HeaderColor => selectedPlugin?.HeaderColor;
+		public void LoadPluginsAsync(string path)
+		{
+			//Thread t = new Thread(new ParameterizedThreadStart(LoadPlugins));
+			//t.Start(path);
+			Task loadPluginsTask = Task.Run(() => LoadPlugins(path));
+		}
+		public void LoadNextPage()
+		{
+			Task t = Task.Factory.StartNew(() =>
+			{
+				nextPage = new MyObservableCollection<FilmViewModel>(films.Skip((curPageNumber + 1) * pageSize).Take(pageSize).ToArray());
+				if (nextPage == null)
+				{
+					curPageNumber--;
+				}
+			});
+		}
+		public void LoadPrevPage()
+		{
+			Task t = Task.Factory.StartNew(() =>
+			{
+				if (curPageNumber <= 0)
+				{
+					curPageNumber = 0;
+					return;
+				}
+				prevPage = new MyObservableCollection<FilmViewModel>(films.Skip((curPageNumber - 1) * pageSize).Take(pageSize).ToArray());
+			});
+		}
+		public RelayCommand NextPageCommand => nextPageCommand ?? (
+			nextPageCommand = new RelayCommand(obj =>
+			{
+				curPageNumber++;
+				CurPage = new MyObservableCollection<FilmViewModel>(nextPage);
+				try
+				{
+					SelectedFilm = curPage[0];
+				}
+				catch
+				{
+					SelectedFilm = null;
+				}
+				LoadNextPage();
+				LoadPrevPage();
+			}));
+		public RelayCommand PrevPageCommand => prevPageCommand ?? (
+			prevPageCommand = new RelayCommand(obj =>
+			{
+				curPageNumber--;
+				CurPage = new MyObservableCollection<FilmViewModel>(prevPage);
+				try
+				{
+					SelectedFilm = curPage[0];
+				}
+				catch
+				{
+					SelectedFilm = null;
+				}
+				LoadNextPage();
+				LoadPrevPage();
+			}));
 
 		public string IconPath => Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", "logo.png");
 

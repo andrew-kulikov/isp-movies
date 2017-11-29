@@ -11,19 +11,19 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition />
-			<RowDefinition Height="40" />
+			<RowDefinition Height="50" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="250"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
-		<ScrollViewer Grid.RowSpan="2">
-			<ListBox 
-				ItemsSource="{Binding Path=Films, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+			<ListBox Grid.RowSpan="2" 
+				ItemsSource="{Binding Path=CurPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				SelectedItem="{Binding Path=SelectedFilm}"
 				Grid.Column="0"
 				ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+				ScrollViewer.VerticalScrollBarVisibility="Disabled"
 				x:Name="FilmListBox">
 				<ListBox.ItemContainerStyle>
 					<Style TargetType="ListBoxItem">
@@ -54,7 +54,10 @@
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
-		</ScrollViewer>
+		<StackPanel HorizontalAlignment="Center" Grid.Column="0" Grid.Row="2" Orientation="Horizontal">
+			<Button Width="70" Margin="10 0 0 0" Command="{Binding Path=PrevPageCommand}">Prev</Button>
+			<Button Width="70" Margin="0 0 10 0" Command="{Binding Path=NextPageCommand}">Next</Button>
+		</StackPanel>
 		<Image
 			Grid.Row="0"
 			Grid.Column="1"

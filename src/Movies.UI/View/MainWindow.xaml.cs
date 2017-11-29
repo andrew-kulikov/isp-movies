@@ -5,6 +5,7 @@ using Movies.UI;
 using Movies.UI.ViewModel;
 using System.Windows.Data;
 using System.Globalization;
+using System.Windows.Controls;
 
 namespace Movies.UI.View
 {
@@ -19,6 +20,7 @@ namespace Movies.UI.View
 			InitializeComponent();
 			viewModel = new ApplicationViewModel();
 			DataContext = viewModel;
+			groupButton.Visibility = Visibility.Collapsed;
 			MainFrame.Content = new FilmsListPage(ref viewModel);
 		}
 		private void AddFilm_Click(object sender, RoutedEventArgs e)
@@ -38,18 +40,21 @@ namespace Movies.UI.View
 
 		private void ListBoxItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
+			groupButton.Visibility = Visibility.Collapsed;
 			viewModel.Context = Model.Context.Films;
 			MainFrame.Content = new FilmsListPage(ref viewModel);
 			LinqToFilms.Visibility = Visibility.Visible;
 		}
 		private void ListBoxItem1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
+			groupButton.Visibility = Visibility.Visible;
 			viewModel.Context = Model.Context.Actors;
 			MainFrame.Content = new ActorsListPage(viewModel);
 			LinqToFilms.Visibility = Visibility.Collapsed;
 		}
 		private void ListBoxItem2_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
+			groupButton.Visibility = Visibility.Collapsed;
 			viewModel.Context = Model.Context.Prodecers;
 			MainFrame.Content = new ProducersListPage(viewModel);
 			LinqToFilms.Visibility = Visibility.Collapsed;

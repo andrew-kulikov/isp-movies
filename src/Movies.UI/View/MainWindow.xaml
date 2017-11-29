@@ -104,20 +104,15 @@
 					<TextBlock VerticalAlignment="Center">To</TextBlock>
 					<TextBox Text="{Binding Path=EndAge, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
 				</UniformGrid>
-				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Sort by name</TextBlock>
+				<!--TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Sort by name</>
 				<UniformGrid Rows="1" Margin="10 0">
-					<RadioButton>Up</RadioButton>
-					<RadioButton>Down</RadioButton>
-				</UniformGrid>
+					<RadioButton IsChecked="{Binding Path=NameUp, Mode=TwoWay}">Up</RadioButton>
+					<RadioButton IsChecked="{Binding Path=NameDown, Mode=TwoWay}">Down</RadioButton>
+				</UniformGrid-->
 				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Sort by rating</TextBlock>
 				<UniformGrid Rows="1" Margin="10 0">
-					<RadioButton>Up</RadioButton>
-					<RadioButton>Down</RadioButton>
-				</UniformGrid>
-				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Sort by age</TextBlock>
-				<UniformGrid Rows="1" Margin="10 0">
-					<RadioButton>Up</RadioButton>
-					<RadioButton>Down</RadioButton>
+					<RadioButton IsChecked="{Binding Path=RatingUp, Mode=TwoWay}">Up</RadioButton>
+					<RadioButton IsChecked="{Binding Path=RatingDown, Mode=TwoWay}">Down</RadioButton>
 				</UniformGrid>
 				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Genres</TextBlock>
 				<UniformGrid Rows="8" Margin="10 0">
@@ -130,8 +125,12 @@
 					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[Action]}">Action</CheckBox>
 					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[Animation]}">Animation</CheckBox>
 				</UniformGrid>
-				<Button Command="{Binding Path=QueryCommand}">Shpilley-Willey</Button>
+				<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+					<Button Command="{Binding Path=QueryCommand}" Margin="0 20 10 0">Find</Button>
+					<Button Command="{Binding Path=ClearCommand}" Margin="10 20 0 0">Clear</Button>
+				</StackPanel>
 			</StackPanel>
+			<Button x:Name="groupButton" Command="{Binding Path=GroupCommand}">Group</Button>
 		</StackPanel>
 		<Frame Grid.Column="1" Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"></Frame>
 	</Grid>
