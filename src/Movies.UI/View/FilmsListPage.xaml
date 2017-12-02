@@ -18,45 +18,49 @@
 			<ColumnDefinition Width="250"/>
 			<ColumnDefinition Width="*"/>
 		</Grid.ColumnDefinitions>
-			<ListBox Grid.RowSpan="2" 
-				ItemsSource="{Binding Path=CurPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+		<ListBox Grid.RowSpan="2" 
+				ItemsSource="{Binding Path=CurFilmPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				SelectedItem="{Binding Path=SelectedFilm}"
 				Grid.Column="0"
 				ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				ScrollViewer.VerticalScrollBarVisibility="Disabled"
 				x:Name="FilmListBox">
-				<ListBox.ItemContainerStyle>
-					<Style TargetType="ListBoxItem">
-						<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-						<Setter Property="VerticalContentAlignment" Value="Stretch"/>
-					</Style>
-				</ListBox.ItemContainerStyle>
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<StackPanel Orientation="Horizontal">
-							<Image
+			<ListBox.ItemContainerStyle>
+				<Style TargetType="ListBoxItem">
+					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+					<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+				</Style>
+			</ListBox.ItemContainerStyle>
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal">
+						<Image
 							Source="{Binding Path=PosterPath}"
 							Stretch="Uniform"
 							Height="150" />
-							<StackPanel Orientation="Vertical">
-								<TextBlock
+						<StackPanel Orientation="Vertical">
+							<TextBlock
 								FontSize="20"
 								Margin="10 0 0 0"
 								Text="{Binding Path=Name}" />
-								<StackPanel Orientation="Horizontal">
-									<TextBlock
+							<StackPanel Orientation="Horizontal">
+								<TextBlock
 									FontSize="20"
 									Margin="10 0 0 0"
 									Text="{Binding Path=MoreInfo}" />
-								</StackPanel>
 							</StackPanel>
 						</StackPanel>
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-			</ListBox>
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
 		<StackPanel HorizontalAlignment="Center" Grid.Column="0" Grid.Row="2" Orientation="Horizontal">
+			<Button Width="70" Margin="0 0 10 0" Command="{Binding Path=FirstPageCommand}">First</Button>
 			<Button Width="70" Margin="10 0 0 0" Command="{Binding Path=PrevPageCommand}">Prev</Button>
+			<TextBlock Margin="10 0 0 0" VerticalAlignment="Center" Text="Page: "></TextBlock>
+			<TextBlock Margin="0 0 10 0" VerticalAlignment="Center" Text="{Binding Path=CurrentPageNumber, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
 			<Button Width="70" Margin="0 0 10 0" Command="{Binding Path=NextPageCommand}">Next</Button>
+			<Button Width="70" Margin="10 0 0 0" Command="{Binding Path=LastPageCommand}">Last</Button>
 		</StackPanel>
 		<Image
 			Grid.Row="0"

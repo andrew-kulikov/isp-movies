@@ -8,10 +8,12 @@
       d:DesignHeight="300" d:DesignWidth="300"
       Title="ActorsListPage">
 	<Grid>
-		<ListBox ItemsSource="{Binding Path=Actors, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition Height="50"/>
+		</Grid.RowDefinitions>
+		<ListBox ItemsSource="{Binding Path=CurActorsPage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				 SelectedItem="{Binding Path=SelectedActor}"
-				 Grid.Column="1"
-				 Grid.Row="1"
 				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				 x:Name="FilmListBox"
 				 MouseLeftButtonUp="RemoveSelection"
@@ -47,5 +49,11 @@
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
+		<StackPanel  VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.Row="1" Orientation="Horizontal">
+			<Button Width="70" Margin="10 0 0 0" Command="{Binding Path=PrevPageCommand}">Prev</Button>
+			<TextBlock Margin="10 0 0 0" VerticalAlignment="Center" Text="Page: "></TextBlock>
+			<TextBlock Margin="0 0 10 0" VerticalAlignment="Center" Text="{Binding Path=CurrentPageNumber, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+			<Button Width="70" Margin="0 0 10 0" Command="{Binding Path=NextPageCommand}">Next</Button>
+		</StackPanel>
 	</Grid>
 </Page>

@@ -29,9 +29,15 @@ namespace Movies.UI.ViewModel
 		private MyObservableCollection<ActorViewModel> availableActors;
 		private MyObservableCollection<ProducerViewModel> allProducers;
 		private MyObservableCollection<ProducerViewModel> producers;
-		private MyObservableCollection<FilmViewModel> nextPage;
-		private MyObservableCollection<FilmViewModel> prevPage;
-		private MyObservableCollection<FilmViewModel> curPage;
+		private MyObservableCollection<FilmViewModel> nextFilmPage;
+		private MyObservableCollection<FilmViewModel> prevFilmPage;
+		private MyObservableCollection<FilmViewModel> curFilmPage;
+		private MyObservableCollection<ActorViewModel> nextActorsPage;
+		private MyObservableCollection<ActorViewModel> prevActorsPage;
+		private MyObservableCollection<ActorViewModel> curActorsPage;
+		private MyObservableCollection<ProducerViewModel> nextProducersPage;
+		private MyObservableCollection<ProducerViewModel> prevProducersPage;
+		private MyObservableCollection<ProducerViewModel> curProdsPage;
 		private FilmViewModel selectedFilm;
 		private ActorViewModel newActor;
 		private ActorViewModel selectedActor;
@@ -53,6 +59,8 @@ namespace Movies.UI.ViewModel
 		private RelayCommand groupCommand;
 		private RelayCommand nextPageCommand;
 		private RelayCommand prevPageCommand;
+		private RelayCommand firstPageCommand;
+		private RelayCommand lastPageCommand;
 		private string tmpFilmName = "";
 		private FilmViewModel newFilm;
 		private Context context;
@@ -211,6 +219,12 @@ namespace Movies.UI.ViewModel
 			Films = new MyObservableCollection<FilmViewModel>(allFilms);
 			Actors = new MyObservableCollection<ActorViewModel>(allActors);
 			Producers = new MyObservableCollection<ProducerViewModel>(allProducers);
+			curFilmPage = new MyObservableCollection<FilmViewModel>(Films.Take(pageSize).ToArray());
+			nextFilmPage = new MyObservableCollection<FilmViewModel>();
+			prevFilmPage = new MyObservableCollection<FilmViewModel>();
+			curActorsPage = new MyObservableCollection<ActorViewModel>(actors.Take(pageSize).ToArray());
+			nextActorsPage = new MyObservableCollection<ActorViewModel>();
+			prevActorsPage = new MyObservableCollection<ActorViewModel>();
 		}
 		public void Filter()
 		{
@@ -255,29 +269,49 @@ namespace Movies.UI.ViewModel
 				}
 				films = new MyObservableCollection<FilmViewModel>(newFilms.ToArray());
 				Films.Refresh();
-				
-				Films.Refresh();
-				CurPage = new MyObservableCollection<FilmViewModel>(films.Take(pageSize).ToArray());
-				try
-				{
-					SelectedFilm = curPage[0];
-				}
-				catch
-				{
-					SelectedFilm = null;
-				}
-				LoadNextPage();
+				RefreshPages();
 			}
 			else if (context == Context.Actors)
 			{
-				Actors.Refresh();  
+				Actors.Refresh();
+				RefreshPages();
 			}
 			else if (context == Context.Prodecers)
 			{
 				Producers.Refresh();
 			}
 			Find();
-			
+		}
+		private void RefreshPages()
+		{
+			if (context == Context.Films)
+			{
+				CurFilmPage = new MyObservableCollection<FilmViewModel>(films.Take(pageSize).ToArray());
+				curPageNumber = 0;
+				try
+				{
+					SelectedFilm = curFilmPage[0];
+				}
+				catch
+				{
+					SelectedFilm = null;
+				}
+			}
+			else if (context == Context.Actors)
+			{
+				CurActorsPage = new MyObservableCollection<ActorViewModel>(actors.Take(pageSize).ToArray());
+				curPageNumber = 0;
+				try
+				{
+					SelectedActor = CurActorsPage[0];
+				}
+				catch
+				{
+					SelectedActor = null;
+				}
+			}
+			LoadPrevPage();
+			LoadNextPage();
 		}
 		private void LoadFromFile(string path)
 		{
@@ -340,14 +374,7 @@ namespace Movies.UI.ViewModel
 							   where film.Name.ToLower().Contains(tmpFilmName.ToLower())
 							   select film;
 				Films = new MyObservableCollection<FilmViewModel>(newFilms.ToArray());
-				try
-				{
-					SelectedFilm = films[0];
-				}
-				catch
-				{
-					SelectedFilm = null;
-				}
+				RefreshPages();
 			}
 			else if (context == Context.Actors)
 			{
@@ -439,6 +466,26 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
+		public int AmountOfPages
+		{
+			get
+			{
+				int n = 0;
+				if (context == Context.Films) n = films.Count;
+				else if (context == Context.Actors) n = actors.Count;
+				else if (context == Context.Prodecers) n = producers.Count;
+				return (n - 1) / pageSize + 1;
+			}
+		}
+		public int CurrentPageNumber
+		{
+			get => curPageNumber;
+			set
+			{
+				curPageNumber = value;
+				OnPropertyChanged();
+			}
+		}
 		public ActorViewModel NewActor
 		{
 			get => newActor;
@@ -458,12 +505,21 @@ namespace Movies.UI.ViewModel
 				OnPropertyChanged();
 			}
 		}
-		public MyObservableCollection<FilmViewModel> CurPage
+		public MyObservableCollection<FilmViewModel> CurFilmPage
 		{
-			get => curPage;
+			get => curFilmPage;
 			set
 			{
-				curPage = value;
+				curFilmPage = value;
+				OnPropertyChanged();
+			}
+		}
+		public MyObservableCollection<ActorViewModel> CurActorsPage
+		{
+			get => curActorsPage;
+			set
+			{
+				curActorsPage = value;
 				OnPropertyChanged();
 			}
 		}
@@ -480,8 +536,10 @@ namespace Movies.UI.ViewModel
 		{
 			get => context;
 			set
-			{
+			{		
 				context = value;
+				curPageNumber = 0;
+				RefreshPages();
 				OnPropertyChanged();
 			}
 		}
@@ -761,7 +819,7 @@ namespace Movies.UI.ViewModel
 			get => selectedPlugin;
 			set
 			{
-				CurPage.Refresh();
+				CurFilmPage.Refresh();
 				selectedPlugin = value;
 				OnPropertyChanged("HeaderColor");
 				System.Windows.MessageBox.Show("Plugin " + selectedPlugin.Name + " added!");
@@ -845,10 +903,20 @@ namespace Movies.UI.ViewModel
 		{
 			Task t = Task.Factory.StartNew(() =>
 			{
-				nextPage = new MyObservableCollection<FilmViewModel>(films.Skip((curPageNumber + 1) * pageSize).Take(pageSize).ToArray());
-				if (nextPage == null)
+				if (context == Context.Films)
 				{
-					curPageNumber--;
+					nextFilmPage = new MyObservableCollection<FilmViewModel>(
+						films.Skip((curPageNumber + 1) * pageSize).Take(pageSize).ToArray());
+				}
+				else if (context == Context.Actors)
+				{
+					nextActorsPage = new MyObservableCollection<ActorViewModel>(
+						actors.Skip((curPageNumber + 1) * pageSize).Take(pageSize).ToArray());
+				}
+				else if (context == Context.Prodecers)
+				{
+					nextProducersPage = new MyObservableCollection<ProducerViewModel>(
+						producers.Skip((curPageNumber + 1) * pageSize).Take(pageSize).ToArray());
 				}
 			});
 		}
@@ -856,26 +924,61 @@ namespace Movies.UI.ViewModel
 		{
 			Task t = Task.Factory.StartNew(() =>
 			{
-				if (curPageNumber <= 0)
+				if (CurrentPageNumber <= 0)
 				{
-					curPageNumber = 0;
+					prevFilmPage = new MyObservableCollection<FilmViewModel>();
+					prevActorsPage = new MyObservableCollection<ActorViewModel>();
+					prevProducersPage = new MyObservableCollection<ProducerViewModel>();
+					CurrentPageNumber = 0;
 					return;
 				}
-				prevPage = new MyObservableCollection<FilmViewModel>(films.Skip((curPageNumber - 1) * pageSize).Take(pageSize).ToArray());
+				if (context == Context.Films)
+				{
+					prevFilmPage = new MyObservableCollection<FilmViewModel>(
+						films.Skip((curPageNumber - 1) * pageSize).Take(pageSize).ToArray());
+				}
+				else if (context == Context.Actors)
+				{
+					prevActorsPage = new MyObservableCollection<ActorViewModel>(
+						actors.Skip((curPageNumber - 1) * pageSize).Take(pageSize).ToArray());
+				}
+				else if (context == Context.Prodecers)
+				{
+					prevProducersPage = new MyObservableCollection<ProducerViewModel>(
+						producers.Skip((curPageNumber - 1) * pageSize).Take(pageSize).ToArray());
+				}
 			});
 		}
 		public RelayCommand NextPageCommand => nextPageCommand ?? (
 			nextPageCommand = new RelayCommand(obj =>
 			{
-				curPageNumber++;
-				CurPage = new MyObservableCollection<FilmViewModel>(nextPage);
-				try
+				if (context == Context.Films)
 				{
-					SelectedFilm = curPage[0];
+					if (nextFilmPage == null || nextFilmPage.Count == 0) return;
+					CurrentPageNumber++;
+					CurFilmPage = new MyObservableCollection<FilmViewModel>(nextFilmPage);
+					try
+					{
+						SelectedFilm = curFilmPage[0];
+					}
+					catch
+					{
+						SelectedFilm = null;
+					}
 				}
-				catch
+				else if (context == Context.Actors)
 				{
-					SelectedFilm = null;
+					if (nextActorsPage == null || nextActorsPage.Count == 0) return;
+					CurrentPageNumber++;
+					CurActorsPage = new MyObservableCollection<ActorViewModel>(nextActorsPage);
+					try
+					{
+						SelectedActor = curActorsPage[0];
+					}
+					catch
+					{
+						SelectedActor = null;
+					}
 				}
 				LoadNextPage();
 				LoadPrevPage();
@@ -883,21 +986,105 @@ namespace Movies.UI.ViewModel
 		public RelayCommand PrevPageCommand => prevPageCommand ?? (
 			prevPageCommand = new RelayCommand(obj =>
 			{
-				curPageNumber--;
-				CurPage = new MyObservableCollection<FilmViewModel>(prevPage);
-				try
+				if (context == Context.Films)
 				{
-					SelectedFilm = curPage[0];
+					if (prevFilmPage == null || prevFilmPage.Count == 0) return;
+					CurrentPageNumber--;
+					CurFilmPage = new MyObservableCollection<FilmViewModel>(prevFilmPage);
+					try
+					{
+						SelectedFilm = curFilmPage[0];
+					}
+					catch
+					{
+						SelectedFilm = null;
+					}
 				}
-				catch
+				else if (context == Context.Actors)
 				{
-					SelectedFilm = null;
+					if (prevActorsPage == null || prevActorsPage.Count == 0) return;
+					CurrentPageNumber--;
+					CurActorsPage = new MyObservableCollection<ActorViewModel>(prevActorsPage);
+					try
+					{
+						SelectedActor = curActorsPage[0];
+					}
+					catch
+					{
+						SelectedActor = null;
+					}
+				}
+				LoadNextPage();
+				LoadPrevPage();
+			}));
+		public RelayCommand FirstPageCommand => firstPageCommand ?? (
+			firstPageCommand = new RelayCommand(obj =>
+			{
+				curPageNumber = 0;
+				if (context == Context.Films)
+				{	
+					CurFilmPage = new MyObservableCollection<FilmViewModel>(films.Take(pageSize).ToArray());
+					try
+					{
+						SelectedFilm = curFilmPage[0];
+					}
+					catch
+					{
+						SelectedFilm = null;
+					}
+				}
+				else if (context == Context.Actors)
+				{
+					CurActorsPage = new MyObservableCollection<ActorViewModel>(actors.Take(pageSize).ToArray());
+					try
+					{
+						SelectedActor = curActorsPage[0];
+					}
+					catch
+					{
+						SelectedActor = null;
+					}
+				}
+				LoadNextPage();
+				LoadPrevPage();
+			}));
+		public RelayCommand LastPageCommand => lastPageCommand ?? (
+			lastPageCommand = new RelayCommand(obj =>
+			{
+				CurrentPageNumber = AmountOfPages - 1;
+				if (context == Context.Films)
+				{
+					CurFilmPage = new MyObservableCollection<FilmViewModel>(
+						films.Skip(curPageNumber * pageSize).Take(pageSize).ToArray());
+					try
+					{
+						SelectedFilm = curFilmPage[0];
+					}
+					catch
+					{
+						SelectedFilm = null;
+					}
+				}
+				else if (context == Context.Actors)
+				{
+					CurActorsPage = new MyObservableCollection<ActorViewModel>(
+						actors.Skip((curPageNumber - 1) * pageSize).Take(pageSize).ToArray());
+					try
+					{
+						SelectedActor = curActorsPage[0];
+					}
+					catch
+					{
+						SelectedActor = null;
+					}
 				}
 				LoadNextPage();
 				LoadPrevPage();
 			}));
 
-		public string IconPath => Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", "logo.png");
+
+		public string IconPath => Path.Combine(
+			Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", "logo.png");
 
 		public event PropertyChangedEventHandler PropertyChanged;
 		public void OnPropertyChanged([CallerMemberName] string prop = "") =>
