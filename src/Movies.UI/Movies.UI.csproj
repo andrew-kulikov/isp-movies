@@ -41,6 +41,7 @@
       <HintPath>..\packages\MaterialDesignThemes.2.3.1.953\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -64,7 +65,15 @@
     </ApplicationDefinition>
     <Compile Include="Model\Context.cs" />
     <Compile Include="Model\RelayCommand.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Tools\MyCollectionsConverter.cs" />
+    <Compile Include="Tools\KeysConfig.cs" />
+    <Compile Include="Tools\PageConverter.cs" />
+    <Compile Include="Tools\PluginsConfig.cs" />
     <Compile Include="ViewModel\ActorViewModel.cs" />
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\Collections\MyObservableCollection.cs" />
@@ -131,11 +140,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -143,8 +147,8 @@
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -153,7 +157,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Movies.BusinessLogic\Movies.BusinessLogic.csproj">
@@ -165,9 +171,26 @@
       <Name>IPlugin</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <None Include="Images\plus.ico" />
+    <Resource Include="Resources\save.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\plus.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\delete.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\open.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\find.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

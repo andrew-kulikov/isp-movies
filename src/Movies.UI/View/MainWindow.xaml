@@ -13,9 +13,65 @@
         TextElement.FontSize="13"
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"       
-		Icon="{Binding Path=IconPath}"
+		Icon="pack://application:,,,/Movies.UI;component/Resources/logo.ico"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}">
+	<Window.InputBindings>
+		<KeyBinding Command="{Binding SaveCommand}"
+                    Key="{Binding Path=SaveKey}"
+					Modifiers="Ctrl"/>
+		<KeyBinding Command="{Binding OpenCommand}"
+                    Key="{Binding Path=OpenKey}"
+					Modifiers="Ctrl"/>
+		<KeyBinding Command="{Binding LoadCommand}"
+                    Key="{Binding Path=LoadKey}"
+					Modifiers="Ctrl"/>
+		<KeyBinding Command="{Binding NextPageCommand}"
+                    Key="{Binding Path=NextPageKey}"/>
+		<KeyBinding Command="{Binding PrevPageCommand}"
+                    Key="{Binding Path=PrevPageKey}"/>
+		<KeyBinding Command="{Binding FirstPageCommand}"
+                    Key="{Binding Path=FirstPageKey}"
+					Modifiers="Ctrl"/>
+		<KeyBinding Command="{Binding LastPageCommand}"
+                    Key="{Binding Path=LastPageKey}"
+					Modifiers="Ctrl"/>
+	</Window.InputBindings>
+	<Window.Resources>
+		<Style x:Key="RoundButton" TargetType="{x:Type Button}">
+			<Setter Property="Button.Foreground" Value="White" />
+			<Setter Property="Button.Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button" >
+						<Grid>
+							<Path Stretch="Uniform" UseLayoutRounding="False"  Fill="#81d4fa">
+								<Path.Data>
+									<EllipseGeometry RadiusX="1" RadiusY="1"/>
+								</Path.Data>
+							</Path>
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Setter Property="Button.FontSize" Value="14" />
+		</Style>
+		<Style x:Key="CoolButton" TargetType="{x:Type Button}">
+			<Setter Property="Background" Value="Azure" />
+			<Setter Property="Width" Value="79" />
+			<Setter Property="Height" Value="50" />
+			<Setter Property="LayoutTransform">
+				<Setter.Value>
+					<RotateTransform Angle="77" />
+				</Setter.Value>
+			</Setter>
+			<Setter Property="RenderTransform">
+				<Setter.Value>
+					<MatrixTransform Matrix="0.5,0.5,2.7,4.3,2,3"/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="50"/>
@@ -38,7 +94,7 @@
 				Width="40"
 				Margin="10 0 0 0"
 				Click="AddFilm_Click">
-				<Image Source="D:\git\isp-movies\src\Movies.UI\Images\plus.ico" />
+				<Image Source="{Binding Path=AddIcon}" />
 			</Button>
 			<Button
 				Height="40"
@@ -46,7 +102,7 @@
 				Margin="10 0 0 0"
 				Command="{Binding RemoveCommand}"
 				Style="{DynamicResource MaterialDesignFloatingActionLightButton}">
-				<Image Source="D:\git\isp-movies\src\Movies.UI\Images\delete.ico" />
+				<Image Source="{Binding Path=DeleteIcon}" />
 			</Button>
 			<Button
 				Height="40"
@@ -54,7 +110,7 @@
 				Margin="10 0 0 0"
 				Command="{Binding SaveCommand}"
 				Style="{DynamicResource MaterialDesignFloatingActionLightButton}">
-				<Image Source="D:\git\isp-movies\src\Movies.UI\Images\save.ico" />
+				<Image Source="{Binding Path=SaveIcon}" />
 			</Button>
 			<Button
 				Height="40"
@@ -62,7 +118,7 @@
 				Margin="10 0 0 0"
 				Command="{Binding OpenCommand}"
 				Style="{DynamicResource MaterialDesignFloatingActionLightButton}">
-				<Image Source="D:\git\isp-movies\src\Movies.UI\Images\open.png" />
+				<Image Source="{Binding Path=OpenIcon}" />
 			</Button>
 			<Button
 				Height="40"
@@ -81,7 +137,7 @@
 			HorizontalAlignment="Right"
 			Orientation="Horizontal">
 			<TextBox Width="100" Text="{Binding Path=TmpFilmName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
-			<Image Source="D:\git\isp-movies\src\Movies.UI\Images\find.png" />
+			<Image Source="{Binding Path=FindIcon}" />
 		</StackPanel>
 		<StackPanel Orientation="Vertical" Grid.Row="1">
 			<ListBox>
@@ -91,28 +147,23 @@
 			</ListBox>
 			<StackPanel x:Name="LinqToFilms" Margin="0 20 0 0">
 				<TextBlock HorizontalAlignment="Center">Rating</TextBlock>
-				<UniformGrid Rows="1" Margin="10 0"> 
+				<UniformGrid Rows="1" Margin="10 5"> 
 					<TextBlock VerticalAlignment="Center">From</TextBlock>
-					<TextBox Text="{Binding Path=StartRating, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+					<TextBox TextAlignment="Center" Text="{Binding Path=StartRating, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
 					<TextBlock VerticalAlignment="Center">To</TextBlock>
-					<TextBox Text="{Binding Path=EndRating, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+					<TextBox TextAlignment="Center" Text="{Binding Path=EndRating, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
 				</UniformGrid>
-				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Age limit</TextBlock>
-				<UniformGrid Rows="1" Margin="10 0">
+				<TextBlock HorizontalAlignment="Center" Margin="0 15 0 0">Age limit</TextBlock>
+				<UniformGrid Rows="1" Margin="10 5">
 					<TextBlock VerticalAlignment="Center">From</TextBlock>
-					<TextBox Text="{Binding Path=StartAge, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+					<TextBox TextAlignment="Center" Text="{Binding Path=StartAge, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
 					<TextBlock VerticalAlignment="Center">To</TextBlock>
-					<TextBox Text="{Binding Path=EndAge, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
+					<TextBox TextAlignment="Center" Text="{Binding Path=EndAge, ValidatesOnExceptions=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250}"></TextBox>
 				</UniformGrid>
-				<!--TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Sort by name</>
-				<UniformGrid Rows="1" Margin="10 0">
-					<RadioButton IsChecked="{Binding Path=NameUp, Mode=TwoWay}">Up</RadioButton>
-					<RadioButton IsChecked="{Binding Path=NameDown, Mode=TwoWay}">Down</RadioButton>
-				</UniformGrid-->
 				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Sort by rating</TextBlock>
-				<UniformGrid Rows="1" Margin="10 0">
-					<RadioButton IsChecked="{Binding Path=RatingUp, Mode=TwoWay}">Up</RadioButton>
-					<RadioButton IsChecked="{Binding Path=RatingDown, Mode=TwoWay}">Down</RadioButton>
+				<UniformGrid Rows="1" Margin="10 5">
+					<RadioButton HorizontalAlignment="Center" IsChecked="{Binding Path=RatingUp, Mode=TwoWay}">Up</RadioButton>
+					<RadioButton HorizontalAlignment="Center" IsChecked="{Binding Path=RatingDown, Mode=TwoWay}">Down</RadioButton>
 				</UniformGrid>
 				<TextBlock HorizontalAlignment="Center" Margin="0 10 0 0">Genres</TextBlock>
 				<UniformGrid Rows="8" Margin="10 0">
@@ -130,7 +181,28 @@
 					<Button Command="{Binding Path=ClearCommand}" Margin="10 20 0 0">Clear</Button>
 				</StackPanel>
 			</StackPanel>
-			<Button x:Name="groupButton" Command="{Binding Path=GroupCommand}">Group</Button>
+			<Button Margin="0 30 0 0" Width="200" x:Name="groupButton" Command="{Binding Path=GroupCommand}">
+				<!--Button.Background>
+					<LinearGradientBrush>
+						<GradientStop Color="#2976A2" Offset="0"/>
+						<GradientStop Color="#78EA98" Offset="0.5"/>
+						<GradientStop Color="#AA34FE25" Offset="1"/>
+					</LinearGradientBrush>
+				</-->
+				<Button.Content>
+					Group
+				</Button.Content>
+				<Button.LayoutTransform>
+					<RotateTransform Angle="-45" />
+				</Button.LayoutTransform>
+
+
+				<Button.Effect>
+					<DropShadowEffect>
+
+					</DropShadowEffect>
+				</Button.Effect>
+			</Button>
 		</StackPanel>
 		<Frame Grid.Column="1" Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"></Frame>
 	</Grid>

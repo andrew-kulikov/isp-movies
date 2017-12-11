@@ -16,7 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
-using System.Collections.Concurrent;
+using System.Configuration;
+using System.Resources;
+using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace Movies.UI.ViewModel
 {
@@ -102,8 +105,24 @@ namespace Movies.UI.ViewModel
 				SelectedFilm = null;
 			}
 			LoadNextPage();
-			LoadPluginsAsync(@"D:\git\isp-movies\src\plugins");
+			string path = ((PluginsConfig)ConfigurationManager.GetSection("plugins")).Plugins.Path;
+			LoadPluginsAsync(path);
+			ConfigureKeys();
+			LoadResourceImages();
 		}
+		public BitmapImage OpenIcon { get; set; }
+		public BitmapImage SaveIcon { get; set; }
+		public BitmapImage MainIcon { get; set; }
+		public BitmapImage FindIcon { get; set; }
+		public BitmapImage DeleteIcon { get; set; }
+		public BitmapImage AddIcon { get; set; }
+		public string LoadKey { get; set; }
+		public string SaveKey { get; set; }
+		public string OpenKey { get; set; }
+		public string NextPageKey { get; set; }
+		public string PrevPageKey { get; set; }
+		public string FirstPageKey { get; set; }
+		public string LastPageKey { get; set; }
 		public FilmViewModel SelectedFilm
 		{
 			get => selectedFilm;
@@ -230,56 +249,46 @@ namespace Movies.UI.ViewModel
 		{
 			if (context == Context.Films)
 			{
-				var newFilms = from film in allFilms
-							   where film.Rating <= endRating && film.Rating >= startRating
-							   && film.AgeLimit >= startAge && film.AgeLimit <= endAge
-							   select film;
+				var newParallelFilms = from film in allFilms.AsParallel()
+									   where film.Rating <= endRating && film.Rating >= startRating
+									   && film.AgeLimit >= startAge && film.AgeLimit <= endAge
+									   select film;
 				if (genres.Count != 0 && !genres.All(x => !x.Value))
 				{
-					newFilms = from film in newFilms
-							   from genre in genres.Keys
-							   where genres[genre] && film.Genres.Contains(genre)
-							   select film;
+					newParallelFilms = from film in newParallelFilms
+									   from genre in genres.Keys
+									   where genres[genre] && film.Genres.Contains(genre)
+									   select film;
 				}
-				var newFilms1 = new HashSet<FilmViewModel>(newFilms);
-				newFilms = newFilms1.AsEnumerable();
+				newParallelFilms = (new HashSet<FilmViewModel>(newParallelFilms.AsEnumerable())).AsParallel();
 				if (nameUp)
 				{
-					newFilms = from film in newFilms
-							   orderby film.Name
-							   select film;
+					newParallelFilms = from film in newParallelFilms
+									   orderby film.Name
+									   select film;
 				}
 				else if (nameDown)
 				{
-					newFilms = from film in newFilms
-							   orderby film.Name descending
-							   select film;
+					newParallelFilms = from film in newParallelFilms
+									   orderby film.Name descending
+									   select film;
 				}
 				if (ratingUp)
 				{
-					newFilms = from film in newFilms
-							   orderby film.Rating
-							   select film;
+					newParallelFilms = from film in newParallelFilms
+									   orderby film.Rating
+									   select film;
 				}
 				else if (ratingDown)
 				{
-					newFilms = from film in newFilms
-							   orderby film.Rating descending
-							   select film;
+					newParallelFilms = from film in newParallelFilms
+									   orderby film.Rating descending
+									   select film;
 				}
-				films = new MyObservableCollection<FilmViewModel>(newFilms.ToArray());
+				films = new MyObservableCollection<FilmViewModel>(newParallelFilms.ToArray());
 				Films.Refresh();
-				RefreshPages();
 			}
-			else if (context == Context.Actors)
-			{
-				Actors.Refresh();
-				RefreshPages();
-			}
-			else if (context == Context.Prodecers)
-			{
-				Producers.Refresh();
-			}
+			RefreshPages();
 			Find();
 		}
 		private void RefreshPages()
@@ -379,8 +388,8 @@ namespace Movies.UI.ViewModel
 			else if (context == Context.Actors)
 			{
 				var newActors = from actor in actors
-							   where actor.FullName.ToLower().Contains(tmpFilmName.ToLower())
-							   select actor;
+								where actor.FullName.ToLower().Contains(tmpFilmName.ToLower())
+								select actor;
 				Actors = new MyObservableCollection<ActorViewModel>(newActors.ToArray());
 				try
 				{
@@ -394,8 +403,8 @@ namespace Movies.UI.ViewModel
 			else if (context == Context.Prodecers)
 			{
 				var newProds = from prod in producers
-								where prod.FullName.ToLower().Contains(tmpFilmName.ToLower())
-								select prod;
+							   where prod.FullName.ToLower().Contains(tmpFilmName.ToLower())
+							   select prod;
 				Producers = new MyObservableCollection<ProducerViewModel>(newProds.ToArray());
 				try
 				{
@@ -536,7 +545,7 @@ namespace Movies.UI.ViewModel
 		{
 			get => context;
 			set
-			{		
+			{
 				context = value;
 				curPageNumber = 0;
 				RefreshPages();
@@ -893,11 +902,9 @@ namespace Movies.UI.ViewModel
 			}
 		}
 		public string HeaderColor => selectedPlugin?.HeaderColor;
-		public void LoadPluginsAsync(string path)
+		public async void LoadPluginsAsync(string path)
 		{
-			//Thread t = new Thread(new ParameterizedThreadStart(LoadPlugins));
-			//t.Start(path);
-			Task loadPluginsTask = Task.Run(() => LoadPlugins(path));
+			await Task.Factory.StartNew(() => LoadPlugins(path));
 		}
 		public void LoadNextPage()
 		{
@@ -1022,7 +1029,7 @@ namespace Movies.UI.ViewModel
 			{
 				curPageNumber = 0;
 				if (context == Context.Films)
-				{	
+				{
 					CurFilmPage = new MyObservableCollection<FilmViewModel>(films.Take(pageSize).ToArray());
 					try
 					{
@@ -1081,7 +1088,40 @@ namespace Movies.UI.ViewModel
 				LoadNextPage();
 				LoadPrevPage();
 			}));
-
+		private void ConfigureKeys()
+		{
+			var conf = (KeysConfig)ConfigurationManager.GetSection("keys");
+			SaveKey = conf.Save.Key.ToUpper();
+			OpenKey = conf.Open.Key.ToUpper();
+			LoadKey = conf.Load.Key.ToUpper();
+			NextPageKey = conf.NextPage.Key.ToUpper();
+			PrevPageKey = conf.PrevPage.Key.ToUpper();
+			FirstPageKey = conf.FirstPage.Key.ToUpper();
+			LastPageKey = conf.LastPage.Key.ToUpper();
+			OnPropertyChanged("SaveKey");
+			OnPropertyChanged("LoadKey");
+			OnPropertyChanged("OpenKey");
+			OnPropertyChanged("NextPageKey");
+			OnPropertyChanged("PrevPageKey");
+			OnPropertyChanged("FirstPageKey");
+			OnPropertyChanged("LastPageKey");
+		}
+		private void LoadResourceImages()
+		{
+			OpenIcon = new BitmapImage(new Uri("pack://application:,,,/Movies.UI;component/Resources/open.ico", UriKind.RelativeOrAbsolute));
+			OnPropertyChanged("OpenIcon");
+			SaveIcon = new BitmapImage(new Uri("pack://application:,,,/Movies.UI;component/Resources/save.ico", UriKind.RelativeOrAbsolute));
+			OnPropertyChanged("SaveIcon");
+			AddIcon = new BitmapImage(new Uri("pack://application:,,,/Movies.UI;component/Resources/plus.ico", UriKind.RelativeOrAbsolute));
+			OnPropertyChanged("AddIcon");
+			DeleteIcon = new BitmapImage(new Uri("pack://application:,,,/Movies.UI;component/Resources/delete.ico", UriKind.RelativeOrAbsolute));
+			OnPropertyChanged("DeleteIcon");
+			FindIcon = new BitmapImage(new Uri("pack://application:,,,/Movies.UI;component/Resources/find.ico", UriKind.RelativeOrAbsolute));
+			OnPropertyChanged("FindIcon");
+			MainIcon = new BitmapImage(new Uri("pack://application:,,,/Movies.UI;component/Resources/logo.ico", UriKind.RelativeOrAbsolute));
+			OnPropertyChanged("MainIcon");
+			
+		}
 
 		public string IconPath => Path.Combine(
 			Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName, "Images", "logo.png");
