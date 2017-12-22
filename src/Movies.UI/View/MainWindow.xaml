@@ -38,39 +38,11 @@
 					Modifiers="Ctrl"/>
 	</Window.InputBindings>
 	<Window.Resources>
-		<Style x:Key="RoundButton" TargetType="{x:Type Button}">
-			<Setter Property="Button.Foreground" Value="White" />
-			<Setter Property="Button.Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="Button" >
-						<Grid>
-							<Path Stretch="Uniform" UseLayoutRounding="False"  Fill="#81d4fa">
-								<Path.Data>
-									<EllipseGeometry RadiusX="1" RadiusY="1"/>
-								</Path.Data>
-							</Path>
-							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-						</Grid>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-			<Setter Property="Button.FontSize" Value="14" />
-		</Style>
-		<Style x:Key="CoolButton" TargetType="{x:Type Button}">
-			<Setter Property="Background" Value="Azure" />
-			<Setter Property="Width" Value="79" />
-			<Setter Property="Height" Value="50" />
-			<Setter Property="LayoutTransform">
-				<Setter.Value>
-					<RotateTransform Angle="77" />
-				</Setter.Value>
-			</Setter>
-			<Setter Property="RenderTransform">
-				<Setter.Value>
-					<MatrixTransform Matrix="0.5,0.5,2.7,4.3,2,3"/>
-				</Setter.Value>
-			</Setter>
-		</Style>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Dictionary1.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
 	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
@@ -85,7 +57,6 @@
 			Background="{Binding Path=HeaderColor}"
 			Grid.Row="0"
 			Grid.ColumnSpan="3"
-			
 			Orientation="Horizontal"
 			HorizontalAlignment="Stretch">
 			<Button
@@ -128,6 +99,14 @@
 				Style="{DynamicResource MaterialDesignFloatingActionLightButton}">
 				Load
 			</Button>
+			<Button
+				Height="40"
+				Width="40"
+				Margin="10 0 0 0"
+				Click="Button_Click"
+				Style="{DynamicResource MaterialDesignFloatingActionLightButton}">
+				About
+			</Button>
 		</StackPanel>
 		<StackPanel
 			Grid.Row="0"
@@ -136,7 +115,23 @@
 			Margin="0 5 10 5"
 			HorizontalAlignment="Right"
 			Orientation="Horizontal">
-			<TextBox Width="100" Text="{Binding Path=TmpFilmName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+			<StackPanel Orientation="Vertical">
+				<TextBox Name="txt" Width="100" Text="{Binding Path=TmpFilmName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></TextBox>
+				<Rectangle RenderTransformOrigin="1,0.5" Height="20">
+					<Rectangle.Fill>
+						<VisualBrush Visual="{Binding ElementName=txt}" />
+					</Rectangle.Fill>
+					<Rectangle.OpacityMask>
+						<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+							<GradientStop Offset="0.3" Color="Transparent" />
+							<GradientStop Offset="1" Color="#88000000" />
+						</LinearGradientBrush>
+					</Rectangle.OpacityMask>
+					<Rectangle.RenderTransform>
+						<ScaleTransform ScaleY="-1" />
+					</Rectangle.RenderTransform>
+				</Rectangle>
+			</StackPanel>
 			<Image Source="{Binding Path=FindIcon}" />
 		</StackPanel>
 		<StackPanel Orientation="Vertical" Grid.Row="1">
@@ -177,31 +172,12 @@
 					<CheckBox Margin="0 5 5 5" IsChecked="{Binding Path=Genres[Animation]}">Animation</CheckBox>
 				</UniformGrid>
 				<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-					<Button Command="{Binding Path=QueryCommand}" Margin="0 20 10 0">Find</Button>
-					<Button Command="{Binding Path=ClearCommand}" Margin="10 20 0 0">Clear</Button>
+					<Button Height="50" Width="80" Style="{StaticResource CoolButton}" Command="{Binding Path=QueryCommand}" Margin="0 20 10 0">Find</Button>
+					<Button Height="50" Width="80" Style="{StaticResource CoolButton}" Command="{Binding Path=ClearCommand}" Margin="10 20 0 0">Clear</Button>
 				</StackPanel>
 			</StackPanel>
-			<Button Margin="0 30 0 0" Width="200" x:Name="groupButton" Command="{Binding Path=GroupCommand}">
-				<!--Button.Background>
-					<LinearGradientBrush>
-						<GradientStop Color="#2976A2" Offset="0"/>
-						<GradientStop Color="#78EA98" Offset="0.5"/>
-						<GradientStop Color="#AA34FE25" Offset="1"/>
-					</LinearGradientBrush>
-				</-->
-				<Button.Content>
+			<Button BorderThickness="0" Style="{StaticResource CoolButton}" Margin="0 30 0 0" Width="200" x:Name="groupButton" Command="{Binding Path=GroupCommand}">
 					Group
-				</Button.Content>
-				<Button.LayoutTransform>
-					<RotateTransform Angle="-45" />
-				</Button.LayoutTransform>
-
-
-				<Button.Effect>
-					<DropShadowEffect>
-
-					</DropShadowEffect>
-				</Button.Effect>
 			</Button>
 		</StackPanel>
 		<Frame Grid.Column="1" Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"></Frame>

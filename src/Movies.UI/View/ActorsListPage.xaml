@@ -7,6 +7,13 @@
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="ActorsListPage">
+	<Page.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Dictionary1.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Page.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition />
@@ -50,10 +57,10 @@
 			</ListBox.ItemTemplate>
 		</ListBox>
 		<StackPanel  VerticalAlignment="Bottom" HorizontalAlignment="Center" Grid.Row="1" Orientation="Horizontal">
-			<Button Width="70" Margin="10 0 0 0" Command="{Binding Path=PrevPageCommand}">Prev</Button>
+			<Button Style="{StaticResource CoolButton}" Height="50" Width="70" Margin="10 0 0 0" Command="{Binding Path=PrevPageCommand}">Prev</Button>
 			<TextBlock Margin="10 0 0 0" VerticalAlignment="Center" Text="Page: "></TextBlock>
 			<TextBlock Margin="0 0 10 0" VerticalAlignment="Center" Text="{Binding Path=CurrentPageNumber, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
-			<Button Width="70" Margin="0 0 10 0" Command="{Binding Path=NextPageCommand}">Next</Button>
+			<Button Style="{StaticResource CoolButton}" Height="50" Width="70" Margin="0 0 10 0" Command="{Binding Path=NextPageCommand}">Next</Button>
 		</StackPanel>
 	</Grid>
 </Page>

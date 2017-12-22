@@ -1,0 +1,219 @@
+﻿<Window x:Class="Movies.UI.View.About"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Movies.UI.View"
+        mc:Ignorable="d"
+        Title="About" Height="300" Width="300">
+	<Window.Resources>
+		<ResourceDictionary >
+			<PathGeometry x:Key="path">
+				<PathFigure IsClosed="True" >
+					<ArcSegment
+						Point="1,0" 
+						Size="50,25" 
+						IsLargeArc="True" />
+				</PathFigure>
+			</PathGeometry>
+			<PathGeometry x:Key="path1">
+				<PathFigure IsClosed="True" >
+					<ArcSegment
+						Point="1,0" 
+						Size="50, 25" 
+						IsLargeArc="True"
+						RotationAngle="45"/>
+				</PathFigure>
+			</PathGeometry>
+			<PathGeometry x:Key="path2">
+				<PathFigure IsClosed="True" >
+					<ArcSegment
+						Point="1,0" 
+						Size="50,25" 
+						IsLargeArc="True"
+						RotationAngle="60"/>
+				</PathFigure>
+			</PathGeometry>
+		</ResourceDictionary>
+	</Window.Resources>
+	<Grid>
+		<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Name="canv1">
+			<Path Stroke="Black" StrokeThickness="10">
+				<!--Path.Fill>
+					<LinearGradientBrush>
+						<GradientStop Color="#81d4fa" Offset="0"/>
+						<GradientStop Color="Black" Offset="1"/>
+					</LinearGradientBrush>
+				</>
+				<Path.Data>
+					<ombinedGeometry GeometryCombineMode="Xor">
+						<CombinedGeometry.Geometry1>
+							<LineGeometry StartPoint="40, 20" EndPoint="50,60" />
+						</CombinedGeometry.Geometry1>
+						<CombinedGeometry.Geometry2>
+							<GeometryGroup>
+
+							</GeometryGroup>
+						</CombinedGeometry.Geometry2>
+					</>
+				</Path.Data-->
+			</Path>
+			<Polyline
+				VerticalAlignment="Center"
+				HorizontalAlignment="Center" 
+				Stroke="Black" 
+				StrokeThickness="10"
+				Points="20, 80 40, 0 65, 60 90,0 110, 80" Canvas.Left="-64" Canvas.Top="-30" />
+		</Canvas>
+		<Canvas Margin="140 105">
+			<Ellipse 
+				x:Name="el" Stroke="Black" 
+				StrokeThickness="0" Width="15" 
+				Height="15" Fill="AliceBlue">
+				<Ellipse.Style>
+					<Style>
+						<Style.Triggers>
+							<EventTrigger RoutedEvent="Window.Loaded">
+								<EventTrigger.Actions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimationUsingPath 
+												Storyboard.TargetProperty="(Canvas.Left)"
+												PathGeometry="{StaticResource path}"
+												Source="X" Duration="0:0:3"
+												RepeatBehavior="Forever"/>
+											<DoubleAnimationUsingPath 
+												Storyboard.TargetProperty="(Canvas.Top)" 
+												PathGeometry="{StaticResource path}"
+												Source="Y" Duration="0:0:3"
+												RepeatBehavior="Forever"/>
+											<ColorAnimationUsingKeyFrames
+												Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)"
+												RepeatBehavior="Forever">
+												<LinearColorKeyFrame 
+													KeyTime="0:0:1" 
+													Value="WhiteSmoke"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:2" 
+													Value="Yellow"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:3" 
+													Value="LightGreen"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:4" 
+													Value="Yellow"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:5" 
+													Value="WhiteSmoke"/>
+											</ColorAnimationUsingKeyFrames>
+										</Storyboard>
+									</BeginStoryboard>
+								</EventTrigger.Actions>
+							</EventTrigger>
+						</Style.Triggers>
+					</Style>
+				</Ellipse.Style>
+			</Ellipse>
+		</Canvas>
+		<Canvas Margin="125 95">
+			<Ellipse
+				x:Name="el1" Stroke="Black" 
+				StrokeThickness="0" Width="15" 
+				Height="15" Fill="AliceBlue">
+				<Ellipse.Style>
+					<Style>
+						<Style.Triggers>
+							<EventTrigger RoutedEvent="Window.Loaded">
+								<EventTrigger.Actions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimationUsingPath 
+												Storyboard.TargetProperty="(Canvas.Left)"
+												PathGeometry="{StaticResource path1}"
+												Source="X" Duration="0:0:2"
+												RepeatBehavior="Forever"/>
+											<DoubleAnimationUsingPath 
+												Storyboard.TargetProperty="(Canvas.Top)" 
+												PathGeometry="{StaticResource path1}"
+												Source="Y" Duration="0:0:2"
+												RepeatBehavior="Forever"/>
+											<ColorAnimationUsingKeyFrames
+												Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)"
+												RepeatBehavior="Forever">
+												<LinearColorKeyFrame 
+													KeyTime="0:0:1" 
+													Value="#ffcdd2"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:2" 
+													Value="#29b6f6"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:3" 
+													Value="#ffee58"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:4" 
+													Value="#29b6f6"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:5" 
+													Value="#ffcdd2"/>
+											</ColorAnimationUsingKeyFrames>
+										</Storyboard>
+									</BeginStoryboard>
+								</EventTrigger.Actions>
+							</EventTrigger>
+						</Style.Triggers>
+					</Style>
+				</Ellipse.Style>
+			</Ellipse>
+		</Canvas>
+		<Canvas Margin="125 85">
+			<Ellipse
+				x:Name="el2" Stroke="Black" 
+				StrokeThickness="0" Width="15" 
+				Height="15" Fill="AliceBlue">
+				<Ellipse.Style>
+					<Style>
+						<Style.Triggers>
+							<EventTrigger RoutedEvent="Window.Loaded">
+								<EventTrigger.Actions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimationUsingPath 
+												Storyboard.TargetProperty="(Canvas.Left)"
+												PathGeometry="{StaticResource path2}"
+												Source="X" Duration="0:0:5"
+												RepeatBehavior="Forever"/>
+											<DoubleAnimationUsingPath 
+												Storyboard.TargetProperty="(Canvas.Top)" 
+												PathGeometry="{StaticResource path2}"
+												Source="Y" Duration="0:0:5"
+												RepeatBehavior="Forever"/>
+											<ColorAnimationUsingKeyFrames
+												Storyboard.TargetProperty="(Ellipse.Fill).(SolidColorBrush.Color)"
+												RepeatBehavior="Forever">
+												<LinearColorKeyFrame 
+													KeyTime="0:0:1" 
+													Value="WhiteSmoke"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:2" 
+													Value="Yellow"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:3" 
+													Value="LightGreen"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:4" 
+													Value="Yellow"/>
+												<LinearColorKeyFrame 
+													KeyTime="0:0:5" 
+													Value="WhiteSmoke"/>
+											</ColorAnimationUsingKeyFrames>
+										</Storyboard>
+									</BeginStoryboard>
+								</EventTrigger.Actions>
+							</EventTrigger>
+						</Style.Triggers>
+					</Style>
+				</Ellipse.Style>
+			</Ellipse>
+		</Canvas>
+	</Grid>
+</Window>

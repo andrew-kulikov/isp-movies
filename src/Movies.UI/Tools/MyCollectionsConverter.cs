@@ -184,5 +184,10 @@ namespace Movies.UI.Tools
 			}
 			
 		}
+
+		public static List<double> GetRatings(MyObservableCollection<FilmViewModel> films)
+		{
+			return films.Select(x => x.Rating).ToList();
+		}
 	}
 }

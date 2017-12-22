@@ -59,5 +59,11 @@ namespace Movies.UI.View
 			MainFrame.Content = new ProducersListPage(viewModel);
 			LinqToFilms.Visibility = Visibility.Collapsed;
 		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			About ab = new About(viewModel);
+			ab.ShowDialog();
+		}
 	}
 }

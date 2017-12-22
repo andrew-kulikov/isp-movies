@@ -1,0 +1,75 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Movies.Styles">
+	<Style x:Key="RoundButton" TargetType="{x:Type Button}">
+		<Setter Property="Button.Foreground" Value="White" />
+		<Setter Property="Button.Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button" >
+					<Grid>
+						<Path Stretch="Uniform" UseLayoutRounding="False"  Fill="#81d4fa">
+							<Path.Data>
+								<EllipseGeometry RadiusX="1" RadiusY="1"/>
+							</Path.Data>
+						</Path>
+						<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Button.FontSize" Value="14" />
+	</Style>
+	<Style x:Key="CoolButton" TargetType="{x:Type Button}">
+		<Setter Property="Background" Value="Azure" />
+		<Setter Property="Width" Value="79" />
+		<Setter Property="Height" Value="50" />
+		<Setter Property="FontWeight" Value="Bold" />
+		<Setter Property="FontSize" Value="14" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="Button">
+					<Border CornerRadius="15" BorderThickness="5" Padding="2">
+						<Border.Background>
+							<LinearGradientBrush>
+								<GradientStop Color="#81d4fa" Offset="0"/>
+								<GradientStop Color="Black" Offset="1"/>
+							</LinearGradientBrush>
+						</Border.Background>
+						<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter Property="Effect">
+					<Setter.Value>
+						<DropShadowEffect ShadowDepth="10" />
+					</Setter.Value>
+				</Setter>
+			</Trigger>
+			<EventTrigger RoutedEvent="Button.MouseLeave">
+				<EventTrigger.Actions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetProperty="Height" From="60" To="50" Duration="0:0:0:1">
+
+							</DoubleAnimation>
+						</Storyboard>
+					</BeginStoryboard>
+				</EventTrigger.Actions>
+			</EventTrigger>
+			<EventTrigger RoutedEvent="Button.MouseEnter">
+				<EventTrigger.Actions>
+					<BeginStoryboard>
+						<Storyboard>
+							<DoubleAnimation Storyboard.TargetProperty="Height" From="50" To="60" Duration="0:0:0:1">
+
+							</DoubleAnimation>
+						</Storyboard>
+					</BeginStoryboard>
+				</EventTrigger.Actions>
+			</EventTrigger>
+		</Style.Triggers>
+	</Style>
+</ResourceDictionary>

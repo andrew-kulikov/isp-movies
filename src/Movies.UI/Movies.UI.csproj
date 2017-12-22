@@ -78,6 +78,9 @@
     <Compile Include="ViewModel\ApplicationViewModel.cs" />
     <Compile Include="ViewModel\Collections\MyObservableCollection.cs" />
     <Compile Include="ViewModel\FilmViewModel.cs" />
+    <Compile Include="View\About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ActorsListPage.xaml.cs">
       <DependentUpon>ActorsListPage.xaml</DependentUpon>
     </Compile>
@@ -91,6 +94,10 @@
     <Compile Include="View\ProducersListPage.xaml.cs">
       <DependentUpon>ProducersListPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ActorInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -100,6 +107,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\AddFilm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Dictionary1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -135,6 +146,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Style1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -165,6 +180,10 @@
     <ProjectReference Include="..\Movies.BusinessLogic\Movies.BusinessLogic.csproj">
       <Project>{bb403bb0-743c-4ebf-abc9-52388b43b2f5}</Project>
       <Name>Movies.BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Movies.Styles\Movies.Styles.csproj">
+      <Project>{b9762220-73dc-4b65-bb60-77975e477cb8}</Project>
+      <Name>Movies.Styles</Name>
     </ProjectReference>
     <ProjectReference Include="..\PluginLib\IPlugin.csproj">
       <Project>{bb5f0072-0b3a-43c1-9827-fd7d4d809ff7}</Project>

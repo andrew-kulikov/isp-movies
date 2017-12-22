@@ -9,7 +9,12 @@
       d:DesignHeight="300" d:DesignWidth="300"
       Title="FilmsListPage">
 	<Page.Resources>
-		<databinding:PageConverter x:Key="PageConverter"></databinding:PageConverter>
+		<ResourceDictionary>
+			<databinding:PageConverter x:Key="PageConverter"></databinding:PageConverter>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Dictionary1.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
 	</Page.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
@@ -33,6 +38,16 @@
 				<Style TargetType="ListBoxItem">
 					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
 					<Setter Property="VerticalContentAlignment" Value="Stretch"/>
+					<!--Setter Property="Background" Value="LightSteelBlue"/>
+					<Setter Property="Margin" Value="5"/>
+					<Setter Property="Padding" Value="5"/>
+					<Style.Triggers>
+						<Trigger Property="IsSelected" Value="True">
+							<Setter Property="Foreground" Value="White"/>
+							<Setter Property="BorderThickness" Value="1"/>
+							<Setter Property="BorderBrush" Value="Black"/>
+						</Trigger>
+					</Style.Triggers-->
 				</Style>
 			</ListBox.ItemContainerStyle>
 			<ListBox.ItemTemplate>
@@ -59,12 +74,12 @@
 			</ListBox.ItemTemplate>
 		</ListBox>
 		<StackPanel HorizontalAlignment="Center" Grid.Column="0" Grid.Row="2" Orientation="Horizontal">
-			<Button Width="70" Margin="0 0 10 0" Command="{Binding Path=FirstPageCommand}">First</Button>
-			<Button Width="70" Margin="10 0 0 0" Command="{Binding Path=PrevPageCommand}">Prev</Button>
+			<Button Style="{StaticResource CoolButton}" Width="70" Margin="0 0 10 0" Command="{Binding Path=FirstPageCommand}">First</Button>
+			<Button Style="{StaticResource CoolButton}" Width="70" Margin="10 0 0 0" Command="{Binding Path=PrevPageCommand}">Prev</Button>
 			<TextBlock Margin="10 0 0 0" VerticalAlignment="Center" Text="Page: "></TextBlock>
 			<TextBlock Margin="0 0 10 0" VerticalAlignment="Center" Text="{Binding Path=CurrentPageNumber, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource PageConverter}}"></TextBlock>
-			<Button Width="70" Margin="0 0 10 0" Command="{Binding Path=NextPageCommand}">Next</Button>
-			<Button Width="70" Margin="10 0 0 0" Command="{Binding Path=LastPageCommand}">Last</Button>
+			<Button Style="{StaticResource CoolButton}" Width="70" Margin="0 0 10 0" Command="{Binding Path=NextPageCommand}">Next</Button>
+			<Button Style="{StaticResource CoolButton}" Width="70" Margin="10 0 0 0" Command="{Binding Path=LastPageCommand}">Last</Button>
 		</StackPanel>
 		<Image
 			Grid.Row="0"

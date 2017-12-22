@@ -4,7 +4,27 @@
         xmlns:local="clr-namespace:Movies.UI.View"
         Title="Plugins" Height="300" Width="300"
 		Icon="D:\git\isp-movies\src\Movies.UI\Images\logo.png">
-    <Grid>
+	<Window.Resources>
+		<PathGeometry x:Key="path">
+			<PathFigure IsClosed="True">
+				<ArcSegment Point="1,0" 
+					Size="50,25" 
+					IsLargeArc="True"/>
+			</PathFigure>
+		</PathGeometry>
+		<Storyboard x:Key="storyboard" 
+			Storyboard.TargetName="rect">
+			<DoubleAnimationUsingPath 
+				Storyboard.TargetProperty="(Canvas.Left)"
+				PathGeometry="{StaticResource path}"
+				Source="X" Duration="0:0:5"/>
+			<DoubleAnimationUsingPath 
+				Storyboard.TargetProperty="(Canvas.Top)" 
+				PathGeometry="{StaticResource path}"
+				Source="Y" Duration="0:0:5"/>
+		</Storyboard>
+	</Window.Resources>
+	<Grid>
 		<StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
 			<ListBox
 				x:Name="Plugs"
@@ -20,5 +40,18 @@
 				OFF
 			</Button>
 		</StackPanel>
+		
+		<Canvas>
+			<Path Data="{StaticResource path}"
+				StrokeThickness="2" Stroke="Black"
+				Canvas.Left="50"/>
+			<Rectangle x:Name="rect" Stroke="Black" 
+				StrokeThickness="2" Width="10" 
+				Height="10">
+				<Rectangle.RenderTransform>
+					<TranslateTransform X="45" Y="-5"/>
+				</Rectangle.RenderTransform>
+			</Rectangle>
+		</Canvas>
 	</Grid>
 </Window>

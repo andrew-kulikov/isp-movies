@@ -1120,7 +1120,7 @@ namespace Movies.UI.ViewModel
 			OnPropertyChanged("FindIcon");
 			MainIcon = new BitmapImage(new Uri("pack://application:,,,/Movies.UI;component/Resources/logo.ico", UriKind.RelativeOrAbsolute));
 			OnPropertyChanged("MainIcon");
-			
+			//System.Windows.Shapes.Path
 		}
 
 		public string IconPath => Path.Combine(
